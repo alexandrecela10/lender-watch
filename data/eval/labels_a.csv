@@ -1,0 +1,1029 @@
+pair_id,label,reason
+5,no_match,Ioogo is a different company
+3,no_match,"Ingenovis is healthcare staffing, not Ingenio"
+4,no_match,"Ingenovis is healthcare staffing, not Ingenio"
+6,no_match,"Mediware is healthcare software, unrelated"
+2,no_match,"Ingenovis is healthcare staffing, not Ingenio"
+1,match,"Ingenio LLC, consumer services, same exact name"
+0,match,"Ingenio LLC, consumer services, same exact name"
+10,no_match,Penn Quarter Partners is advertising
+16,no_match,Pool Service Partners is a pool services business
+14,no_match,"Apex Service Partners is HVAC and plumbing, separate"
+19,no_match,Juniper Landscaping is a separate landscaper
+8,match,Exact legal name of Canopy Service Partners
+7,match,Exact legal name of Canopy Service Partners
+18,no_match,Horizon Facilities Services is different
+15,no_match,Leap Service Partners is a different business
+11,no_match,36th Street Capital is equipment finance
+12,no_match,"SPAC, unrelated"
+13,no_match,Astra Service Partners is a different business
+17,no_match,SR Landscaping is a different landscaper
+9,no_match,AML Rightsource is compliance services
+28,unsure,ASG III software fits Alpine SG; legal link unconfirmed
+27,no_match,AGDATA is ag data business
+30,no_match,USG AS Holdings is water utilities
+31,no_match,"Silk Technologies is a venture borrower, unrelated"
+25,no_match,AG Bells is unrelated to ASG
+29,unsure,ASG III software fits Alpine SG; legal link unconfirmed
+24,unsure,ASG III software fits Alpine SG; legal link unconfirmed
+23,unsure,ASG II may be Alpine SG; legal link unconfirmed
+21,unsure,ASG III software fits Alpine SG; legal link unconfirmed
+34,no_match,Crowdtap is a separate venture borrower
+32,no_match,Cart.com is a separate ecommerce company
+26,no_match,AG Group Holdings is Addison Group staffing
+22,unsure,ASG III software fits Alpine SG; legal link unconfirmed
+35,no_match,Smartly is a separate venture borrower
+33,no_match,Saatva is a mattress company
+20,unsure,ASG II may be Alpine SG; legal link unconfirmed
+39,no_match,Process Insights is machinery instrumentation
+41,no_match,Transportation Insight is logistics
+45,no_match,Educators Resource is a different business
+46,no_match,Discovery Education is a separate K-12 company
+37,no_match,Avenu Insights is government IT services
+43,no_match,TechInsights is semiconductor intelligence
+40,no_match,Side is a real estate venture
+38,no_match,6Sense Insights is sales software
+42,no_match,HG Insights is technology intelligence
+44,no_match,HG Insights is technology intelligence
+36,match,"Exact name Riverside Insights, first lien term loan"
+57,no_match,HighPeak Energy is oil and gas
+58,no_match,NEPEZ is unrelated to the pet platform
+48,no_match,Bridgepoint fund interest
+51,no_match,IntelePeer is communications
+59,no_match,QPE Alpha is Australian healthcare
+55,no_match,"Anteriad is formerly MeritDirect, media data"
+56,no_match,Spectrum of Hope is unrelated
+53,no_match,"Anteriad is formerly MeritDirect, media data"
+49,no_match,Bowe and Gant is electrical utilities
+47,no_match,"Cordance is a software investor, no link to Antelope"
+54,no_match,"Anteriad is formerly MeritDirect, media data"
+50,no_match,Integrated Openings Solutions is doors and hardware
+52,no_match,Slope Tech is fintech
+65,no_match,"Shipoffers vehicle, unrelated to Evergreen fintech group"
+73,no_match,Tomorrow Companies is weather technology
+61,no_match,Empower Benefits is benefits administration
+64,no_match,Jane Street is a trading firm
+68,no_match,OTG is airport concessions
+67,no_match,Trademark Global is leisure products
+70,no_match,Crowdtap is a separate venture borrower
+66,no_match,EFC International is manufacturing
+71,no_match,"Silk Technologies is a venture borrower, unrelated"
+69,no_match,Saatva is a mattress company
+72,no_match,Cart.com is a separate ecommerce company
+63,no_match,Harbour Benefit is benefits administration
+60,no_match,Benefytt is health insurance technology
+62,no_match,Encorevet is veterinary
+83,no_match,Medical Guardian is personal emergency devices
+81,no_match,Guardian Bidco has no restoration link
+85,no_match,Legacy Restoration is a separate roofing business
+80,no_match,"Waupaca Foundry holding, unrelated"
+78,no_match,ATI Restoration is a separate restoration company
+79,no_match,36th Street Capital is equipment finance
+82,no_match,Guardian US Holdco is software
+84,no_match,American Restoration is a separate business
+74,match,Guardian Restoration Partners Buyer is the borrowing vehicle
+75,match,Variant spelling of Guardian Restoration Partners Buyer vehicle
+77,match,Variant spelling of Guardian Restoration Partners Buyer vehicle
+76,match,Guardian Restoration Partners Buyer is the borrowing vehicle
+87,no_match,Bridgepoint fund interest
+92,no_match,National Property REIT is Prospect affiliated
+91,no_match,Domuso is proptech payments
+86,no_match,Brookfield Properties is a separate real estate group
+95,no_match,Starwood Property is a mortgage REIT
+97,no_match,United Land Services is utility land services
+93,no_match,CW Nest is a separate property owner
+96,no_match,CARDS and Live Oak is waste services
+88,no_match,Royal Property Company has no Oakline link
+98,no_match,CARDS and Live Oak is waste services
+89,no_match,Retail 1959 Holdings is broadline retail
+94,no_match,Stake Network is proptech
+90,no_match,"Peer Holding is Action retail, Netherlands"
+99,no_match,NextCar is vehicle subscription technology
+103,no_match,Carolinas Buyer is unrelated
+101,no_match,Carolina Topco is Solid Surface
+108,no_match,Landscape Workshop is landscaping
+109,no_match,ExtraHop is network security
+111,no_match,Blackcart is commerce software
+102,no_match,Carolinas Buyer is unrelated
+105,no_match,Team Car Care is Jiffy Lube franchisee
+112,no_match,Sidecar Health is insurance
+107,no_match,Tailored Brands is menswear retail
+106,no_match,Lincoln Metal Shop is unrelated
+104,no_match,Men's Wearhouse is menswear retail
+110,no_match,BlueCart is software
+100,no_match,Carolina Skiff is boats
+113,no_match,Club Car Wash is car washes
+128,no_match,Transcendia is packaging films
+121,match,"Ascend, same 8/11/2031 maturity as Ascend Partner Services"
+123,no_match,Ascend Buyer is PPC Flexible Packaging
+126,no_match,Ascent Midco is a different business
+118,no_match,Ascend Wellness is cannabis
+124,match,Ascend Partner Services is the accounting platform borrower
+127,no_match,Digital Experience Services is IT consulting
+115,match,"Ascend, business services, maturity matches Ascend Partner Services"
+116,no_match,Ascend Buyer is PPC Flexible Packaging
+114,match,Ascend Partner Services is the accounting platform borrower
+122,no_match,Ascend Learning is healthcare education
+125,no_match,Ascend Plastic Surgery is healthcare
+120,no_match,Ascend Plastic Surgery is healthcare
+117,no_match,Ascend Learning is healthcare education
+119,match,"Ascend Partner Services, same 8/11/2031-era Alpine accounting platform"
+136,no_match,Astra Service Partners is a different business
+137,no_match,"Apex Service Partners is HVAC and plumbing, separate"
+134,no_match,"SPAC, unrelated"
+132,no_match,Penn Quarter Partners is advertising
+131,no_match,AML Rightsource is compliance services
+130,match,Exact legal name of Cobalt Service Partners
+129,match,Exact legal name of Cobalt Service Partners
+139,no_match,Industrial Service Solutions is machinery services
+135,no_match,Cobalt Buyer Sub has no access solutions link
+138,no_match,Leap Service Partners is a different business
+140,no_match,Pool Service Partners is a pool services business
+133,no_match,36th Street Capital is equipment finance
+141,no_match,Construction Partners is road construction
+147,no_match,Phynet is a separate dermatology group
+145,no_match,Forefront Dermatology is a separate group
+144,no_match,Anne Arundel is a separate dermatology group
+143,no_match,Animal Dermatology Group is veterinary
+146,no_match,Integrated Dermatology is a separate group
+142,no_match,"Abacus Dermatology is a separate MSO, no Optima link found"
+148,no_match,Dermatology Medical Partners has no Optima link
+157,no_match,RPX is patent risk services
+155,no_match,Brand Industrial is scaffolding services
+151,no_match,Alpine Acquisition Corp is a different company
+150,match,"Alpinex Opco, labelled AlpineX"
+153,no_match,Alpine Pet is a different company
+158,no_match,CoreX is a different business
+154,no_match,TL Alpine is Air Distribution Technologies
+149,match,"Alpinex Opco, labelled AlpineX"
+156,no_match,Roofing Services Solutions is roofing
+152,no_match,Alpine Intel is a different company
+164,match,Apex Service Partners holding vehicle
+163,match,Exact legal name of Apex Service Partners
+159,match,Exact legal name of Apex Service Partners
+170,no_match,Pool Service Partners is a pool services business
+169,no_match,Peak Utility Services is utility services
+168,no_match,Apex Dental Partners is dental
+161,match,Exact legal name of Apex Service Partners
+166,match,Exact legal name of Apex Service Partners
+167,no_match,AML Rightsource is compliance services
+162,match,Apex Service Partners intermediate holding company
+160,match,Apex Service Partners first lien loan
+165,match,Apex Service Partners intermediate holding company
+175,match,GS SEER Group is Genstar's SEER vehicle
+180,match,"SEER labelled in filing, GS SEER Group Borrower"
+177,no_match,SE Ranking is SEO software
+181,no_match,R-V Industries is machinery
+185,no_match,Inmar is promotions technology
+179,match,"SEER labelled in filing, GS SEER Group Holdings"
+174,match,GS SEER Group Holdings is the holding vehicle
+172,match,"SEER labelled in filing, GS SEER Group Holdings"
+173,match,GS SEER Group Borrower is the borrower vehicle
+178,no_match,Serverlift is data center lifts
+182,no_match,Relevant Industrial is pipes and valves
+183,no_match,Double S is industrial contractors
+184,no_match,Dorel is consumer products
+176,match,GS SEER Group Holdings is the holding vehicle
+171,match,"SEER labelled in filing, GS SEER Group Borrower"
+189,no_match,Accelerator Investments Aggregator is unrelated
+190,no_match,First Medical is healthcare
+199,no_match,Cliffwater is a separate investment manager
+197,no_match,Smarsh is compliance archiving
+193,no_match,Eagle Parent is Epicor
+194,no_match,Eagle Parent Corp has no First Eagle link
+192,match,First Eagle Holdings is the First Eagle Investments parent
+195,no_match,"Eagle Midco is Avania, life sciences"
+186,no_match,AGS is construction services
+188,no_match,Eagle Purchaser is Accelerate Learning
+196,no_match,TS Imagine is trading software
+191,no_match,SRP Eagle is electronic equipment
+187,no_match,AGS is construction services
+198,no_match,Computer Services Inc is bank technology
+211,no_match,EP Wealth is a separate wealth manager
+201,match,Exact name Mercer Advisors Inc
+206,no_match,Peer Advisors is a separate firm
+209,no_match,Cyber Advisors is IT services
+210,no_match,Mariner Wealth is a separate wealth manager
+204,no_match,Citrin Cooperman is accounting
+203,no_match,Grant Thornton is accounting
+202,no_match,Beacon Pointe is a separate wealth manager
+208,no_match,NDH Advisors is consulting
+205,no_match,Clearstead is a separate wealth manager
+213,no_match,Perigon is a separate wealth manager
+207,no_match,Lido Advisors is a separate wealth manager
+200,match,Exact name Mercer Advisors Inc
+212,no_match,EP Wealth is a separate wealth manager
+227,no_match,Brookfield WEC is Westinghouse
+216,no_match,Twin Brook is a credit vehicle
+214,match,"BW Holding, filing names Brook & Whittle"
+224,no_match,Whitcraft is aerospace
+215,match,Audax labels the holding Brook & Whittle
+225,no_match,Whitcraft is aerospace
+222,no_match,Venbrook is insurance brokerage
+218,no_match,WhiteWater is pipelines
+219,no_match,WhiteWater is pipelines
+228,no_match,Vytl Controls is machinery
+226,no_match,BSI2 Hold Nettle is real estate
+221,no_match,Venbrook is insurance brokerage
+217,no_match,Twin Brook is a credit vehicle
+220,no_match,Brookfield Infrastructure is pipelines
+223,no_match,Brown & Settle is construction
+235,match,Cerity Partners Equity Holding is the holding vehicle
+232,match,Exact name Cerity Partners LLC
+237,no_match,360 Partners is commercial services
+236,match,Exact name Cerity Partners LLC
+233,match,Cerity Partners Equity Holding is the holding vehicle
+229,match,Cerity Partners Equity Holding is the holding vehicle
+230,match,Cerity Partners Equity Holding is the holding vehicle
+231,match,Cerity Partners Equity Holding is the holding vehicle
+234,match,Cerity Partners Equity Holding is the holding vehicle
+238,match,"PDI TA Holdings is PDI Technologies, Genstar and TA"
+239,match,"PDI TA Holdings is PDI Technologies, Genstar and TA"
+243,no_match,PDDS is Planet DDS dental software
+244,no_match,PDQ is IT management software
+241,no_match,DISA is employment screening
+240,no_match,DIRECTV is pay TV
+245,no_match,PDQ is IT management software
+242,no_match,MDI Buyer is chemicals
+255,no_match,Orion Services Group is consumer services
+247,match,Exact name Orion Advisor Solutions Inc
+246,match,Exact name Orion Advisor Solutions Inc
+249,no_match,ASC Engineered Solutions is pipe fittings
+251,no_match,Advantis is staffing
+250,no_match,Advanced Infusion is healthcare
+254,no_match,Vision Solutions is IT services
+248,match,"Orion Advisor Solutions, second lien"
+253,no_match,Last Dance is telecom
+252,no_match,48Forty is pallets
+256,no_match,"Orion US Finco is KKR's OSTTRA financing, likely"
+263,match,"Exact name Bullhorn Inc, professional services"
+266,no_match,Bullcave is a different company
+264,match,"Exact name Bullhorn Inc, professional services"
+261,match,Exact name Bullhorn Inc
+262,no_match,"Bulldog Purchaser is Bulldog business, not Bullhorn"
+260,match,Exact name Bullhorn Inc
+259,match,Exact name Bullhorn Inc
+265,no_match,Matterhorn is a different software company
+257,match,Exact name Bullhorn Inc
+258,match,Exact name Bullhorn Inc
+269,no_match,Plastics Management is healthcare
+270,no_match,American Nuts is food
+279,no_match,Version1 is IT services
+271,no_match,American Pet Resort is pet services
+272,no_match,Metric Inc has no PlayMetrics link
+268,no_match,Paymentsense is payments
+276,no_match,Prometric is testing
+280,no_match,Scale Computing is systems software
+273,no_match,Precision Point Metrics has no PlayMetrics link
+281,no_match,Perforce is developer software
+278,no_match,Piano Software is media software
+275,no_match,Play Holdings is leisure products
+267,no_match,PlayPower is playground equipment
+277,no_match,Piano Software is media software
+274,no_match,Playmonster is toys
+287,no_match,Dodge Data & Analytics is construction data
+293,no_match,Asure is HR software
+288,no_match,Quest Analytics is healthcare technology
+290,no_match,Inmar is promotions technology
+291,no_match,Analytic Partners is marketing analytics
+283,no_match,Avenu is government IT services
+284,no_match,Azurite is a different analytics company
+286,no_match,Clearwater Analytics is investment accounting software
+282,match,"Procure Acquireco, filing names Procure Analytics"
+292,no_match,Piano Software is media software
+285,no_match,CData is connectivity software
+289,no_match,Haus Analytics is marketing venture
+301,no_match,RWA Wealth Partners is wealth management
+294,match,"Likewize Corp, same name"
+296,match,"Likewize Corp, same name"
+298,match,Exact name Likewize Corporation
+299,no_match,Livewire is a different company
+297,match,"Likewize Corp, same name"
+300,no_match,Revalize is software
+295,match,"Likewize Corp, same name"
+312,no_match,Passport Labs is parking payments
+303,match,"Ascensus Group Holdings, financial services, same company"
+304,match,"Olympic Buyer, filing names Ascensus"
+306,match,"Ascensus Group Holdings, financial services, same company"
+310,no_match,Ascent Midco is a different business
+305,match,Ascensus Holdings is the retirement platform
+302,no_match,Ascensus Specialties is chemicals
+307,match,Ascensus Holdings is the retirement platform
+309,no_match,Ascend Buyer is PPC Flexible Packaging
+311,no_match,Dedalus is healthcare software
+308,no_match,Ascend Learning is healthcare education
+321,no_match,Axiom Space is aerospace
+324,no_match,OfferUp is a marketplace
+314,no_match,NeuroPace is medical devices
+319,no_match,Accupac is personal care
+323,no_match,DOCS is healthcare
+317,no_match,Pace Health is healthcare
+322,no_match,Impulse Space is aerospace
+313,match,"Douglas Holdings, filing names Docupace"
+315,no_match,cPacket is networking
+318,no_match,Pace Industries is die casting
+320,no_match,Space Parent is pharmaceuticals
+325,no_match,Treace is medical devices
+316,no_match,Induspac is packaging
+336,no_match,Phoenix Finance is application software
+330,no_match,FoodPharma is food
+328,no_match,Audax Private Credit is a BDC subsidiary
+333,no_match,RTIC is leisure products
+338,no_match,TS Imagine is trading software
+329,no_match,Centria is healthcare
+327,no_match,AVG is healthcare
+326,no_match,AVG is healthcare
+334,no_match,Passport Labs is parking payments
+331,no_match,RTIC is leisure products
+332,no_match,Median is German rehab clinics
+335,no_match,Triad is manufactured home finance
+337,no_match,PayEntry is payroll
+347,no_match,SafetyCo HEF is a different safety business
+349,no_match,Action Environmental is waste services
+339,no_match,ASC Ortho is healthcare
+350,no_match,Beyond Risk is insurance
+346,no_match,MBH Management has no link
+342,no_match,Align ENTA is ENT healthcare
+340,no_match,Abacus Dermatology is healthcare
+345,no_match,Fortis Fire is fire protection
+343,no_match,Pye-Barker is fire protection
+348,no_match,Clean Water Environmental is a different business
+341,no_match,Advanced Medical Management is healthcare
+344,no_match,Marmic Fire is fire protection
+359,no_match,GuideHealth is health technology
+360,no_match,Petco is pet retail
+358,no_match,Prime IV is IV hydration
+357,no_match,Elements Finco is a different company
+354,no_match,Supplant is unrelated
+362,no_match,Petco is pet retail
+351,no_match,Double S is industrial contractors
+356,no_match,Double E Company has no supplements link
+352,no_match,Hanley Wood is construction media
+355,no_match,Barnes & Noble is book retail
+361,no_match,Predictive Fitness is fitness technology
+353,no_match,Poly-Wood is outdoor furniture
+371,no_match,First Brands is auto parts
+370,no_match,Intelligent Brands is agriculture technology
+366,match,"Exact name Smile Brands Inc, dental support"
+364,match,"Exact name Smile Brands Inc, dental support"
+365,match,"Smile Brands Group, parent of the same dental business"
+369,match,Filing names Smile Brands Inc
+367,match,Exact name Smile Brands Inc
+363,match,Filing names Smile Brands Inc
+368,match,"Smile Brands Group, parent of the same dental business"
+372,no_match,Community Brands is software
+376,no_match,Municipal Emergency Services is fire equipment
+378,match,Meta Buyer is the Metagenics borrower per HIG release
+381,no_match,Prime IV is IV hydration
+385,no_match,Petco is pet retail
+377,no_match,Municipal Emergency Services is fire equipment
+373,no_match,Thermogenics is a different business
+382,no_match,GuideHealth is health technology
+384,no_match,Petco is pet retail
+375,no_match,Municipal Emergency Services is fire equipment
+374,no_match,Amgen is biotech
+380,no_match,Metasource is business process services
+383,no_match,Predictive Fitness is fitness technology
+379,match,Meta Buyer is the Metagenics borrower per HIG release
+391,no_match,"Essential Services Holding appears to be TurnPoint, OMERS owned"
+390,no_match,SCP ENT is healthcare
+387,no_match,American Pet Resort is pet services
+389,no_match,Riddell is sports equipment
+386,no_match,American Nuts is food
+392,no_match,"Essential Services Holding appears to be TurnPoint, OMERS owned"
+388,no_match,Afore is insurance services
+395,no_match,Quality Liaison Services is unrelated
+393,no_match,"Essential Services Holdings appears to be TurnPoint, OMERS owned"
+397,no_match,OEH is machinery
+396,no_match,North American Rail Solutions is rail
+394,no_match,ARS is a different home services company
+398,no_match,American Community Homes is unrelated
+410,no_match,Amercare Royal is commercial supplies
+399,no_match,GoodLife Fitness is gyms
+406,no_match,Simply Good Foods is snacks
+411,no_match,Baker Manufacturing is unrelated
+401,no_match,Goodnight Water is midstream
+409,no_match,Tru Fragrance is a separate beauty business
+407,no_match,SCP Baked Goods is food
+400,no_match,GoodLife Fitness is gyms
+412,no_match,Prose is a separate hair care brand
+404,no_match,Cloud for Good is IT consulting
+402,no_match,Goodwin Biotechnology is contract biotech
+403,no_match,Good Feet is arch supports retail
+408,no_match,Patti's Good Life is unrelated
+405,no_match,Canada Goose is apparel
+413,no_match,M-Personal Protection is a German business
+415,no_match,Acuren is inspection services
+416,no_match,Acuren is inspection services
+417,no_match,Accurate Background is screening
+427,no_match,AP Plastics is a different plastics business
+419,no_match,Accuride is wheels
+424,no_match,Advanced Medical Management is healthcare
+418,no_match,Accurate Finance Sub is capital goods
+425,no_match,"Americo Chemical is chemicals, not Pacur"
+426,no_match,ACP Packaging is a different packaging business
+420,no_match,ePac is flexible packaging
+414,match,"PG Aggregator, filing names Pacur"
+421,no_match,"Valcour is packaging, not Pacur"
+423,no_match,SCP Medical Products is a Shore company
+422,no_match,PAC DAC is unrelated
+439,no_match,Learning Experience is childcare
+429,no_match,Cambium is K-12 education
+431,no_match,Excelligence is early education supplies
+440,no_match,Knowledge Universe is childcare
+437,no_match,Ascend Learning is healthcare education
+428,no_match,Accelerate Learning is K-12 curriculum
+432,no_match,Excelligence is early education supplies
+430,no_match,Cengage is publishing
+433,no_match,Med Learning is medical education
+434,no_match,Learning Care Group is childcare
+436,no_match,Imagine Learning is K-12 education
+438,no_match,Vista Higher Learning is language publishing
+435,no_match,Learning Care Group is childcare
+443,no_match,Apex Service Partners is HVAC and plumbing
+454,no_match,New Look Vision is Canadian optical retail
+449,no_match,Basin Innovation is different
+450,no_match,Clarity Innovations is different
+448,no_match,Innovation Ventures is 5 Hour Energy
+446,no_match,American Vision Partners is a separate eye care group
+452,no_match,Shoulder Innovations is medical devices
+445,no_match,Megawatt Acquisition is different
+447,no_match,Innovate Corp is media and telecom
+442,no_match,"Waupaca Foundry holding, unrelated"
+453,no_match,Vision Solutions is IT services
+451,no_match,AHP Health Partners is hospitals
+441,no_match,36th Street Capital is equipment finance
+444,no_match,Ascend Plastic Surgery is healthcare
+456,match,Vessco Midco Holdings is the holding vehicle
+461,match,Vessco Midco Holdings is the holding vehicle
+465,match,Vessco Midco Holdings is the holding vehicle
+466,no_match,Advantage Distribution is a different distributor
+464,match,Vessco Midco Holdings is the holding vehicle
+457,match,Vessco Midco Holdings is the holding vehicle
+468,no_match,Value Added Distributors is a different company
+458,match,"Vessco Water, same company"
+459,match,Vessco Midco Holdings is the holding vehicle
+467,match,Vessco Midco Holdings is the holding vehicle
+460,match,Vessco Midco Holdings is the holding vehicle
+463,match,Vessco Midco Holdings is the holding vehicle
+462,match,"Vessco, same company"
+455,match,Vessco Midco Holdings is the holding vehicle
+475,no_match,WestJet Loyalty is an airline program
+469,match,Exact name Transportation Insight LLC
+472,match,Exact name Transportation Insight LLC
+478,no_match,Echelon Transportation is distributors
+477,no_match,Zuum is a separate venture borrower
+479,match,Text shows Transportation Insight LLC
+482,no_match,Horizon Freight is marine transport
+470,match,"Transportation Insight Parent Company, holding entity"
+485,no_match,ICAT Logistics is a separate logistics company
+473,no_match,New Insight Holdings is Research Now
+471,match,"TI Intermediate Holdings, filing names Transportation Insight"
+481,no_match,A&R Logistics is bulk trucking
+476,match,"Insight Borrower, ground transportation, terms match Transportation Insight"
+483,no_match,Transervice is fleet services
+484,no_match,RailTrac is rail
+474,no_match,Insight Hideaway is business services
+480,no_match,Auto Transport is a different business
+487,no_match,Asure is HR software
+488,no_match,BMC is enterprise software
+491,no_match,AI Software is Capacity
+490,no_match,Banyan Software is a software aggregator
+492,no_match,Rocket Software is mainframe software
+486,no_match,CData is connectivity software
+494,no_match,Cloud Software Group is Citrix and TIBCO
+493,no_match,Roofstock is real estate
+489,no_match,Banyan Software is a software aggregator
+495,no_match,Cloud Software Group is Citrix and TIBCO
+496,no_match,Cloud Software Group is Citrix and TIBCO
+497,no_match,Cloud Software Group is Citrix and TIBCO
+498,no_match,Rocket Bidco is Recochem chemicals
+505,no_match,Biogen is biotech
+499,unsure,Rocket Buyer name fits NewRocket; no source links them
+506,no_match,Caprock is wealth management
+501,no_match,Rocket Group is hospitality
+502,no_match,Rocket Software is mainframe software
+503,no_match,NextGen Healthcare is health software
+500,no_match,DOXA co-invest is insurance
+507,no_match,WorkGenius is a different business
+504,no_match,Amgen is biotech
+509,no_match,SW Ingredients has no Vivify link found
+514,no_match,Viavi is network test equipment
+512,no_match,Penta Fine Ingredients is a separate chemicals company
+515,no_match,BVI Medical is ophthalmic devices
+513,no_match,Enviva is wood pellets
+516,no_match,Vantage Specialty Chemicals is a separate company
+510,unsure,Specialty Ingredients LLC echoes Vivify Specialty Ingredients; unconfirmed
+508,no_match,Penta Fine Ingredients is a separate chemicals company
+511,no_match,J&K Ingredients is food ingredients
+524,no_match,B&G Foods is packaged foods
+526,no_match,Great Kitchens is prepared food
+525,no_match,Foodology is a different business
+518,no_match,Integrative Nutrition is health coaching education
+522,unsure,SDC Holdco name fits SDC Nutrition; no source links them
+523,no_match,SDG Corporation is identity consulting
+521,no_match,Integrative Nutrition is health coaching education
+517,no_match,Actus Nutrition is a different dairy ingredient business
+520,no_match,Nutrition 101 is 101 Inc
+519,unsure,LCM SDC name overlaps SDC Nutrition; no source links them
+536,no_match,NextGen Healthcare is health software
+537,no_match,Upward Health is home care
+529,no_match,Better Life Health is Thirty Madison
+527,no_match,Akadeum is life science tools
+534,no_match,AmeriLife is insurance distribution
+532,no_match,Patti's Good Life is unrelated
+539,no_match,Cala Health is medical devices
+528,no_match,Real Life Intermediate is different
+533,no_match,Caris Life Sciences is diagnostics
+530,unsure,CG Group Holdings initials fit CG Life; no source links them
+535,no_match,CHG Healthcare is staffing
+531,unsure,CG Parent Intermediate initials fit CG Life; no source links them
+538,no_match,GHR Healthcare is staffing
+550,no_match,Prime Healthcare is hospitals
+548,no_match,Invictus Buyer is a different healthcare business
+552,no_match,Cala Health is medical devices
+543,no_match,Pro Mach is packaging machinery
+542,no_match,Manna Pro is pet products
+549,no_match,Spectrum Vision is eye care
+546,no_match,"Husk AcquireCo holding, unrelated"
+547,no_match,Spectrum Solutions is healthcare products
+553,no_match,Paragon Healthcare is infusion
+541,no_match,Pro Mach is packaging machinery
+551,no_match,Meditrina is medical devices
+544,no_match,Pro-Vigil is security
+540,no_match,Knowledge Pro is professional services
+545,no_match,Spectrio is media services
+554,no_match,A&J Holdco is different
+556,no_match,ACE Solutions is oil and gas
+558,unsure,SCP Beverage Buyer fits Shore beverage platform; link unconfirmed
+555,no_match,AA&D Midco is different
+562,no_match,Spindrift is a beverage brand
+565,no_match,DrinkPak is beverage co-packing
+563,no_match,BC CS is Cuisine Solutions
+557,no_match,ASC Engineered Solutions is pipe fittings
+559,no_match,48Forty is pallets
+564,no_match,Refresh Buyer is soft drinks
+560,no_match,Last Dance is telecom
+566,no_match,B&G Foods is packaged foods
+561,no_match,Southern Crown Beverage is a distributor
+570,no_match,Halcyon is a CLO
+579,no_match,Secretariat is expert witness consulting
+578,no_match,EP Wealth is wealth management
+575,no_match,UHY is accounting
+573,no_match,Lido Advisors is wealth management
+567,no_match,Grant Thornton is accounting
+571,no_match,Halcyon is a CLO
+569,no_match,Grant Thornton is accounting
+574,no_match,NDH Advisors is consulting
+568,no_match,Citrin Cooperman is accounting
+577,no_match,Impact Advisors is a separate healthcare IT consultancy
+580,no_match,Mercer Advisors is wealth management
+572,no_match,Peer Advisors is financial services
+576,no_match,Cyber Advisors is IT services
+589,no_match,"Align ENT is Zenyth-backed Northeast group, not SENTA"
+586,no_match,Penta Group is professional services
+587,no_match,Magenta Buyer is McAfee
+585,no_match,Penta Group is professional services
+592,no_match,NextGen Healthcare is health software
+593,no_match,Prime Healthcare is hospitals
+584,no_match,Sentinel Technologies is IT services
+591,no_match,Gifthealth is pharmacy technology
+594,no_match,CHG Healthcare is staffing
+582,no_match,Entain is gambling
+590,no_match,Upward Health is home care
+583,no_match,Sentinel Buyer is SimpliSafe
+588,no_match,Magenta Security is McAfee related
+581,no_match,Entact is environmental services
+596,no_match,Conexiom is supply chain software
+600,no_match,EdgeConneX is data centers
+599,no_match,Connect Holding is telecom
+595,no_match,"Connexin Software is pediatric software, different"
+602,no_match,NextGen Healthcare is health software
+597,no_match,Connect America is emergency response devices
+601,no_match,Vital Connect is medical devices
+598,no_match,Connect Holdings is telecom
+604,no_match,Confluent Medical is medical devices
+603,no_match,Concentra is occupational health
+605,no_match,Exemplar is UK care homes
+606,match,Premier Produce One is Shore's Produce One platform
+613,no_match,LA Specialty Produce is Vesta Foodservice
+617,no_match,Planet A is German food
+612,no_match,I Love Produce is a different produce company
+615,no_match,DrinkPak is beverage co-packing
+614,no_match,Worldwide Produce is a different distributor
+610,no_match,One Call is medical services
+608,no_match,LA Specialty Produce is Vesta Foodservice
+607,match,Premier Produce One is Shore's Produce One platform
+616,no_match,Athletic Brewing is beer
+611,no_match,KDC One is beauty contract manufacturing
+618,no_match,Great Kitchens is prepared food
+609,no_match,BR PJK is a different produce company
+629,no_match,Stepping Stones is healthcare
+626,no_match,CRC is wholesale insurance brokerage
+631,no_match,Upward Health is home care
+620,no_match,Baldwin is a separate insurance brokerage
+623,no_match,Asurion is device insurance
+632,no_match,Tenet is hospitals
+633,no_match,GHR Healthcare is staffing
+624,no_match,Kin is home insurance
+619,no_match,American Coastal is P&C insurance
+630,no_match,Bankers Healthcare is lending
+628,no_match,Truist Insurance is a separate brokerage
+627,no_match,Aspen is reinsurance
+621,no_match,Bamboo is P&C insurance
+625,no_match,Kin is home insurance
+622,no_match,AmWINS is a wholesale broker
+643,no_match,LA Specialty Produce is food
+639,no_match,Ryan Specialty is insurance
+644,no_match,SpecialtyCare is surgical services
+645,no_match,Reliant Rehab Hospital is a different provider
+637,no_match,BiOrigin is paper products
+646,no_match,NextGen Healthcare is health software
+642,no_match,Ryan Specialty is insurance
+638,no_match,ITC Infusion is a different infusion investment
+636,no_match,ITC Infusion is a different infusion investment
+635,no_match,Vantage is chemicals
+640,no_match,Iris Specialty is insurance
+634,no_match,Advanced Infusion Solutions is a different infusion provider
+641,no_match,School Specialty is education supplies
+651,no_match,Conventional Lending TCP is a lending vehicle
+654,no_match,Ideal Tridon is clamps
+653,no_match,Continental Group is auto components
+658,no_match,RPX is patent risk services
+649,no_match,Conventus is orthopaedic devices
+652,no_match,Component Hardware is distribution
+656,no_match,CoreX is a different business
+648,no_match,Concentra is occupational health
+655,no_match,K&N is auto filters
+657,no_match,Li-Cor is scientific instruments
+647,no_match,Xponential Fitness is boutique gyms
+660,no_match,Price Fx is pricing software
+650,no_match,Propagate Content is media
+659,no_match,Tenneco is auto parts
+674,no_match,Upward Health is home care
+665,no_match,36th Street Capital is equipment finance
+661,match,Exact legal name of Community Care Partners
+666,no_match,Affordable Care is dental
+668,no_match,Community Brands is software
+667,no_match,Community Based Care is a different healthcare group
+673,no_match,Option Care is home infusion
+669,no_match,360 Partners is commercial services
+671,no_match,RegionalCare is hospitals
+663,no_match,AML Rightsource is compliance services
+670,no_match,Construction Partners is road construction
+664,no_match,Penn Quarter Partners is advertising
+672,no_match,AHP Health Partners is hospitals
+662,match,Exact legal name of Community Care Partners
+682,no_match,Southern Veterinary is veterinary
+678,no_match,"Waupaca Foundry holding, unrelated"
+683,no_match,Southern Sports Medicine is orthopedics
+680,no_match,Seacoast Service Partners is home services
+676,match,Southern Orthodontic Partners Management is the management company
+675,match,Southern Orthodontic Partners Management is the management company
+685,no_match,Endodontic Practice Partners is a different specialty
+679,no_match,Megawatt Acquisition is different
+684,no_match,LightForce is orthodontic devices
+677,no_match,36th Street Capital is equipment finance
+681,no_match,Canadian Orthodontic Partners is a separate group
+689,no_match,Penn Quarter Partners is advertising
+691,no_match,360 Partners is commercial services
+687,no_match,ARC Financial is a different business
+697,no_match,Apex Service Partners is HVAC and plumbing
+692,no_match,Construction Partners is road construction
+694,no_match,Bart & Associates is government IT
+696,no_match,Homecare Partners is healthcare
+695,no_match,CoreX is a different business
+693,no_match,Core Capital Partners is a fund
+690,no_match,36th Street Capital is equipment finance
+688,no_match,Accordion Partners is consulting
+686,no_match,AML Rightsource is compliance services
+700,match,"Motus Group, Thoma Bravo's vehicle reimbursement company"
+705,no_match,Lotus Topco is Legacy.com
+706,no_match,Lotus Topco is Legacy.com
+709,no_match,Moxe Health is health data
+702,no_match,Lotus HPI is healthcare technology
+708,no_match,Apttus is quote software
+707,no_match,Moximed is medical devices
+698,match,"Motus Group, Thoma Bravo's vehicle reimbursement company"
+701,match,"Motus LLC, exact legal name"
+703,no_match,Bleriot is aviation
+699,match,"Motus LLC, exact legal name"
+704,no_match,Camelot is Clarivate
+715,no_match,BW Fusion is commercial services
+719,no_match,Fineline is consumer goods labels
+712,match,Exact name Bottomline Technologies
+710,match,Exact name Bottomline Technologies
+716,match,Exact name Bottomline Technologies
+717,no_match,Komline-Sanderson is industrial equipment
+713,match,Exact name Bottomline Technologies
+711,match,Exact name Bottomline Technologies
+718,no_match,Fineline is consumer goods labels
+714,no_match,BW Fusion is commercial services
+721,no_match,Alpine Intel has no Intel 471 link
+723,no_match,Valor is hardware
+722,no_match,PSP Intermediate is different
+726,no_match,IntelePeer is communications
+730,no_match,1touch.io is a separate security company
+729,no_match,ThreatER is a separate security company
+724,no_match,VCI Intermediate is financial services
+733,no_match,3SI is commercial security
+732,no_match,Cynet is a separate security company
+725,no_match,Neuintel is consumer products
+727,no_match,Cresta is AI software
+720,match,Exact name Intel 471 Inc
+728,no_match,Global Tel Link is telecom
+731,no_match,International Cybernetics is rail engineering
+735,match,"PROS Holdings, the pricing software company"
+745,no_match,Railpros is rail services
+740,no_match,Mustang Prospects is Senske lawn care
+746,no_match,PostProcess is 3D printing
+748,no_match,Travelpro is luggage
+736,match,"PROS Parent, airline pricing software take-private vehicle, December 2025"
+742,match,"PROS Holdings, the pricing software company"
+741,no_match,Mustang Prospects is Senske lawn care
+739,no_match,Climate Pros is HVAC services
+743,match,"PROS Parent, airline pricing software take-private vehicle, December 2025"
+737,no_match,Wheel Pros is auto parts
+734,no_match,Climate Pros is HVAC services
+738,no_match,Punctual Pros is home services
+744,no_match,Wheel Pros is auto parts
+747,no_match,Pressure Pro is different
+757,no_match,1touch.io is a separate security company
+751,no_match,Beam Technologies is dental benefits
+755,no_match,Lightbeam is data privacy
+756,no_match,ThreatER is a separate security company
+753,no_match,Exemplis is office furniture
+749,no_match,EAB is education consulting
+759,no_match,Semsee is different
+752,no_match,Beam Therapeutics is biotech
+760,no_match,Envestnet is wealth technology
+750,no_match,Abea is consumer services
+758,no_match,Cynet is a separate security company
+754,no_match,Highbeam is different
+761,match,"Jeppesen Holdings, the Boeing carve-out to Thoma Bravo"
+763,match,"Jeppesen Holdings, the Boeing carve-out to Thoma Bravo"
+762,match,"Jeppesen Holdings, the Boeing carve-out to Thoma Bravo"
+764,match,"Jeppesen Holdings, the Boeing carve-out to Thoma Bravo"
+765,match,"Jeppesen Holdings, the Boeing carve-out to Thoma Bravo"
+769,no_match,Tarana Wireless is wireless equipment
+773,no_match,ThreatER is a separate security company
+767,match,Exact name ConnectWise LLC
+775,no_match,Together Computer is AI infrastructure
+772,no_match,Connect Holding is telecom
+771,no_match,Connect Holdings is telecom
+766,match,Exact name ConnectWise LLC
+770,no_match,Vertical Communications is telecom
+774,no_match,1touch.io is a separate security company
+777,no_match,Cynet is a separate security company
+768,match,"Exact name ConnectWise LLC, software"
+776,no_match,International Cybernetics is rail engineering
+785,no_match,Magnera is nonwovens
+784,no_match,Magnetite is a CLO
+783,no_match,Magnetite is a CLO
+782,no_match,Unanet is project software
+787,no_match,MRI Software is real estate software
+781,no_match,ecMarket is Conexiom supply chain software
+780,no_match,Mattco Forge is forgings
+778,match,"Exact name Magnet Forensics LLC, formerly Grayshift"
+779,match,"Exact name Magnet Forensics LLC, formerly Grayshift"
+786,no_match,Magneto is electronic components
+790,match,"Cority Software Inc, exact name"
+796,no_match,Cerity Partners is wealth management
+791,no_match,Priority Holdings is payments
+794,no_match,Priority Waste is waste
+798,no_match,ThreatER is a separate security company
+792,no_match,Priority OnDemand is healthcare equipment
+797,no_match,Applied Systems is insurance software
+793,no_match,Alacrity is insurance services
+788,match,"Cority Software Inc, exact name"
+795,no_match,Rapid Fire Safety is fire safety
+789,match,"Cority Parent, co-borrower with Cority Software"
+806,match,Exact name Apryse Software Corp
+799,match,Exact name Apryse Software Corp
+807,match,Exact name Apryse Software Corp
+804,no_match,Aryeh Bidco is Dentalcorp
+803,no_match,Arsenal AIC is Arconic
+801,match,Exact name Apryse Software Corp
+800,match,Exact name Apryse Software Corp
+802,match,Exact name Apryse Software Corp
+805,match,Exact name Apryse Software Corp
+816,no_match,BlueCat is networking
+817,no_match,Cogentrix is power
+808,match,Exact name BlueMatrix Holdings
+813,no_match,BlueCart is software
+818,no_match,Applied Systems is insurance software
+809,match,Exact name BlueMatrix Holdings
+814,no_match,BlueMountain is a CLO
+811,no_match,Matrix Buyer has no BlueMatrix link
+815,no_match,INRIX is traffic data
+810,no_match,3BC Matrix is different
+812,no_match,Matrix Renewables is energy
+823,no_match,Power Stop is brake parts
+826,no_match,Power Stop is brake parts
+820,match,"Project Boost Purchaser, filing names JD Power"
+831,no_match,JWP Holdco is ad technology
+822,no_match,Arcadia Power is energy
+825,no_match,Sure Power is different
+819,match,"Project Boost Purchaser, filing names JD Power"
+821,no_match,Pelican Power is power generation
+829,no_match,JDX Studio is a different company
+828,no_match,LJ Power is professional services
+824,no_match,Belt Power is distribution
+827,no_match,Power Acquisition is commercial services
+830,no_match,JPW Industries is machinery
+837,match,Exact name Majesco LLC
+838,no_match,Esco Technologies is industrial technology
+833,match,"Exact name Majesco Inc, insurance software"
+842,no_match,MAJCO is Big Brand Tire
+839,no_match,MajorDrive is auto retail
+841,match,"Exact name Majesco Inc, insurance services"
+840,match,Exact name Majesco Inc
+835,match,Exact name Majesco LLC
+832,match,Exact name Majesco LLC
+836,match,"Exact name Majesco Inc, insurance software"
+834,match,Exact name Majesco LLC
+850,no_match,Moda Operandi is fashion retail
+844,match,"Goldeneye Parent, filing names Suvoda"
+851,no_match,Relativity ODA is legal software
+855,no_match,QAD is manufacturing ERP
+854,no_match,Traction Apps is different
+846,no_match,Sundance Group is NetDocuments
+845,no_match,Sundance Direct is specialty retail
+847,no_match,Sundance Holdings is specialty retail
+849,no_match,Suveto is veterinary
+852,no_match,Predactiv is ad data
+843,match,"Goldeneye Parent, filing names Suvoda"
+848,no_match,Sunvair is aerospace
+853,no_match,TripAdvisor is travel
+859,no_match,Arcserve is data protection
+863,no_match,Marcone is appliance parts
+857,no_match,Acosta is sales and marketing
+866,no_match,ARC Financial is a different business
+867,no_match,ARC Health is healthcare
+868,no_match,Mainspring is energy technology
+865,no_match,ARC Financial is a different business
+861,no_match,TRC Companies is engineering
+860,no_match,Arcserve is data protection
+856,no_match,Acosta is sales and marketing
+869,no_match,Production Resource Group is entertainment equipment
+864,no_match,Arcoro is HR software for construction
+862,no_match,Watco is railroads
+858,no_match,Arcoro is HR software for construction
+881,no_match,Nalu is medical devices
+882,no_match,Elutia is healthcare
+870,match,"Ellucian Holdings, formerly Sophia LP"
+871,match,"Sophia LP, filing names Ellucian"
+877,no_match,Lucidworks is search software
+874,no_match,Dental Care Alliance is dental
+873,no_match,Accident Care is healthcare
+880,no_match,Lucidworks is search software
+883,no_match,Elemica is supply chain network
+876,no_match,Alliant is insurance brokerage
+878,no_match,Ascent Resources is natural gas
+879,no_match,Physician Partners is healthcare
+872,match,"Ellucian Holdings, formerly Sophia LP"
+875,no_match,Dental Care Alliance is dental
+898,no_match,GHR Healthcare is staffing
+886,no_match,NexPoint is a REIT
+890,no_match,Guided Practice Solutions is dental services
+896,no_match,Cala Health is medical devices
+897,no_match,Azara is healthcare technology
+884,no_match,ARS is home services
+889,no_match,"Dentive is a dental group, not Dentira software"
+885,no_match,Cascade Residential is home services
+895,no_match,Prime Healthcare is hospitals
+893,no_match,"Dentive is a dental group, not Dentira software"
+891,no_match,"Dentive is a dental group, not Dentira software"
+888,no_match,841 Prudential MOB is real estate
+894,no_match,Upward Health is home care
+892,no_match,Dentalcorp is dental
+887,no_match,Progress Residential is rental homes
+906,no_match,3SI is commercial security
+902,no_match,Mission Critical Group is electrical
+899,match,Exact name Critical Start Inc
+904,no_match,Salute Mission Critical is data centers
+901,no_match,Mission Critical Group is electrical
+903,no_match,Salute Mission Critical is data centers
+905,no_match,ThreatER is a separate security company
+900,match,Exact name Critical Start Inc
+909,no_match,Complete Case is online divorce
+914,no_match,Diligent is governance software
+911,no_match,CompleteCase is online divorce
+913,no_match,Animal Supply is pet distribution
+907,no_match,"Comply365 is aviation compliance, separate from New York Comply"
+915,no_match,Sovos is tax compliance
+910,no_match,Complete Paper is paper
+916,no_match,Proceed Legal is legal services
+908,no_match,Complete Case is online divorce
+912,no_match,Simply Good Foods is snacks
+917,no_match,Maverick Bidco is a separate GRC company
+925,no_match,Cloud Software Group is Citrix and TIBCO
+923,no_match,CareCloud is healthcare IT
+922,no_match,InvoCare is Australian funeral services
+919,no_match,JumpCloud is identity software
+921,no_match,VikingCloud is security services
+918,no_match,Ketch Kloud is different
+928,no_match,FlavorCloud is shipping software
+927,no_match,BetterCloud is SaaS management
+920,no_match,Mountain View is a CLO
+924,no_match,Voice Comm is different
+926,no_match,Cloud Software Group is Citrix and TIBCO
+930,no_match,CData is connectivity software
+933,no_match,Banyan Software is a software aggregator
+937,no_match,MRI Software is real estate software
+935,no_match,Cloud Software Group is Citrix and TIBCO
+934,no_match,AI Software is Capacity
+936,no_match,PCS Software is transport software
+941,no_match,US Chemical Technologies is different
+939,no_match,eResearchTechnology is clinical trial data
+931,no_match,Asure is HR software
+938,no_match,Alltech is animal nutrition
+929,no_match,AQ Software has no Amtech link
+932,no_match,BMC is enterprise software
+940,no_match,Tex-Tech is aerospace materials
+953,no_match,Transervice is fleet services
+955,no_match,GoFor is delivery
+946,no_match,Side is a real estate venture
+944,no_match,AS1 Sports is a UK sports business
+949,no_match,Bayside is Pro-PT physical therapy
+954,no_match,A&R Logistics is bulk trucking
+951,no_match,BusBud is bus travel
+950,no_match,Sports Invest is leisure
+943,no_match,AS1 Sports is a UK sports business
+945,no_match,Beacon Behavioral is healthcare
+942,no_match,Sportime is sports clubs
+948,no_match,Bayside is Pro-PT physical therapy
+947,no_match,Bayside is Pro-PT physical therapy
+952,no_match,Metropolis is parking technology
+956,match,Exact name Model N Inc
+964,no_match,Upward Health is home care
+963,no_match,NextGen Healthcare is health software
+960,no_match,K&N is auto filters
+957,match,Exact name Model N Inc
+958,match,Exact name Model N Inc
+961,no_match,Form Remodel is home services
+962,no_match,Mode Holdings is different
+965,no_match,Cala Health is medical devices
+966,no_match,Feature Healthcare is home care
+967,no_match,Joerns is healthcare equipment
+959,no_match,A.C.N. 664 is Aspen Pharmacare
+974,no_match,AVAD is electronics distribution
+972,match,Exact name Avalara Inc
+969,match,Exact name Avalara Inc
+970,match,Exact name Avalara Inc
+973,match,Exact name Avalara Inc
+971,match,Exact name Avalara Inc
+968,match,Exact name Avalara Inc
+975,match,Applause App Quality is the Applause testing company
+987,no_match,Applied Digital is data centers
+980,no_match,Apple Bidco is a different company
+978,no_match,Apple Roofing is roofing
+977,no_match,AP Plastics is plastics
+979,no_match,Apple AU is Aspen Pharmacare
+985,no_match,Perforce is developer software
+983,no_match,GI Apple Midco is business services
+986,no_match,Predactiv is ad data
+982,no_match,Apple Bidco is a different company
+976,match,Applause App Quality is the Applause testing company
+981,no_match,Apple Bidco is consumer services
+984,no_match,Piano Software is media software
+988,match,"Alert Media Inc, same company"
+998,no_match,Proceed Legal is legal services
+995,no_match,Alera is insurance brokerage
+992,no_match,Intermedia is cloud communications
+997,no_match,Unison Risk is insurance
+989,match,"Alert Media Inc, same company"
+991,no_match,Intermedia is cloud communications
+999,no_match,Beyond Risk is insurance
+993,no_match,Alera is insurance brokerage
+994,no_match,Alert SRC is commercial services
+990,no_match,WarnerMedia is entertainment
+996,no_match,Diligent is governance software
+1011,no_match,Acquia is web software
+1008,no_match,Acuren is inspection services
+1001,match,Exact name Acumatica Holdings Inc
+1009,no_match,Acu-Serve is healthcare
+1012,no_match,Acosta is sales and marketing
+1002,no_match,Amneal is pharmaceuticals
+1003,no_match,Apellis is pharmaceuticals
+1006,no_match,Vatica is health technology
+1013,no_match,Acosta is sales and marketing
+1010,no_match,ACS Industries is different
+1004,no_match,Arrowhead is pharmaceuticals
+1007,no_match,Abacum is finance software
+1005,no_match,Azurity is pharmaceuticals
+1000,match,Exact name Acumatica Holdings Inc
+1015,no_match,Avid Bioservices is pharmaceuticals
+1018,no_match,Pace Industries is metals
+1024,no_match,Talkspace is teletherapy
+1026,no_match,EH Real Estate is real estate services
+1023,no_match,Apollo Commercial is a mortgage REIT
+1016,no_match,Avid Bioservices is pharmaceuticals
+1014,no_match,USR Parent is office products
+1020,no_match,Pathstone is wealth management
+1019,no_match,Empire Office is furniture dealer
+1025,no_match,NexPoint is a REIT
+1022,no_match,Axiom Space is aerospace
+1027,no_match,Greystar is apartments
+1017,no_match,Pace Health is healthcare
+1021,no_match,Space Parent is pharmaceuticals

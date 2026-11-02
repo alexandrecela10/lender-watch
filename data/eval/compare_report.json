@@ -1,0 +1,160 @@
+{
+ "answer_key": {
+  "companies": 84,
+  "pairs": 1028,
+  "match": 173,
+  "no_match": 835,
+  "unsure": 20
+ },
+ "results": {
+  "a_name_hit_baseline": {
+   "pair_precision": 0.926,
+   "pair_precision_95ci": [
+    0.877,
+    0.956
+   ],
+   "pair_recall": 0.936,
+   "loan_precision": 0.944,
+   "loan_recall": 0.9,
+   "tp": 162,
+   "fp": 13,
+   "fn": 11,
+   "companies_found": "44 of 48",
+   "companies_with_a_wrong_pair": 3
+  },
+  "b_scoring_model": {
+   "pair_precision": 0.918,
+   "pair_precision_95ci": [
+    0.865,
+    0.952
+   ],
+   "pair_recall": 0.844,
+   "loan_precision": 0.942,
+   "loan_recall": 0.865,
+   "tp": 146,
+   "fp": 13,
+   "fn": 27,
+   "companies_found": "44 of 48",
+   "companies_with_a_wrong_pair": 3
+  },
+  "c_judge_on_name_hits": {
+   "pair_precision": 1.0,
+   "pair_precision_95ci": [
+    0.976,
+    1.0
+   ],
+   "pair_recall": 0.913,
+   "loan_precision": 1.0,
+   "loan_recall": 0.876,
+   "tp": 158,
+   "fp": 0,
+   "fn": 15,
+   "companies_found": "44 of 48",
+   "companies_with_a_wrong_pair": 0
+  },
+  "c_judge_on_wider_name_hits": {
+   "pair_precision": 1.0,
+   "pair_precision_95ci": [
+    0.977,
+    1.0
+   ],
+   "pair_recall": 0.925,
+   "loan_precision": 1.0,
+   "loan_recall": 0.926,
+   "tp": 160,
+   "fp": 0,
+   "fn": 13,
+   "companies_found": "46 of 48",
+   "companies_with_a_wrong_pair": 0
+  },
+  "c_judge_on_all_search_results": {
+   "pair_precision": 0.994,
+   "pair_precision_95ci": [
+    0.967,
+    0.999
+   ],
+   "pair_recall": 0.96,
+   "loan_precision": 0.999,
+   "loan_recall": 0.955,
+   "tp": 166,
+   "fp": 1,
+   "fn": 7,
+   "companies_found": "47 of 48",
+   "companies_with_a_wrong_pair": 1
+  },
+  "d_scoring_model_then_judge": {
+   "pair_precision": 0.926,
+   "pair_precision_95ci": [
+    0.877,
+    0.956
+   ],
+   "pair_recall": 0.936,
+   "loan_precision": 0.944,
+   "loan_recall": 0.9,
+   "tp": 162,
+   "fp": 13,
+   "fn": 11,
+   "companies_found": "44 of 48",
+   "companies_with_a_wrong_pair": 3
+  },
+  "e_exact_name_rule_then_judge": {
+   "pair_precision": 1.0,
+   "pair_precision_95ci": [
+    0.977,
+    1.0
+   ],
+   "pair_recall": 0.936,
+   "loan_precision": 1.0,
+   "loan_recall": 0.928,
+   "tp": 162,
+   "fp": 0,
+   "fn": 11,
+   "companies_found": "46 of 48",
+   "companies_with_a_wrong_pair": 0
+  }
+ },
+ "pairs_needing_person": {
+  "judge_on_name_hits": {
+   "names": 3,
+   "share_of_names": 0.036,
+   "pairs": 11
+  },
+  "judge_on_wider_name_hits": {
+   "names": 3,
+   "share_of_names": 0.036,
+   "pairs": 11
+  },
+  "judge_on_all_search_results": {
+   "names": 46,
+   "share_of_names": 0.548,
+   "pairs": 96
+  }
+ },
+ "batch_usd_per_100_listed_names": {
+  "judge_on_name_hits": 0.48,
+  "judge_on_wider_name_hits": 0.49,
+  "judge_on_all_search_results": 2.73,
+  "exact_name_rule_then_judge": 0.39
+ },
+ "scoring_model_accept_bar_by_fold": [
+  1.5,
+  1.5,
+  -4.0,
+  1.5,
+  1.0
+ ],
+ "exact_name_rule": {
+  "pairs": 39,
+  "wrong": 0
+ },
+ "judge_cost_total": {
+  "pairs": 1028,
+  "input_tokens": 744743,
+  "output_tokens": 80697,
+  "usd": 2.296,
+  "usd_per_100_pairs": 0.223,
+  "model": "claude-opus-5-5",
+  "effort": "low",
+  "batch": true
+ }
+}

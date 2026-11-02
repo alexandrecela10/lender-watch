@@ -1,0 +1,1029 @@
+pair_id,label,reason
+1021,no_match,Different business; only name or sector overlap
+1017,no_match,Different business; only name or sector overlap
+1027,no_match,Different business; only name or sector overlap
+1022,no_match,Different business; only name or sector overlap
+1025,no_match,Different business; only name or sector overlap
+1019,no_match,Different business; only name or sector overlap
+1020,no_match,Different business; only name or sector overlap
+1014,no_match,Different business; only name or sector overlap
+1016,no_match,Different business; only name or sector overlap
+1023,no_match,Different business; only name or sector overlap
+1026,no_match,Different business; only name or sector overlap
+1024,no_match,Different business; only name or sector overlap
+1018,no_match,Different business; only name or sector overlap
+1015,no_match,Different business; only name or sector overlap
+1000,match,"Same name, Acumatica holding company"
+1005,no_match,Different business; only name or sector overlap
+1007,no_match,Different business; only name or sector overlap
+1004,no_match,Different business; only name or sector overlap
+1010,no_match,Different business; only name or sector overlap
+1013,no_match,Different business; only name or sector overlap
+1006,no_match,Different business; only name or sector overlap
+1003,no_match,Different business; only name or sector overlap
+1002,no_match,Different business; only name or sector overlap
+1012,no_match,Different business; only name or sector overlap
+1009,no_match,Different business; only name or sector overlap
+1001,match,"Same name, Acumatica holding company"
+1008,no_match,Different business; only name or sector overlap
+1011,no_match,Different business; only name or sector overlap
+996,no_match,Different business; only name or sector overlap
+990,no_match,Different business; only name or sector overlap
+994,unsure,Alert prefix only; business of Alert SRC Newco not found
+993,no_match,Different business; only name or sector overlap
+999,no_match,Different business; only name or sector overlap
+991,no_match,Different business; only name or sector overlap
+989,match,Alert Media is the same company
+997,no_match,Different business; only name or sector overlap
+992,no_match,Different business; only name or sector overlap
+995,no_match,Different business; only name or sector overlap
+998,no_match,Different business; only name or sector overlap
+988,match,Alert Media is the same company
+984,no_match,Different business; only name or sector overlap
+981,no_match,Different business; only name or sector overlap
+976,match,Applause App Quality is Applause's legal name
+982,no_match,Different business; only name or sector overlap
+986,no_match,Different business; only name or sector overlap
+983,no_match,Different business; only name or sector overlap
+985,no_match,Different business; only name or sector overlap
+979,no_match,Different business; only name or sector overlap
+977,no_match,Different business; only name or sector overlap
+978,no_match,Different business; only name or sector overlap
+980,no_match,Different business; only name or sector overlap
+987,no_match,Different business; only name or sector overlap
+975,match,Applause App Quality is Applause's legal name
+968,match,"Same name, Avalara legal entity"
+971,match,"Same name, Avalara legal entity"
+973,match,"Same name, Avalara legal entity"
+970,match,"Same name, Avalara legal entity"
+969,match,"Same name, Avalara legal entity"
+972,match,"Same name, Avalara legal entity"
+974,no_match,Different business; only name or sector overlap
+959,no_match,Different business; only name or sector overlap
+967,no_match,Different business; only name or sector overlap
+966,no_match,Different business; only name or sector overlap
+965,no_match,Different business; only name or sector overlap
+962,no_match,Different business; only name or sector overlap
+961,no_match,Different business; only name or sector overlap
+958,match,"Same name, Model N legal entity"
+957,match,"Same name, Model N legal entity"
+960,no_match,Different business; only name or sector overlap
+963,no_match,Different business; only name or sector overlap
+964,no_match,Different business; only name or sector overlap
+956,match,"Same name, Model N legal entity"
+952,no_match,Different business; only name or sector overlap
+947,no_match,Different business; only name or sector overlap
+948,no_match,Different business; only name or sector overlap
+942,no_match,Different business; only name or sector overlap
+945,no_match,Different business; only name or sector overlap
+943,no_match,Different business; only name or sector overlap
+950,no_match,Different business; only name or sector overlap
+951,no_match,Different business; only name or sector overlap
+954,no_match,Different business; only name or sector overlap
+949,no_match,Different business; only name or sector overlap
+944,no_match,Different business; only name or sector overlap
+946,no_match,Different business; only name or sector overlap
+955,no_match,Different business; only name or sector overlap
+953,no_match,Different business; only name or sector overlap
+940,no_match,Different business; only name or sector overlap
+932,no_match,Different business; only name or sector overlap
+929,no_match,Different business; only name or sector overlap
+938,no_match,Different business; only name or sector overlap
+931,no_match,Different business; only name or sector overlap
+939,no_match,Different business; only name or sector overlap
+941,no_match,Different business; only name or sector overlap
+936,no_match,Different business; only name or sector overlap
+934,no_match,Different business; only name or sector overlap
+935,no_match,Different business; only name or sector overlap
+937,no_match,Different business; only name or sector overlap
+933,no_match,Different business; only name or sector overlap
+930,no_match,Different business; only name or sector overlap
+926,no_match,Different business; only name or sector overlap
+924,no_match,Different business; only name or sector overlap
+920,no_match,Different business; only name or sector overlap
+927,no_match,Different business; only name or sector overlap
+928,no_match,Different business; only name or sector overlap
+918,no_match,Different business; only name or sector overlap
+921,no_match,Different business; only name or sector overlap
+919,no_match,Different business; only name or sector overlap
+922,no_match,Different business; only name or sector overlap
+923,no_match,Different business; only name or sector overlap
+925,no_match,Different business; only name or sector overlap
+917,no_match,Different business; only name or sector overlap
+912,no_match,Different business; only name or sector overlap
+908,no_match,Different business; only name or sector overlap
+916,no_match,Different business; only name or sector overlap
+910,no_match,Different business; only name or sector overlap
+915,no_match,Different business; only name or sector overlap
+907,no_match,Different business; only name or sector overlap
+913,no_match,Different business; only name or sector overlap
+911,no_match,Different business; only name or sector overlap
+914,no_match,Different business; only name or sector overlap
+909,no_match,Different business; only name or sector overlap
+900,match,"Same name, Critical Start legal entity"
+905,no_match,Different business; only name or sector overlap
+903,no_match,Different business; only name or sector overlap
+901,no_match,Different business; only name or sector overlap
+904,no_match,Different business; only name or sector overlap
+899,match,"Same name, Critical Start legal entity"
+902,no_match,Different business; only name or sector overlap
+906,no_match,Different business; only name or sector overlap
+887,no_match,Different business; only name or sector overlap
+892,no_match,Different business; only name or sector overlap
+894,no_match,Different business; only name or sector overlap
+888,no_match,Different business; only name or sector overlap
+891,no_match,Different business; only name or sector overlap
+893,no_match,Different business; only name or sector overlap
+895,no_match,Different business; only name or sector overlap
+885,no_match,Different business; only name or sector overlap
+889,no_match,Different business; only name or sector overlap
+884,no_match,Different business; only name or sector overlap
+897,no_match,Different business; only name or sector overlap
+896,no_match,Different business; only name or sector overlap
+890,no_match,Different business; only name or sector overlap
+886,no_match,Different business; only name or sector overlap
+898,no_match,Different business; only name or sector overlap
+875,no_match,Different business; only name or sector overlap
+872,match,"Ellucian, formerly Sophia L.P., same business"
+879,no_match,Different business; only name or sector overlap
+878,no_match,Different business; only name or sector overlap
+876,no_match,Different business; only name or sector overlap
+883,no_match,Different business; only name or sector overlap
+880,no_match,Different business; only name or sector overlap
+873,no_match,Different business; only name or sector overlap
+874,no_match,Different business; only name or sector overlap
+877,no_match,Different business; only name or sector overlap
+871,match,"Ellucian, formerly Sophia L.P., same business"
+870,match,"Ellucian, formerly Sophia L.P., same business"
+882,no_match,Different business; only name or sector overlap
+881,no_match,Different business; only name or sector overlap
+858,no_match,Different business; only name or sector overlap
+862,no_match,Different business; only name or sector overlap
+864,no_match,Different business; only name or sector overlap
+869,no_match,Different business; only name or sector overlap
+856,no_match,Different business; only name or sector overlap
+860,no_match,Different business; only name or sector overlap
+861,no_match,Different business; only name or sector overlap
+865,no_match,Different business; only name or sector overlap
+868,no_match,Different business; only name or sector overlap
+867,no_match,Different business; only name or sector overlap
+866,no_match,Different business; only name or sector overlap
+857,no_match,Different business; only name or sector overlap
+863,no_match,Different business; only name or sector overlap
+859,no_match,Different business; only name or sector overlap
+853,no_match,Different business; only name or sector overlap
+848,no_match,Different business; only name or sector overlap
+843,match,Filing names Suvoda under Goldeneye Parent vehicle
+852,no_match,Different business; only name or sector overlap
+849,no_match,Different business; only name or sector overlap
+847,no_match,Different business; only name or sector overlap
+845,no_match,Different business; only name or sector overlap
+846,no_match,Different business; only name or sector overlap
+854,no_match,Different business; only name or sector overlap
+855,no_match,Different business; only name or sector overlap
+851,no_match,Different business; only name or sector overlap
+844,match,Filing names Suvoda under Goldeneye Parent vehicle
+850,no_match,Different business; only name or sector overlap
+834,match,"Same name, Majesco legal entity"
+836,match,"Same name, Majesco legal entity"
+832,match,"Same name, Majesco legal entity"
+835,match,"Same name, Majesco legal entity"
+840,match,"Same name, Majesco legal entity"
+841,match,"Same name, Majesco legal entity"
+839,no_match,Different business; only name or sector overlap
+842,no_match,Different business; only name or sector overlap
+833,match,"Same name, Majesco legal entity"
+838,no_match,Different business; only name or sector overlap
+837,match,"Same name, Majesco legal entity"
+830,no_match,Different business; only name or sector overlap
+827,no_match,Different business; only name or sector overlap
+824,no_match,Different business; only name or sector overlap
+828,no_match,Different business; only name or sector overlap
+829,no_match,Different business; only name or sector overlap
+821,no_match,Different business; only name or sector overlap
+819,match,Project Boost Purchaser is JD Power's borrower
+825,no_match,Different business; only name or sector overlap
+822,no_match,Different business; only name or sector overlap
+831,no_match,Different business; only name or sector overlap
+820,match,Project Boost Purchaser is JD Power's borrower
+826,no_match,Different business; only name or sector overlap
+823,no_match,Different business; only name or sector overlap
+812,no_match,Different business; only name or sector overlap
+810,no_match,Different business; only name or sector overlap
+815,no_match,Different business; only name or sector overlap
+811,unsure,Matrix-only name; business of Matrix Buyer not found
+814,no_match,Different business; only name or sector overlap
+809,match,"Same name, BlueMatrix holding company"
+818,no_match,Different business; only name or sector overlap
+813,no_match,Different business; only name or sector overlap
+808,match,"Same name, BlueMatrix holding company"
+817,no_match,Different business; only name or sector overlap
+816,no_match,Different business; only name or sector overlap
+805,match,"Same name, Apryse legal entity"
+802,match,"Same name, Apryse legal entity"
+800,match,"Same name, Apryse legal entity"
+801,match,"Same name, Apryse legal entity"
+803,no_match,Different business; only name or sector overlap
+804,no_match,Different business; only name or sector overlap
+807,match,"Same name, Apryse legal entity"
+799,match,"Same name, Apryse legal entity"
+806,match,"Same name, Apryse legal entity"
+789,match,Cority Software and Cority Parent are the same business
+795,no_match,Different business; only name or sector overlap
+788,match,Cority Software and Cority Parent are the same business
+793,no_match,Different business; only name or sector overlap
+797,no_match,Different business; only name or sector overlap
+792,no_match,Different business; only name or sector overlap
+798,no_match,Different business; only name or sector overlap
+794,no_match,Different business; only name or sector overlap
+791,no_match,Different business; only name or sector overlap
+796,no_match,Different business; only name or sector overlap
+790,match,Cority Software and Cority Parent are the same business
+786,no_match,Different business; only name or sector overlap
+779,match,"Same name, Magnet Forensics legal entity"
+778,match,"Same name, Magnet Forensics legal entity"
+780,no_match,Different business; only name or sector overlap
+781,no_match,Different business; only name or sector overlap
+787,no_match,Different business; only name or sector overlap
+782,no_match,Different business; only name or sector overlap
+783,no_match,Different business; only name or sector overlap
+784,no_match,Different business; only name or sector overlap
+785,no_match,Different business; only name or sector overlap
+776,no_match,Different business; only name or sector overlap
+768,match,"Same name, ConnectWise legal entity"
+777,no_match,Different business; only name or sector overlap
+774,no_match,Different business; only name or sector overlap
+770,no_match,Different business; only name or sector overlap
+766,match,"Same name, ConnectWise legal entity"
+771,no_match,Different business; only name or sector overlap
+772,no_match,Different business; only name or sector overlap
+775,no_match,Different business; only name or sector overlap
+767,match,"Same name, ConnectWise legal entity"
+773,no_match,Different business; only name or sector overlap
+769,no_match,Different business; only name or sector overlap
+765,match,Jeppesen Holdings is the Jeppesen ForeFlight business
+764,match,Jeppesen Holdings is the Jeppesen ForeFlight business
+762,match,Jeppesen Holdings is the Jeppesen ForeFlight business
+763,match,Jeppesen Holdings is the Jeppesen ForeFlight business
+761,match,Jeppesen Holdings is the Jeppesen ForeFlight business
+754,no_match,Different business; only name or sector overlap
+758,no_match,Different business; only name or sector overlap
+750,no_match,Different business; only name or sector overlap
+760,no_match,Different business; only name or sector overlap
+752,no_match,Different business; only name or sector overlap
+759,no_match,Different business; only name or sector overlap
+749,no_match,Different business; only name or sector overlap
+753,no_match,Different business; only name or sector overlap
+756,no_match,Different business; only name or sector overlap
+755,no_match,Different business; only name or sector overlap
+751,no_match,Different business; only name or sector overlap
+757,no_match,Different business; only name or sector overlap
+747,no_match,Different business; only name or sector overlap
+744,no_match,Different business; only name or sector overlap
+738,no_match,Different business; only name or sector overlap
+734,no_match,Different business; only name or sector overlap
+737,no_match,Different business; only name or sector overlap
+743,match,"PROS Parent, airlines sector, dated December 2025 at Thoma Bravo closing"
+739,no_match,Different business; only name or sector overlap
+741,no_match,Different business; only name or sector overlap
+742,match,Same name; PROS Holdings acquired by Thoma Bravo
+736,match,"PROS Parent, airlines sector, dated December 2025 at Thoma Bravo closing"
+748,no_match,Different business; only name or sector overlap
+746,no_match,Different business; only name or sector overlap
+740,no_match,Different business; only name or sector overlap
+745,no_match,Different business; only name or sector overlap
+735,match,Same name; PROS Holdings acquired by Thoma Bravo
+731,no_match,Different business; only name or sector overlap
+728,no_match,Different business; only name or sector overlap
+720,match,Same name; Thoma Bravo ownership confirmed
+727,no_match,Different business; only name or sector overlap
+725,no_match,Different business; only name or sector overlap
+732,no_match,Different business; only name or sector overlap
+733,no_match,Different business; only name or sector overlap
+724,no_match,Different business; only name or sector overlap
+729,no_match,Different business; only name or sector overlap
+730,no_match,Different business; only name or sector overlap
+726,no_match,Different business; only name or sector overlap
+722,no_match,Different business; only name or sector overlap
+723,no_match,Different business; only name or sector overlap
+721,unsure,"Possible Intel vehicle, but no source links it to Intel 471"
+714,no_match,Different business; only name or sector overlap
+718,no_match,Different business; only name or sector overlap
+711,match,"Same name, Bottomline legal entity"
+713,match,"Same name, Bottomline legal entity"
+717,no_match,Different business; only name or sector overlap
+716,match,"Same name, Bottomline legal entity"
+710,match,"Same name, Bottomline legal entity"
+712,match,"Same name, Bottomline legal entity"
+719,no_match,Different business; only name or sector overlap
+715,no_match,Different business; only name or sector overlap
+704,no_match,Different business; only name or sector overlap
+699,match,Motus LLC and Motus Group are the Motus business
+703,no_match,Different business; only name or sector overlap
+701,match,Motus LLC and Motus Group are the Motus business
+698,match,Motus LLC and Motus Group are the Motus business
+707,no_match,Different business; only name or sector overlap
+708,no_match,Different business; only name or sector overlap
+702,no_match,Different business; only name or sector overlap
+709,no_match,Different business; only name or sector overlap
+706,no_match,Different business; only name or sector overlap
+705,no_match,Different business; only name or sector overlap
+700,match,Motus LLC and Motus Group are the Motus business
+686,no_match,Different business; only name or sector overlap
+688,no_match,Different business; only name or sector overlap
+690,no_match,Different business; only name or sector overlap
+693,no_match,Different business; only name or sector overlap
+695,no_match,Different business; only name or sector overlap
+696,no_match,Different business; only name or sector overlap
+694,no_match,Different business; only name or sector overlap
+692,no_match,Different business; only name or sector overlap
+697,no_match,Different business; only name or sector overlap
+687,no_match,Different business; only name or sector overlap
+691,no_match,Different business; only name or sector overlap
+689,no_match,Different business; only name or sector overlap
+681,no_match,Different business; only name or sector overlap
+677,no_match,Different business; only name or sector overlap
+684,no_match,Different business; only name or sector overlap
+679,no_match,Different business; only name or sector overlap
+685,no_match,Different business; only name or sector overlap
+675,match,"Same name, management entity of Southern Orthodontic Partners"
+676,match,"Same name, management entity of Southern Orthodontic Partners"
+680,no_match,Different business; only name or sector overlap
+683,no_match,Different business; only name or sector overlap
+678,no_match,Different business; only name or sector overlap
+682,no_match,Different business; only name or sector overlap
+662,match,"Same name, Community Care Partners legal entity"
+672,no_match,Different business; only name or sector overlap
+664,no_match,Different business; only name or sector overlap
+670,no_match,Different business; only name or sector overlap
+663,no_match,Different business; only name or sector overlap
+671,no_match,Different business; only name or sector overlap
+669,no_match,Different business; only name or sector overlap
+673,no_match,Different business; only name or sector overlap
+667,no_match,Different business; only name or sector overlap
+668,no_match,Different business; only name or sector overlap
+666,no_match,Different business; only name or sector overlap
+661,match,"Same name, Community Care Partners legal entity"
+665,no_match,Different business; only name or sector overlap
+674,no_match,Different business; only name or sector overlap
+659,no_match,Different business; only name or sector overlap
+650,no_match,Different business; only name or sector overlap
+660,no_match,Different business; only name or sector overlap
+647,no_match,Different business; only name or sector overlap
+657,no_match,Different business; only name or sector overlap
+655,no_match,Different business; only name or sector overlap
+648,no_match,Different business; only name or sector overlap
+656,no_match,Different business; only name or sector overlap
+652,no_match,Different business; only name or sector overlap
+649,no_match,Different business; only name or sector overlap
+658,no_match,Different business; only name or sector overlap
+653,no_match,Different business; only name or sector overlap
+654,no_match,Different business; only name or sector overlap
+651,no_match,Different business; only name or sector overlap
+641,no_match,Different business; only name or sector overlap
+634,no_match,Different business; only name or sector overlap
+640,no_match,Different business; only name or sector overlap
+635,no_match,Different business; only name or sector overlap
+636,no_match,Different business; only name or sector overlap
+638,no_match,Different business; only name or sector overlap
+642,no_match,Different business; only name or sector overlap
+646,no_match,Different business; only name or sector overlap
+637,no_match,Different business; only name or sector overlap
+645,no_match,Different business; only name or sector overlap
+644,no_match,Different business; only name or sector overlap
+639,no_match,Different business; only name or sector overlap
+643,no_match,Different business; only name or sector overlap
+622,no_match,Different business; only name or sector overlap
+625,no_match,Different business; only name or sector overlap
+621,no_match,Different business; only name or sector overlap
+627,no_match,Different business; only name or sector overlap
+628,no_match,Different business; only name or sector overlap
+630,no_match,Different business; only name or sector overlap
+619,no_match,Different business; only name or sector overlap
+624,no_match,Different business; only name or sector overlap
+633,no_match,Different business; only name or sector overlap
+632,no_match,Different business; only name or sector overlap
+623,no_match,Different business; only name or sector overlap
+620,no_match,Different business; only name or sector overlap
+631,no_match,Different business; only name or sector overlap
+626,no_match,Different business; only name or sector overlap
+629,no_match,Different business; only name or sector overlap
+609,no_match,Different business; only name or sector overlap
+618,no_match,Different business; only name or sector overlap
+611,no_match,Different business; only name or sector overlap
+616,no_match,Different business; only name or sector overlap
+607,match,"Premier ProduceOne is Produce One's core, Shore-backed"
+608,no_match,Different business; only name or sector overlap
+610,no_match,Different business; only name or sector overlap
+614,no_match,Different business; only name or sector overlap
+615,no_match,Different business; only name or sector overlap
+612,no_match,Different business; only name or sector overlap
+617,no_match,Different business; only name or sector overlap
+613,no_match,Different business; only name or sector overlap
+606,match,"Premier ProduceOne is Produce One's core, Shore-backed"
+605,no_match,Different business; only name or sector overlap
+603,no_match,Different business; only name or sector overlap
+604,no_match,Different business; only name or sector overlap
+598,no_match,Different business; only name or sector overlap
+601,no_match,Different business; only name or sector overlap
+597,no_match,Different business; only name or sector overlap
+602,no_match,Different business; only name or sector overlap
+595,no_match,Different business; only name or sector overlap
+599,no_match,Different business; only name or sector overlap
+600,no_match,Different business; only name or sector overlap
+596,no_match,Different business; only name or sector overlap
+581,no_match,Different business; only name or sector overlap
+588,no_match,Different business; only name or sector overlap
+583,no_match,Different business; only name or sector overlap
+590,no_match,Different business; only name or sector overlap
+582,no_match,Different business; only name or sector overlap
+594,no_match,Different business; only name or sector overlap
+591,no_match,Different business; only name or sector overlap
+584,no_match,Different business; only name or sector overlap
+593,no_match,Different business; only name or sector overlap
+592,no_match,Different business; only name or sector overlap
+585,no_match,Different business; only name or sector overlap
+587,no_match,Different business; only name or sector overlap
+586,no_match,Different business; only name or sector overlap
+589,no_match,"Align ENT is Zenyth-backed, separate from Shore's SENTA"
+576,no_match,Different business; only name or sector overlap
+572,no_match,Different business; only name or sector overlap
+580,no_match,Different business; only name or sector overlap
+577,no_match,Different business; only name or sector overlap
+568,no_match,Different business; only name or sector overlap
+574,no_match,Different business; only name or sector overlap
+569,no_match,Different business; only name or sector overlap
+571,no_match,Different business; only name or sector overlap
+567,no_match,Different business; only name or sector overlap
+573,no_match,Different business; only name or sector overlap
+575,no_match,Different business; only name or sector overlap
+578,no_match,Different business; only name or sector overlap
+579,no_match,Different business; only name or sector overlap
+570,no_match,Different business; only name or sector overlap
+561,no_match,Different business; only name or sector overlap
+566,no_match,Different business; only name or sector overlap
+560,no_match,Different business; only name or sector overlap
+564,no_match,Different business; only name or sector overlap
+559,no_match,Different business; only name or sector overlap
+557,no_match,Different business; only name or sector overlap
+563,no_match,Different business; only name or sector overlap
+565,no_match,Different business; only name or sector overlap
+562,no_match,Different business; only name or sector overlap
+555,no_match,Different business; only name or sector overlap
+558,unsure,SCP prefix and beverage suggest Shore; link not confirmed
+556,no_match,Different business; only name or sector overlap
+554,no_match,Different business; only name or sector overlap
+545,no_match,Different business; only name or sector overlap
+540,no_match,Different business; only name or sector overlap
+544,no_match,Different business; only name or sector overlap
+551,no_match,Different business; only name or sector overlap
+541,no_match,Different business; only name or sector overlap
+553,no_match,Different business; only name or sector overlap
+547,no_match,Different business; only name or sector overlap
+546,no_match,Different business; only name or sector overlap
+549,no_match,Different business; only name or sector overlap
+542,no_match,Different business; only name or sector overlap
+543,no_match,Different business; only name or sector overlap
+552,no_match,Different business; only name or sector overlap
+548,no_match,Different business; only name or sector overlap
+550,no_match,Different business; only name or sector overlap
+538,no_match,Different business; only name or sector overlap
+531,unsure,Possible CG holding company; link to CG Life not confirmed
+535,no_match,Different business; only name or sector overlap
+530,unsure,CG Life was Competitive Group; holding link not confirmed
+533,no_match,Different business; only name or sector overlap
+528,no_match,Different business; only name or sector overlap
+539,no_match,Different business; only name or sector overlap
+532,no_match,Different business; only name or sector overlap
+534,no_match,Different business; only name or sector overlap
+527,no_match,Different business; only name or sector overlap
+529,no_match,Different business; only name or sector overlap
+537,no_match,Different business; only name or sector overlap
+536,no_match,Different business; only name or sector overlap
+519,unsure,SDC name shared; no source links LCM SDC to SDC Nutrition
+520,no_match,Different business; only name or sector overlap
+517,no_match,Different business; only name or sector overlap
+521,no_match,Different business; only name or sector overlap
+523,no_match,Different business; only name or sector overlap
+522,unsure,SDC name shared; no source links SDC Holdco to SDC Nutrition
+518,no_match,Different business; only name or sector overlap
+525,no_match,Different business; only name or sector overlap
+526,no_match,Different business; only name or sector overlap
+524,no_match,Different business; only name or sector overlap
+511,no_match,Different business; only name or sector overlap
+508,no_match,Different business; only name or sector overlap
+510,unsure,Generic name overlaps Vivify Specialty Ingredients; link not confirmed
+516,no_match,Different business; only name or sector overlap
+513,no_match,Different business; only name or sector overlap
+515,no_match,Different business; only name or sector overlap
+512,no_match,Different business; only name or sector overlap
+514,no_match,Different business; only name or sector overlap
+509,no_match,Different business; only name or sector overlap
+504,no_match,Different business; only name or sector overlap
+507,no_match,Different business; only name or sector overlap
+500,no_match,Different business; only name or sector overlap
+503,no_match,Different business; only name or sector overlap
+502,no_match,Different business; only name or sector overlap
+501,no_match,Different business; only name or sector overlap
+506,no_match,Different business; only name or sector overlap
+499,unsure,Rocket name shared; no source links Rocket Buyer to NewRocket
+505,no_match,Different business; only name or sector overlap
+498,no_match,Different business; only name or sector overlap
+497,no_match,Different business; only name or sector overlap
+496,no_match,Different business; only name or sector overlap
+495,no_match,Different business; only name or sector overlap
+489,no_match,Different business; only name or sector overlap
+493,no_match,Different business; only name or sector overlap
+494,no_match,Different business; only name or sector overlap
+486,no_match,Different business; only name or sector overlap
+492,no_match,Different business; only name or sector overlap
+490,no_match,Different business; only name or sector overlap
+491,no_match,Different business; only name or sector overlap
+488,no_match,Different business; only name or sector overlap
+487,no_match,Different business; only name or sector overlap
+480,no_match,Different business; only name or sector overlap
+474,no_match,Different business; only name or sector overlap
+484,no_match,Different business; only name or sector overlap
+483,no_match,Different business; only name or sector overlap
+476,match,Insight Borrower in ground transportation; same lender format as Transportation Insight
+481,no_match,Different business; only name or sector overlap
+471,match,Filings name Transportation Insight legal entities directly
+473,no_match,Different business; only name or sector overlap
+485,no_match,Different business; only name or sector overlap
+470,match,Filings name Transportation Insight legal entities directly
+482,no_match,Different business; only name or sector overlap
+479,match,Filings name Transportation Insight legal entities directly
+477,no_match,Different business; only name or sector overlap
+478,no_match,Different business; only name or sector overlap
+472,match,Filings name Transportation Insight legal entities directly
+469,match,Filings name Transportation Insight legal entities directly
+475,no_match,Different business; only name or sector overlap
+455,match,Vessco Midco Holdings is the Vessco holding company
+462,match,Vessco Midco Holdings is the Vessco holding company
+463,match,Vessco Midco Holdings is the Vessco holding company
+460,match,Vessco Midco Holdings is the Vessco holding company
+467,match,Vessco Midco Holdings is the Vessco holding company
+459,match,Vessco Midco Holdings is the Vessco holding company
+458,match,Vessco Midco Holdings is the Vessco holding company
+468,no_match,Different business; only name or sector overlap
+457,match,Vessco Midco Holdings is the Vessco holding company
+464,match,Vessco Midco Holdings is the Vessco holding company
+466,no_match,Different business; only name or sector overlap
+465,match,Vessco Midco Holdings is the Vessco holding company
+461,match,Vessco Midco Holdings is the Vessco holding company
+456,match,Vessco Midco Holdings is the Vessco holding company
+444,no_match,Different business; only name or sector overlap
+441,no_match,Different business; only name or sector overlap
+451,no_match,Different business; only name or sector overlap
+453,no_match,Different business; only name or sector overlap
+442,no_match,Different business; only name or sector overlap
+447,no_match,Different business; only name or sector overlap
+445,no_match,Different business; only name or sector overlap
+452,no_match,Different business; only name or sector overlap
+446,no_match,Different business; only name or sector overlap
+448,no_match,Different business; only name or sector overlap
+450,no_match,Different business; only name or sector overlap
+449,no_match,Different business; only name or sector overlap
+454,no_match,Different business; only name or sector overlap
+443,no_match,Different business; only name or sector overlap
+435,no_match,Different business; only name or sector overlap
+438,no_match,Different business; only name or sector overlap
+436,no_match,Different business; only name or sector overlap
+434,no_match,Different business; only name or sector overlap
+433,no_match,Different business; only name or sector overlap
+430,no_match,Different business; only name or sector overlap
+432,no_match,Different business; only name or sector overlap
+428,no_match,Different business; only name or sector overlap
+437,no_match,Different business; only name or sector overlap
+440,no_match,Different business; only name or sector overlap
+431,no_match,Different business; only name or sector overlap
+429,no_match,Different business; only name or sector overlap
+439,no_match,Different business; only name or sector overlap
+422,no_match,Different business; only name or sector overlap
+423,no_match,Different business; only name or sector overlap
+421,no_match,Different business; only name or sector overlap
+414,match,PG Aggregator named as holding vehicle for Pacur
+420,no_match,Different business; only name or sector overlap
+426,no_match,Different business; only name or sector overlap
+425,no_match,Different business; only name or sector overlap
+418,no_match,Different business; only name or sector overlap
+424,no_match,Different business; only name or sector overlap
+419,no_match,Different business; only name or sector overlap
+427,no_match,Different business; only name or sector overlap
+417,no_match,Different business; only name or sector overlap
+416,no_match,Different business; only name or sector overlap
+415,no_match,Different business; only name or sector overlap
+413,no_match,Different business; only name or sector overlap
+405,no_match,Different business; only name or sector overlap
+408,no_match,Different business; only name or sector overlap
+403,no_match,Different business; only name or sector overlap
+402,no_match,Different business; only name or sector overlap
+404,no_match,Different business; only name or sector overlap
+412,no_match,Different business; only name or sector overlap
+400,no_match,Different business; only name or sector overlap
+407,no_match,Different business; only name or sector overlap
+409,no_match,Different business; only name or sector overlap
+401,no_match,Different business; only name or sector overlap
+411,no_match,Different business; only name or sector overlap
+406,no_match,Different business; only name or sector overlap
+399,no_match,Different business; only name or sector overlap
+410,no_match,Different business; only name or sector overlap
+398,no_match,Different business; only name or sector overlap
+394,no_match,Different business; only name or sector overlap
+396,no_match,Different business; only name or sector overlap
+397,no_match,Different business; only name or sector overlap
+393,no_match,Different business; only name or sector overlap
+395,no_match,Different business; only name or sector overlap
+388,no_match,Different business; only name or sector overlap
+392,no_match,Different business; only name or sector overlap
+386,no_match,Different business; only name or sector overlap
+389,no_match,Different business; only name or sector overlap
+387,no_match,Different business; only name or sector overlap
+390,no_match,Different business; only name or sector overlap
+391,no_match,Different business; only name or sector overlap
+379,no_match,Different business; only name or sector overlap
+383,no_match,Different business; only name or sector overlap
+380,no_match,Different business; only name or sector overlap
+374,no_match,Different business; only name or sector overlap
+375,no_match,Different business; only name or sector overlap
+384,no_match,Different business; only name or sector overlap
+382,no_match,Different business; only name or sector overlap
+373,no_match,Different business; only name or sector overlap
+377,no_match,Different business; only name or sector overlap
+385,no_match,Different business; only name or sector overlap
+381,no_match,Different business; only name or sector overlap
+378,no_match,Different business; only name or sector overlap
+376,no_match,Different business; only name or sector overlap
+372,no_match,Different business; only name or sector overlap
+368,match,Smile Brands legal entities
+363,match,Smile Brands legal entities
+367,match,Smile Brands legal entities
+369,match,Smile Brands legal entities
+365,match,Smile Brands legal entities
+364,match,Smile Brands legal entities
+366,match,Smile Brands legal entities
+370,no_match,Different business; only name or sector overlap
+371,no_match,Different business; only name or sector overlap
+353,no_match,Different business; only name or sector overlap
+361,no_match,Different business; only name or sector overlap
+355,no_match,Different business; only name or sector overlap
+352,no_match,Different business; only name or sector overlap
+356,no_match,Different business; only name or sector overlap
+351,no_match,Different business; only name or sector overlap
+362,no_match,Different business; only name or sector overlap
+354,no_match,Different business; only name or sector overlap
+357,no_match,Different business; only name or sector overlap
+358,no_match,Different business; only name or sector overlap
+360,no_match,Different business; only name or sector overlap
+359,no_match,Different business; only name or sector overlap
+344,no_match,Different business; only name or sector overlap
+341,no_match,Different business; only name or sector overlap
+348,no_match,Different business; only name or sector overlap
+343,no_match,Different business; only name or sector overlap
+345,no_match,Different business; only name or sector overlap
+340,no_match,Different business; only name or sector overlap
+342,no_match,Different business; only name or sector overlap
+346,no_match,Different business; only name or sector overlap
+350,no_match,Different business; only name or sector overlap
+339,no_match,Different business; only name or sector overlap
+349,no_match,Different business; only name or sector overlap
+347,no_match,Different business; only name or sector overlap
+337,no_match,Different business; only name or sector overlap
+335,no_match,Different business; only name or sector overlap
+332,no_match,Different business; only name or sector overlap
+331,no_match,Different business; only name or sector overlap
+334,no_match,Different business; only name or sector overlap
+326,no_match,Different business; only name or sector overlap
+327,no_match,Different business; only name or sector overlap
+329,no_match,Different business; only name or sector overlap
+338,no_match,Different business; only name or sector overlap
+333,no_match,Different business; only name or sector overlap
+328,no_match,Different business; only name or sector overlap
+330,no_match,Different business; only name or sector overlap
+336,no_match,Different business; only name or sector overlap
+316,no_match,Different business; only name or sector overlap
+325,no_match,Different business; only name or sector overlap
+320,no_match,Different business; only name or sector overlap
+318,no_match,Different business; only name or sector overlap
+315,no_match,Different business; only name or sector overlap
+313,match,Douglas Holdings named as Docupace's borrower
+322,no_match,Different business; only name or sector overlap
+317,no_match,Different business; only name or sector overlap
+323,no_match,Different business; only name or sector overlap
+319,no_match,Different business; only name or sector overlap
+314,no_match,Different business; only name or sector overlap
+324,no_match,Different business; only name or sector overlap
+321,no_match,Different business; only name or sector overlap
+308,no_match,Different business; only name or sector overlap
+311,no_match,Different business; only name or sector overlap
+309,no_match,Different business; only name or sector overlap
+307,match,Ascensus retirement entities; Olympic Buyer is its vehicle
+302,no_match,Different business; only name or sector overlap
+305,match,Ascensus retirement entities; Olympic Buyer is its vehicle
+310,no_match,Different business; only name or sector overlap
+306,match,Ascensus retirement entities; Olympic Buyer is its vehicle
+304,match,Ascensus retirement entities; Olympic Buyer is its vehicle
+303,match,Ascensus retirement entities; Olympic Buyer is its vehicle
+312,no_match,Different business; only name or sector overlap
+295,match,"Same name, Likewize legal entity"
+300,no_match,Different business; only name or sector overlap
+297,match,"Same name, Likewize legal entity"
+299,no_match,Different business; only name or sector overlap
+298,match,"Same name, Likewize legal entity"
+296,match,"Same name, Likewize legal entity"
+294,match,"Same name, Likewize legal entity"
+301,no_match,Different business; only name or sector overlap
+289,no_match,Different business; only name or sector overlap
+285,no_match,Different business; only name or sector overlap
+292,no_match,Different business; only name or sector overlap
+282,match,Procure Acquireco named as Procure Analytics borrower
+286,no_match,Different business; only name or sector overlap
+284,no_match,Different business; only name or sector overlap
+283,no_match,Different business; only name or sector overlap
+291,no_match,Different business; only name or sector overlap
+290,no_match,Different business; only name or sector overlap
+288,no_match,Different business; only name or sector overlap
+293,no_match,Different business; only name or sector overlap
+287,no_match,Different business; only name or sector overlap
+274,no_match,Different business; only name or sector overlap
+277,no_match,Different business; only name or sector overlap
+267,no_match,Different business; only name or sector overlap
+275,no_match,Different business; only name or sector overlap
+278,no_match,Different business; only name or sector overlap
+281,no_match,Different business; only name or sector overlap
+273,no_match,Different business; only name or sector overlap
+280,no_match,Different business; only name or sector overlap
+276,no_match,Different business; only name or sector overlap
+268,no_match,Different business; only name or sector overlap
+272,no_match,Different business; only name or sector overlap
+271,no_match,Different business; only name or sector overlap
+279,no_match,Different business; only name or sector overlap
+270,no_match,Different business; only name or sector overlap
+269,no_match,Different business; only name or sector overlap
+258,match,"Same name, Bullhorn legal entity"
+257,match,"Same name, Bullhorn legal entity"
+265,no_match,Different business; only name or sector overlap
+259,match,"Same name, Bullhorn legal entity"
+260,match,"Same name, Bullhorn legal entity"
+262,no_match,Different business; only name or sector overlap
+261,match,"Same name, Bullhorn legal entity"
+264,match,"Same name, Bullhorn legal entity"
+266,no_match,Different business; only name or sector overlap
+263,match,"Same name, Bullhorn legal entity"
+256,unsure,Financial-sector Orion borrower; no source links it to Orion Advisor
+252,no_match,Different business; only name or sector overlap
+253,no_match,Different business; only name or sector overlap
+248,match,"Same name, Orion Advisor Solutions legal entity"
+254,no_match,Different business; only name or sector overlap
+250,no_match,Different business; only name or sector overlap
+251,no_match,Different business; only name or sector overlap
+249,no_match,Different business; only name or sector overlap
+246,match,"Same name, Orion Advisor Solutions legal entity"
+247,match,"Same name, Orion Advisor Solutions legal entity"
+255,no_match,Different business; only name or sector overlap
+242,no_match,Different business; only name or sector overlap
+245,no_match,Different business; only name or sector overlap
+240,no_match,Different business; only name or sector overlap
+241,no_match,Different business; only name or sector overlap
+244,no_match,Different business; only name or sector overlap
+243,no_match,Different business; only name or sector overlap
+239,match,"PDI TA Holdings is PDI Technologies holding, retail software"
+238,match,"PDI TA Holdings is PDI Technologies holding, retail software"
+234,match,Cerity Partners and its equity holding company
+231,match,Cerity Partners and its equity holding company
+230,match,Cerity Partners and its equity holding company
+229,match,Cerity Partners and its equity holding company
+233,match,Cerity Partners and its equity holding company
+236,match,Cerity Partners and its equity holding company
+237,no_match,Different business; only name or sector overlap
+232,match,Cerity Partners and its equity holding company
+235,match,Cerity Partners and its equity holding company
+223,no_match,Different business; only name or sector overlap
+220,no_match,Different business; only name or sector overlap
+217,no_match,Different business; only name or sector overlap
+221,no_match,Different business; only name or sector overlap
+226,no_match,Different business; only name or sector overlap
+228,no_match,Different business; only name or sector overlap
+219,no_match,Different business; only name or sector overlap
+218,no_match,Different business; only name or sector overlap
+222,no_match,Different business; only name or sector overlap
+225,no_match,Different business; only name or sector overlap
+215,match,Filing names Brook & Whittle under BW Holding
+224,no_match,Different business; only name or sector overlap
+214,match,Filing names Brook & Whittle under BW Holding
+216,no_match,Different business; only name or sector overlap
+227,no_match,Different business; only name or sector overlap
+212,no_match,Different business; only name or sector overlap
+200,match,"Same name, Mercer Advisors legal entity"
+207,no_match,Different business; only name or sector overlap
+213,no_match,Different business; only name or sector overlap
+205,no_match,Different business; only name or sector overlap
+208,no_match,Different business; only name or sector overlap
+202,no_match,Different business; only name or sector overlap
+203,no_match,Different business; only name or sector overlap
+204,no_match,Different business; only name or sector overlap
+210,no_match,Different business; only name or sector overlap
+209,no_match,Different business; only name or sector overlap
+206,no_match,Different business; only name or sector overlap
+201,match,"Same name, Mercer Advisors legal entity"
+211,no_match,Different business; only name or sector overlap
+198,no_match,Different business; only name or sector overlap
+187,no_match,Different business; only name or sector overlap
+191,no_match,Different business; only name or sector overlap
+196,no_match,Different business; only name or sector overlap
+188,no_match,Different business; only name or sector overlap
+186,no_match,Different business; only name or sector overlap
+195,no_match,Different business; only name or sector overlap
+192,match,First Eagle Holdings is First Eagle Investments' parent
+194,no_match,Different business; only name or sector overlap
+193,no_match,Different business; only name or sector overlap
+197,no_match,Different business; only name or sector overlap
+199,no_match,Different business; only name or sector overlap
+190,no_match,Different business; only name or sector overlap
+189,no_match,Different business; only name or sector overlap
+171,match,"GS SEER Group entities are SEER, multi-utilities"
+176,match,"GS SEER Group entities are SEER, multi-utilities"
+184,no_match,Different business; only name or sector overlap
+183,no_match,Different business; only name or sector overlap
+182,no_match,Different business; only name or sector overlap
+178,no_match,Different business; only name or sector overlap
+173,match,"GS SEER Group entities are SEER, multi-utilities"
+172,match,"GS SEER Group entities are SEER, multi-utilities"
+174,match,"GS SEER Group entities are SEER, multi-utilities"
+179,match,"GS SEER Group entities are SEER, multi-utilities"
+185,no_match,Different business; only name or sector overlap
+181,no_match,Different business; only name or sector overlap
+177,no_match,Different business; only name or sector overlap
+180,match,"GS SEER Group entities are SEER, multi-utilities"
+175,match,"GS SEER Group entities are SEER, multi-utilities"
+165,match,Apex Service Partners legal entities
+160,match,Apex Service Partners legal entities
+162,match,Apex Service Partners legal entities
+167,no_match,Different business; only name or sector overlap
+166,match,Apex Service Partners legal entities
+161,match,Apex Service Partners legal entities
+168,no_match,Different business; only name or sector overlap
+169,no_match,Different business; only name or sector overlap
+170,no_match,Different business; only name or sector overlap
+159,match,Apex Service Partners legal entities
+163,match,Apex Service Partners legal entities
+164,match,Apex Service Partners legal entities
+152,unsure,Alpine name shared; no source identifies Alpine Intel's business
+156,no_match,Different business; only name or sector overlap
+149,match,Alpinex Opco is AlpineX operating company
+154,no_match,Different business; only name or sector overlap
+158,no_match,Different business; only name or sector overlap
+153,no_match,Different business; only name or sector overlap
+150,match,Alpinex Opco is AlpineX operating company
+151,no_match,Different business; only name or sector overlap
+155,no_match,Different business; only name or sector overlap
+157,no_match,Different business; only name or sector overlap
+148,no_match,"Separate company, Tyree & D'Angelo-owned per Mergr"
+142,no_match,Different business; only name or sector overlap
+146,no_match,Different business; only name or sector overlap
+143,no_match,Different business; only name or sector overlap
+144,no_match,Different business; only name or sector overlap
+145,no_match,Different business; only name or sector overlap
+147,no_match,Different business; only name or sector overlap
+141,no_match,Different business; only name or sector overlap
+133,no_match,Different business; only name or sector overlap
+140,no_match,Different business; only name or sector overlap
+138,no_match,Different business; only name or sector overlap
+135,unsure,Cobalt name shared; no source identifies Cobalt Buyer Sub
+139,no_match,Different business; only name or sector overlap
+129,match,"Same name, Cobalt Service Partners legal entity"
+130,match,"Same name, Cobalt Service Partners legal entity"
+131,no_match,Different business; only name or sector overlap
+132,no_match,Different business; only name or sector overlap
+134,no_match,Different business; only name or sector overlap
+137,no_match,Different business; only name or sector overlap
+136,no_match,Different business; only name or sector overlap
+119,match,Ascend Partner Services is Alpine's accounting platform
+117,no_match,Different business; only name or sector overlap
+120,no_match,Different business; only name or sector overlap
+125,no_match,Different business; only name or sector overlap
+122,no_match,Different business; only name or sector overlap
+114,match,Ascend Partner Services is Alpine's accounting platform
+116,no_match,Different business; only name or sector overlap
+115,match,"Ascend, business services, maturity matches Ascend Partner Services 8/11/2031"
+127,no_match,Different business; only name or sector overlap
+124,match,Ascend Partner Services is Alpine's accounting platform
+118,no_match,Different business; only name or sector overlap
+126,no_match,Different business; only name or sector overlap
+123,no_match,Different business; only name or sector overlap
+121,match,"Ascend, business services, maturity matches Ascend Partner Services 8/11/2031"
+128,no_match,Different business; only name or sector overlap
+113,no_match,Different business; only name or sector overlap
+100,no_match,Different business; only name or sector overlap
+110,no_match,Different business; only name or sector overlap
+104,no_match,Different business; only name or sector overlap
+106,no_match,Different business; only name or sector overlap
+107,no_match,Different business; only name or sector overlap
+112,no_match,Different business; only name or sector overlap
+105,no_match,Different business; only name or sector overlap
+102,no_match,Different business; only name or sector overlap
+111,no_match,Different business; only name or sector overlap
+109,no_match,Different business; only name or sector overlap
+108,no_match,Different business; only name or sector overlap
+101,no_match,Different business; only name or sector overlap
+103,no_match,Different business; only name or sector overlap
+99,no_match,Different business; only name or sector overlap
+90,no_match,Different business; only name or sector overlap
+94,no_match,Different business; only name or sector overlap
+89,no_match,Different business; only name or sector overlap
+98,no_match,Different business; only name or sector overlap
+88,no_match,Different business; only name or sector overlap
+96,no_match,Different business; only name or sector overlap
+93,no_match,Different business; only name or sector overlap
+97,no_match,Different business; only name or sector overlap
+95,no_match,Different business; only name or sector overlap
+86,no_match,Different business; only name or sector overlap
+91,no_match,Different business; only name or sector overlap
+92,no_match,Different business; only name or sector overlap
+87,no_match,Different business; only name or sector overlap
+76,match,Guardian Restoration Partners buyer vehicle
+77,match,Guardian Restoration Partners buyer vehicle
+75,match,Guardian Restoration Partners buyer vehicle
+74,match,Guardian Restoration Partners buyer vehicle
+84,no_match,Different business; only name or sector overlap
+82,no_match,Different business; only name or sector overlap
+79,no_match,Different business; only name or sector overlap
+78,no_match,Different business; only name or sector overlap
+80,no_match,Different business; only name or sector overlap
+85,no_match,Different business; only name or sector overlap
+81,no_match,Different business; only name or sector overlap
+83,no_match,Different business; only name or sector overlap
+62,no_match,Different business; only name or sector overlap
+60,no_match,Different business; only name or sector overlap
+63,no_match,Different business; only name or sector overlap
+72,no_match,Different business; only name or sector overlap
+69,no_match,Different business; only name or sector overlap
+71,no_match,Different business; only name or sector overlap
+66,no_match,Different business; only name or sector overlap
+70,no_match,Different business; only name or sector overlap
+67,no_match,Different business; only name or sector overlap
+68,no_match,Different business; only name or sector overlap
+64,no_match,Different business; only name or sector overlap
+61,no_match,Different business; only name or sector overlap
+73,no_match,Different business; only name or sector overlap
+65,no_match,Different business; only name or sector overlap
+52,no_match,Different business; only name or sector overlap
+50,no_match,Different business; only name or sector overlap
+54,no_match,Different business; only name or sector overlap
+47,no_match,Different business; only name or sector overlap
+49,no_match,Different business; only name or sector overlap
+53,no_match,Different business; only name or sector overlap
+56,no_match,Different business; only name or sector overlap
+55,no_match,Different business; only name or sector overlap
+59,no_match,Different business; only name or sector overlap
+51,no_match,Different business; only name or sector overlap
+48,no_match,Different business; only name or sector overlap
+58,no_match,Different business; only name or sector overlap
+57,no_match,Different business; only name or sector overlap
+36,match,"Same name, Riverside Insights"
+44,no_match,Different business; only name or sector overlap
+42,no_match,Different business; only name or sector overlap
+38,no_match,Different business; only name or sector overlap
+40,no_match,Different business; only name or sector overlap
+43,no_match,Different business; only name or sector overlap
+37,no_match,Different business; only name or sector overlap
+46,no_match,Different business; only name or sector overlap
+45,no_match,Different business; only name or sector overlap
+41,no_match,Different business; only name or sector overlap
+39,no_match,Different business; only name or sector overlap
+20,match,ASG II and III are Alpine Software Group entities
+33,no_match,Different business; only name or sector overlap
+35,no_match,Different business; only name or sector overlap
+22,match,ASG II and III are Alpine Software Group entities
+26,no_match,Different business; only name or sector overlap
+32,no_match,Different business; only name or sector overlap
+34,no_match,Different business; only name or sector overlap
+21,match,ASG II and III are Alpine Software Group entities
+23,match,ASG II and III are Alpine Software Group entities
+24,match,ASG II and III are Alpine Software Group entities
+29,match,ASG II and III are Alpine Software Group entities
+25,no_match,Different business; only name or sector overlap
+31,no_match,Different business; only name or sector overlap
+30,no_match,Different business; only name or sector overlap
+27,no_match,Different business; only name or sector overlap
+28,match,ASG II and III are Alpine Software Group entities
+9,no_match,Different business; only name or sector overlap
+17,no_match,Different business; only name or sector overlap
+13,no_match,Different business; only name or sector overlap
+12,no_match,Different business; only name or sector overlap
+11,no_match,Different business; only name or sector overlap
+15,no_match,Different business; only name or sector overlap
+18,no_match,Different business; only name or sector overlap
+7,match,"Same name, Canopy Service Partners legal entity"
+8,match,"Same name, Canopy Service Partners legal entity"
+19,no_match,Different business; only name or sector overlap
+14,no_match,Different business; only name or sector overlap
+16,no_match,Different business; only name or sector overlap
+10,no_match,Different business; only name or sector overlap
+0,match,"Same name, Ingenio legal entity"
+1,match,"Same name, Ingenio legal entity"
+2,no_match,Different business; only name or sector overlap
+6,no_match,Different business; only name or sector overlap
+4,no_match,Different business; only name or sector overlap
+3,no_match,Different business; only name or sector overlap
+5,no_match,Different business; only name or sector overlap

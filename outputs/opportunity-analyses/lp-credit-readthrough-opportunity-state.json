@@ -1,0 +1,64 @@
+{
+  "output": "outputs/opportunity-analyses/lp-credit-readthrough-opportunity.md",
+  "date": "2026-11-01",
+  "recommendation": "Go, scoped: 2-week build of the matching engine with the LP read-through as first use, measured against an answer key.",
+  "why": [
+    "49% of 291 PE-owned companies have a loan with a usable value in Q2 2026; weak for lower-mid-market (Shore 8/59).",
+    "Plain matching is 94% precise at loan level, so matching adds less than first reported; other names and bad filer data are the harder work.",
+    "BDC stress data itself is a commodity. The differentiator is mapping a client's own list, with proof."
+  ],
+  "what_would_change_it": [
+    "No-go on the commercial case if 3 LP analysts say PitchBook or 9fin already answers 'which of my companies are stressed'.",
+    "If LPs only hold GP PDFs (no company list), add PDF reading to scope or park."
+  ],
+  "decided_by_pm": {
+    "user": "LP / fund-of-funds analyst",
+    "framing": "Credit stress read-through for equity holders",
+    "evidence": "Public signals only (pain inferred)",
+    "goal": "A tool someone uses; also learn the tech and produce a case study; engine reusable across side projects and customers"
+  },
+  "open": [
+    "Recruit 2-3 LP analysts for interviews before the PRD is final.",
+    "Validate alpha inputs: share of flagged companies later marked down by GP, typical markdown size, how often an LP decision is priced in the window.",
+    "PM spot check of Claude's labels: outputs/analyses/answer-key-spot-check.csv"
+  ],
+  "goals_check": {
+    "1_recommendation_explicit": "pass",
+    "2_coverage_measured": "pass (143/291)",
+    "3_concrete_case_real": "pass (KnowBe4, Golub filings, CIK 1930087)",
+    "4_atomic_rows": "pass",
+    "5_value_equation_filled": "pass",
+    "6_pain_marked_inferred": "pass",
+    "7_voice": "pass (0 em dashes, no banned words)",
+    "8_length": "near-miss: 321 words of prose plus a ~240-word required problems table",
+    "9_vision": "pass",
+    "10_value_column": "pass"
+  },
+  "artifacts": {
+    "data": "data/coverage/*.csv|json, data/sponsors/sponsor_portfolios.csv, data/holdings.parquet",
+    "scripts": "scripts/build_holdings.py, scripts/coverage_test.py, scripts/stress_signals.py, scripts/variants.py",
+    "research": "outputs/research-synthesis/lp-monitoring-public-signals.md"
+  },
+  "next": [
+    "/prd-draft (reads this file)",
+    "/interview-guide for LP analysts",
+    "build: answer key + 3 matching approaches compared"
+  ],
+  "revisions": [
+    {
+      "date": "2026-11-01",
+      "by": "PM request",
+      "change": "Added Vision section and a value-opportunity column (productivity for problems 1-2, alpha for problem 3) with an assumptions line."
+    },
+    {
+      "date": "2026-11-02",
+      "by": "Claude, found while building",
+      "change": "Corrected 70% to 94% (name-cleaning bug), re-measured after fixing mixed periods, and corrected 'by hand' wording."
+    }
+  ],
+  "value_estimate_per_lp_per_year": {
+    "productivity_usd": 33000,
+    "alpha_usd": 540000,
+    "status": "assumed; alpha inputs (markdown rate, markdown size, decision-in-window probability) to validate in LP interviews"
+  }
+}

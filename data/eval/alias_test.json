@@ -1,0 +1,256 @@
+{
+ "results": [
+  {
+   "company": "EFTG",
+   "probe_verdict": "unsure",
+   "probe_alias": "Evergreen Services Group PIK Holdco, LLC; Redwood Services Group, LLC (Evergreen Services Group)",
+   "aliases": [
+    "Evergreen Financial Technology Group",
+    "Evergreen Services Group"
+   ],
+   "hits": [
+    {
+     "alias": "Evergreen Services Group",
+     "source": "https://www.linkedin.com/posts/alpine-investors_evergreen-financial-technology-group-ceo-activity-7062106215920623617-7mwE",
+     "n_holdings": 20,
+     "n_lenders": 4,
+     "example": "Evergreen Services Group PIK Holdco, LLC 1 | Non-Affiliated Issuer"
+    }
+   ],
+   "input_tokens": 19201,
+   "output_tokens": 550,
+   "searches": 1
+  },
+  {
+   "company": "First Eagle Investments",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "First Eagle Holdings, Inc.",
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 35442,
+   "output_tokens": 529,
+   "searches": 3
+  },
+  {
+   "company": "PlayMetrics",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "Stack Sports Buyer, LLC",
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 26433,
+   "output_tokens": 420,
+   "searches": 3
+  },
+  {
+   "company": "Safety Management Group",
+   "probe_verdict": "unsure",
+   "probe_alias": "SMG Operating Company, LLC",
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 28305,
+   "output_tokens": 455,
+   "searches": 3
+  },
+  {
+   "company": "Metagenics",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "Meta Buyer, LLC",
+   "aliases": [
+    "Meta Buyer LLC",
+    "Metagenics, LLC",
+    "Metagenics, Inc."
+   ],
+   "hits": [
+    {
+     "alias": "Meta Buyer LLC",
+     "source": "https://d18rn0p25nwr6d.cloudfront.net/CIK-0001552198/9b6db451-7b25-49b4-ad9f-10fd97bd2574.pdf",
+     "n_holdings": 145,
+     "n_lenders": 11,
+     "example": "Non-Controlled/Non-Affiliated Investments 1st Lien/Secured Loans United States of America Meta Buyer LLC Instrument 1st Lien Term Loan Industry Consum"
+    }
+   ],
+   "input_tokens": 29962,
+   "output_tokens": 1035,
+   "searches": 3
+  },
+  {
+   "company": "Goodier",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "Revision Buyer LLC; RVGD Aggregator LP",
+   "aliases": [
+    "Goodier Cosmetics"
+   ],
+   "hits": [],
+   "input_tokens": 19286,
+   "output_tokens": 372,
+   "searches": 1
+  },
+  {
+   "company": "Vision Innovation Partners",
+   "probe_verdict": "unsure",
+   "probe_alias": "MVP VIP Borrower, LLC",
+   "aliases": [
+    "Chesapeake Eye Care"
+   ],
+   "hits": [],
+   "input_tokens": 29080,
+   "output_tokens": 640,
+   "searches": 3
+  },
+  {
+   "company": "SDC Nutrition",
+   "probe_verdict": "unsure",
+   "probe_alias": "LCM SDC Holdings, LLC",
+   "aliases": [
+    "SDC Nutrition Inc."
+   ],
+   "hits": [],
+   "input_tokens": 19264,
+   "output_tokens": 352,
+   "searches": 1
+  },
+  {
+   "company": "SENTA",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "SCP ENT and Allergy Services, LLC",
+   "aliases": [
+    "Southern Ear, Nose, Throat and Allergy Physicians"
+   ],
+   "hits": [],
+   "input_tokens": 18593,
+   "output_tokens": 357,
+   "searches": 1
+  },
+  {
+   "company": "Exabeam",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "LogRhythm, Inc.",
+   "aliases": [
+    "LogRhythm, Inc."
+   ],
+   "hits": [
+    {
+     "alias": "LogRhythm, Inc.",
+     "source": "https://en.wikipedia.org/wiki/LogRhythm",
+     "n_holdings": 69,
+     "n_lenders": 14,
+     "example": "Debt Investments - non-controlled/non-affiliated Software LogRhythm, Inc. First Lien Debt Reference Rate and Spread S + 7.50% (incl. 6.75% PIK) Intere"
+    }
+   ],
+   "input_tokens": 27570,
+   "output_tokens": 558,
+   "searches": 3
+  },
+  {
+   "company": "Jeppesen ForeFlight",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "Jeppesen Holdings, LLC",
+   "aliases": [
+    "Jeppesen ForeFlight, Inc.",
+    "Boeing Digital Aviation Solutions (portions of)"
+   ],
+   "hits": [],
+   "input_tokens": 28224,
+   "output_tokens": 973,
+   "searches": 3
+  },
+  {
+   "company": "InvoiceCloud",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "Icefall Parent, Inc.",
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 25731,
+   "output_tokens": 401,
+   "searches": 3
+  },
+  {
+   "company": "AlertMedia",
+   "probe_verdict": "has_bdc_loan_under_other_name",
+   "probe_alias": "Alert Media, Inc.",
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 44527,
+   "output_tokens": 711,
+   "searches": 3
+  },
+  {
+   "company": "Portside",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 19179,
+   "output_tokens": 217,
+   "searches": 1
+  },
+  {
+   "company": "Antelope",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 33156,
+   "output_tokens": 443,
+   "searches": 3
+  },
+  {
+   "company": "NewRocket",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 27071,
+   "output_tokens": 447,
+   "searches": 3
+  },
+  {
+   "company": "Arcos",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [
+    "ARCOS LLC"
+   ],
+   "hits": [],
+   "input_tokens": 35753,
+   "output_tokens": 735,
+   "searches": 3
+  },
+  {
+   "company": "Freestone Insurance Group",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 19000,
+   "output_tokens": 214,
+   "searches": 1
+  },
+  {
+   "company": "PRO-spectus",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [],
+   "hits": [],
+   "input_tokens": 25757,
+   "output_tokens": 328,
+   "searches": 3
+  },
+  {
+   "company": "North American Essential Home Services (NAEHS)",
+   "probe_verdict": "no_bdc_loan_found",
+   "probe_alias": NaN,
+   "aliases": [
+    "North American Essential Home Services"
+   ],
+   "hits": [],
+   "input_tokens": 18632,
+   "output_tokens": 318,
+   "searches": 1
+  }
+ ],
+ "usd": 2.781764,
+ "input_tokens": 530166,
+ "output_tokens": 10055,
+ "searches": 46
+}

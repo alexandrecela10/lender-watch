@@ -1,0 +1,23 @@
+{
+ "output": "outputs/portfolio/lender-watch/index.html",
+ "date": "2026-11-02",
+ "status": "Ready to publish, waiting on the PM's push",
+ "decided": [
+  "Lead with the outcome, and show demand as unproven in the stat strip",
+  "Show first-wrong numbers as the main learning"
+ ],
+ "defaults_taken": [
+  "Name: Lender Watch",
+  "Filing link not fetched, because the SEC contact is still a placeholder",
+  "No demo or code button, since neither is public"
+ ],
+ "open": [
+  "Push repo and hub",
+  "Deploy Streamlit app",
+  "Check live links"
+ ],
+ "next": [
+  "PM spot check"
+ ],
+ "note": "KnowBe4 June value read from the filing by Claude on 2026-11-02; a person hasn't looked"
+}

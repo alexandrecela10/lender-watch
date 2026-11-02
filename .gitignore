@@ -1,0 +1,23 @@
+.env
+.env.*
+.DS_Store
+__pycache__/
+.venv/
+data/raw/
+*.duckdb
+data/holdings.parquet
+data/*.parquet
+data/index.pkl
+data/decisions.sqlite
+# Private or draft material, kept out of the public repo
+PRD_1.md
+CLAUDE_1.md
+KICKOFF_PROMPTS.md
+CLAUDE.md
+context-library/
+outputs/research-synthesis/
+data/coverage/
+.pytest_cache/
+.ruff_cache/
+data/eval/*_batch_id.txt
+data/demo/*_enriched.xlsx

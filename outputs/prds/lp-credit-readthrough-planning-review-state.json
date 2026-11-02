@@ -1,0 +1,38 @@
+{
+ "output": "outputs/prds/lp-credit-readthrough-planning-review.md",
+ "date": "2026-11-02",
+ "stage": "Planning Review",
+ "status": "Draft, reviewed by the panel and corrected 2026-11-02",
+ "decided": [
+  "Go, scoped 2-week build (ERM-001)",
+  "Names policy confirmed 2026-11-01 (context-library/README.md)",
+  "Precision favoured over recall"
+ ],
+ "defaults_taken_pm_away": [
+  "Stage: Planning Review",
+  "Working name: Lender Watch",
+  "First interface: spreadsheet",
+  "Deadline: 2026-11-16",
+  "Review load target: <= 15% of names"
+ ],
+ "open": [
+  "LP list vs GP PDFs",
+  "Alpha inputs",
+  "Whether PitchBook or 9fin already serves a client's own list",
+  "Product name",
+  "business-info template and strategy folder are empty",
+  "Whether fund agreements allow names to go to an outside AI",
+  "Stop features, dated kill and 6 interviews: see review synthesis"
+ ],
+ "not_verified": [
+  "SEC data set publish date, so day 62 is approximate",
+  "Labels are Claude's until a person checks the 50 pairs",
+  "Flag values confirmed by script only",
+  "All value figures except coverage and flag rate are assumed"
+ ],
+ "next": [
+  "PM spot check",
+  "PitchBook and 9fin demos",
+  "LP interviews"
+ ]
+}
