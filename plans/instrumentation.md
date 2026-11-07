@@ -87,6 +87,17 @@ Exit criteria
 Run the `verifier` agent. It runs `make test`, `make lint`, `make evals` and the demo enrich, and reports only.
 A live judge-on run with real Langfuse keys sends names to Anthropic. It needs Alexandre's approval first, uses `data/demo/sample_list.csv` only, and ends with a look at one trace in the Langfuse UI to confirm its input holds only `has_sector`, `has_owner` and `n_examples`.
 
+## Options not chosen
+
+| Option | Why not |
+|---|---|
+| Send company names to Langfuse when the person agreed to the judge | Agreeing to Anthropic isn't agreeing to a second vendor (spec concern 1) |
+| Langfuse's `@observe` decorator | It captures function arguments, which are company names |
+| Trace every run, not only judge calls | Runs with the judge off would then send data out by default |
+| Store run records in the decision store | The hosted app copies that store per visitor, so records would be lost |
+| Turn tracing on whenever Langfuse keys exist | Adds an outside call that is on by default |
+| Wire the entry points first (step 4 before 1 to 3) | Product behaviour would change before the safety tests exist |
+
 ## Risks
 
 | Risk | What it would break | Mitigation |
