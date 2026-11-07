@@ -10,7 +10,8 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 - It fails if precision drops below 0.97 or recall below 0.90, and GitHub emails Alexandre.
 - One run makes about 145 judge calls, takes about 8 minutes, and should cost under $1. It stops at $3.
 - Each run's result is added to one GitHub issue, which keeps the history and emails Alexandre.
-- It sends only public filing names to Anthropic, and skips cleanly when the API key is absent.
+- It sends public filing data to Anthropic: company names, sectors, owners, borrower text and filing rows. It skips cleanly when the API key is absent.
+- This is the one outside call that runs without a person starting it: CI only, answer-key data only. The product's judge stays off by default.
 - Not in this build: alerts on real-use run records (Stage 6). Too few real runs exist yet.
 
 ## Concerns and resolutions
@@ -28,6 +29,9 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 | 9 | The 2 November answers came from the Batch API, without the refusal fallback. The live check goes through the product's call, which adds it. | Don't compare live verdicts with the batch answers. Report the batch scores once, labelled "batch, 2 November", next to the first live run. | Otherwise a change of call path would read as drift. |
 | 10 | The intent asks for each run to be recorded, but a CI job keeps nothing, and `data/metrics.sqlite` only exists on the machine that ran it. | Each run adds one comment to a GitHub issue, "Live judge check history": date, model, scores, false matches, verdicts changed, cost, PASS or FAIL. The next run reads the last comment to compare. | The history survives log expiry, needs no commit to `main`, and the issue's emails reach Alexandre. |
 | 11 | A change to the pairs, the reference, the gate or the SDK version also changes what is judged. | Those files trigger the check too (section 3). | The metric "judge changes merged with a passing live check" must cover them. |
+| 12 | The product calls the judge through `erm.api.call_judge`, which adds logging, cost and error handling, and builds the filing rows itself. Calling `judge` directly would test a different path. | The check calls `call_judge`, with filing rows cut to 170 characters as the product does. `erm/api.py` and `erm/telemetry.py` trigger it. No Langfuse keys are set in CI, so no traces are sent. | The check must test the call users get. |
+| 13 | An outage or rate limit mid-run would read as a drop in recall. | A call that errors is counted as an error and left out of the scores. Over 10% errors marks the run ERROR, not FAIL. A run stopped by a cap is INCOMPLETE. Neither is compared. | An outage is not drift. |
+| 14 | A skipped run (no key) could look like a completed one. | A skipped run posts no history comment, so the 8-day warning still fires. Pull requests from forks and bots skip; only runs with the key count toward the metric. | The staleness warning must see only real runs. |
 
 ## Problems this solves
 
@@ -47,9 +51,11 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 **What goes in.** The answer-key pairs from `data/eval/scored_pairs.csv`, with company name, sector, owner, borrower text and two filing rows. Sent to Anthropic, never logged. Only pairs the chosen method sends to the judge are asked: a wider name hit that the exact-name rule doesn't settle. Today that's about 145 of 1,028.
 
 **What it does.**
-- Asks the judge about each pair, live, through `erm.match.judge.judge`, the same call the product makes.
+- Asks the judge about each pair, live, through `erm.api.call_judge`, the same call the product makes (concern 12).
 - Scores the result with the same scorer as the replayed gate.
-- Compares it with the floors in `evals/thresholds.yaml`, and with the first live run's verdicts, stored by pair id in `evals/live_reference.csv` once that run is accepted.
+- Compares it with the floors in `evals/thresholds.yaml`.
+- Compares it with the first live run's verdicts, stored by pair id in `evals/live_reference.csv` once that run is accepted: how many verdicts changed.
+- Compares it with the last completed run, read from the history issue: the change in precision, recall and false matches.
 - Stops at $3 or 250 calls, whichever comes first, and exits with a failure saying which limit was hit.
 
 **What comes out.** One summary, printed and written to the GitHub job page:
@@ -57,7 +63,7 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 ```
 live judge check, 2026-11-09, model claude-opus-5-5 (145 calls)
 precision 1.000 (floor 0.97)   recall 0.936 (floor 0.90)
-false matches 0 (reference 0)  verdicts changed since the reference: 3 of 145
+false matches 0 (last run 0)  verdicts changed since the reference: 3 of 145  errors 0
 cost $0.67  time 7m 50s        labels are Claude's, not checked by a person
 PASS
 ```
@@ -79,7 +85,7 @@ The numbers above are an example, not a result.
 ## 3. The workflow: `.github/workflows/live-eval.yml`
 
 - **Runs on:**
-  - pull requests that touch `erm/match/`, `eval/live.py`, `eval/compare.py`, `eval/offline.py`, `evals/`, `data/eval/answer_key.csv`, `data/eval/scored_pairs.csv`, `data/eval/judge_results.csv` or `uv.lock`
+  - pull requests that touch `erm/match/`, `erm/api.py`, `erm/telemetry.py`, `eval/live.py`, `eval/compare.py`, `eval/offline.py`, `evals/`, `data/eval/answer_key.csv`, `data/eval/scored_pairs.csv`, `data/eval/judge_results.csv` or `uv.lock`
   - every Monday at 04:00 UTC
   - by hand
 - **Secret:** `ANTHROPIC_API_KEY`, added by Alexandre. Never printed.
@@ -97,6 +103,8 @@ Each is a test in `tests/test_live_eval.py` unless marked. None calls Anthropic.
 5. No key: exit 0 and "skipped". No call is made.
 6. The product, the scorer and the gate import the same `is_clear_exact`. `make evals` still prints 1.000 and 0.936.
 7. No log line, summary line, dry-run line or history comment contains a company name from the answer key.
-8. The history comment parses back: the next run reads the date, scores and verdict count from it.
-9. (Manual, once) Three live runs (`--repeat 3`) on `main` complete under $3 each. The spread is written into this spec, and the first run becomes the reference.
-10. `make test`, `make lint` and `make evals` pass.
+8. The history comment parses back. A second run with one more false match reports "false matches 1 (last run 0)".
+9. A fake judge that errors on 20 of 145 pairs marks the run ERROR, not FAIL, and leaves those pairs out of the scores.
+10. A skipped run posts no history comment.
+11. (Manual, once) Three live runs (`--repeat 3`) on `main` complete under $3 each. The spread is written into this spec, and the first run becomes the reference.
+12. `make test`, `make lint` and `make evals` pass.
