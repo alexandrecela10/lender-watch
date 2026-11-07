@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>I5 test proof</title>
+<style>body{font:9px/1.45 -apple-system,Helvetica,sans-serif;margin:24px;background:#fff;color:#111}
+h1{font-size:13px}h2{font-size:10px;margin-top:10px}pre{font-size:8px;background:#f4f4f4;padding:6px;border-radius:6px;white-space:pre-wrap}</style></head>
+<body><h1>Step I5 test proof, 2026-11-07</h1>
+<p>Raw command output, copied unchanged. Section 3 is the live run with the judge on: 24 calls to Anthropic, on the 6 demo names only.</p>
+<h2>Tests, style check, evals (main)</h2><pre>============================= 58 passed in 53.40s ==============================
+All checks passed!
+62 files already formatted
+precision   1.000  threshold 0.97
+recall      0.936  threshold 0.90
+tp 162  fp 0  fn 11
+PASS
+90a570a feat(telemetry): instrument CLI, app and MCP runs
+</pre>
+<h2>Run records, logs, saved answers</h2><pre>APP RUN RECORDS (/tmp/erm-verify/metrics.sqlite)
+source | names_in | matched | need review | judge_on
+app | 6 | 2 | 3 | 0
+app_answer | 0 | 0 | 0 | 0
+
+APP LOG EVENTS
+run_started app  
+run_finished app  
+run_started app_answer  
+person_answer  no_match person
+run_finished app_answer  
+tracking ids: 2
+company names found in app log: {&#x27;KnowBe4&#x27;: 0, &#x27;Apex Group&#x27;: 0, &#x27;Foundation&#x27;: 0, &#x27;Exabeam&#x27;: 0, &#x27;Anaplan&#x27;: 0, &#x27;Not A Real Company Xyzzy&#x27;: 0}
+
+LIVE JUDGE-ON CLI RUN (/tmp/erm-verify/live.log)
+run_started judge_on= True {}
+run_finished judge_on= True {&#x27;names_in&#x27;: 6, &#x27;judge_calls&#x27;: 0, &#x27;judge_cost_usd&#x27;: 0.0}
+company names found in live log: 0
+
+SAVED ANSWERS UNCHANGED:
+d3f8eb510b80548b99912adea1a723b79078f2ea  data/decisions.sqlite
+d3f8eb510b80548b99912adea1a723b79078f2ea  /tmp/erm-verify/decisions.backup.sqlite
+
+</pre><h2>3. Live judge-on run and Langfuse read-back</h2><pre>LIVE RUN, JUDGE ON, EMPTY SAVED-ANSWERS FILE (/tmp/erm-verify/live2.log)
+events: {&#x27;run_started&#x27;: 1, &#x27;judge_call&#x27;: 24, &#x27;run_finished&#x27;: 1}
+tracking ids: 1
+verdicts: {&#x27;no_match&#x27;: 19, &#x27;match&#x27;: 3, &#x27;unsure&#x27;: 2}
+model: {&#x27;claude-opus-5-5&#x27;: 24}
+run_finished: names_in=6 judge_calls=24 judge_cost_usd=0.109396 duration_ms=64720
+one judge_call line: {&quot;event&quot;: &quot;judge_call&quot;, &quot;verdict&quot;: &quot;no_match&quot;, &quot;model&quot;: &quot;claude-opus-5-5&quot;, &quot;input_tokens&quot;: 800, &quot;output_tokens&quot;: 84, &quot;cost_usd&quot;: 0.00488, &quot;latency_ms&quot;: 2946}
+company names in live log: 0
+
+READ BACK FROM LANGFUSE (one of 24 stored records; Langfuse&#x27;s own SDK attributes left out)
+input:  {&quot;has_sector&quot;: true, &quot;has_owner&quot;: true, &quot;n_examples&quot;: 2}
+output: {&quot;verdict&quot;: &quot;match&quot;, &quot;stop_reason&quot;: &quot;end_turn&quot;}
+metadata (ours): prompt_version=dafe5558, source=cli, request_id=8a48787a-...
+model: claude-opus-5-5   usage: input 655, output 79   cost: 0.0042
+records stored: 24; company names across all 24: 0
+
+SAVED ANSWERS RESTORED:
+d3f8eb510b80548b99912adea1a723b79078f2ea  data/decisions.sqlite
+d3f8eb510b80548b99912adea1a723b79078f2ea  /tmp/erm-verify/decisions.backup.sqlite
+</pre></body></html>
