@@ -1,4 +1,5 @@
 """Run all 291 sponsor companies: judge every unclear pair by batch, save verdicts, then write facts and flags."""
+
 import csv
 import json
 import time
@@ -30,18 +31,35 @@ todo = {}
 for r in sp.itertuples():
     for key, g in e.groups(r.company_name).items():
         m = g["mention"]
-        f = compute(g["via"], m.text, e.doc_freq, e.total_docs, m.left, m.right, m.trade_name)
+        f = compute(
+            g["via"], m.text, e.doc_freq, e.total_docs, m.left, m.right, m.trade_name
+        )
         pid = pair_id(r.company_name, key)
         if (g["via"] == r.company_name and is_clear_exact(f)) or e.store.get(pid):
             continue
-        ex = e.index.holdings.iloc[g["rows"]].raw_text.drop_duplicates().str.slice(0, 170).head(2).tolist()
-        todo[pid] = (r.company_name, key, request_params(r.company_name, r.sector, r.sponsor, m.text, ex))
+        ex = (
+            e.index.holdings.iloc[g["rows"]]
+            .raw_text.drop_duplicates()
+            .str.slice(0, 170)
+            .head(2)
+            .tolist()
+        )
+        todo[pid] = (
+            r.company_name,
+            key,
+            request_params(r.company_name, r.sector, r.sponsor, m.text, ex),
+        )
 print(len(todo), "pairs to judge", flush=True)
 if todo:
     if state.exists():
         bid = state.read_text().strip()
     else:
-        bid = client.messages.batches.create(requests=[Request(custom_id=k, params=MessageCreateParamsNonStreaming(**v[2])) for k, v in todo.items()]).id
+        bid = client.messages.batches.create(
+            requests=[
+                Request(custom_id=k, params=MessageCreateParamsNonStreaming(**v[2]))
+                for k, v in todo.items()
+            ]
+        ).id
         state.write_text(bid)
     while client.messages.batches.retrieve(bid).processing_status != "ended":
         time.sleep(20)
@@ -56,7 +74,9 @@ if todo:
         else:
             e.store.save(name, key, "unsure", JUDGE, f"Batch {it.result.type}")
     usd = (tin * 4e-6 + tout * 20e-6) * 0.5
-    Path("data/eval/full_cost.json").write_text(json.dumps(dict(pairs=len(todo), usd=round(usd, 3))))
+    Path("data/eval/full_cost.json").write_text(
+        json.dumps(dict(pairs=len(todo), usd=round(usd, 3)))
+    )
     print("usd", round(usd, 3), flush=True)
 
 rows, facts = [], []
@@ -64,17 +84,52 @@ t0 = time.time()
 for r in sp.itertuples():
     o = e.gather_facts(r.company_name, {"sector": r.sector, "sponsor": r.sponsor})
     res, fl = o["resolution"], o["flags"]
-    rows.append(dict(sponsor=r.sponsor, company=r.company_name, sector=r.sector, status=res["status"], borrower=res["canonical_name"],
-                     level=fl["level"], n_lenders=fl["n_lenders"], n_loans=fl["n_loans"], weighted=fl["weighted_pct_par"], weighted_change=fl["weighted_change"], lowest=fl["lowest_pct_par"], biggest_drop=fl["biggest_drop"],
-                     below_90=fl["below_90"], dropped=fl["dropped"], lender_gap=fl["lender_gap"], pik=fl["pik"], summary=fl["summary"],
-                     n_candidates=len(res["candidates"]), n_unsure=sum(c["verdict"] == "unsure" for c in res["candidates"])))
+    rows.append(
+        dict(
+            sponsor=r.sponsor,
+            company=r.company_name,
+            sector=r.sector,
+            status=res["status"],
+            borrower=res["canonical_name"],
+            level=fl["level"],
+            n_lenders=fl["n_lenders"],
+            n_loans=fl["n_loans"],
+            weighted=fl["weighted_pct_par"],
+            weighted_change=fl["weighted_change"],
+            lowest=fl["lowest_pct_par"],
+            biggest_drop=fl["biggest_drop"],
+            below_90=fl["below_90"],
+            dropped=fl["dropped"],
+            lender_gap=fl["lender_gap"],
+            pik=fl["pik"],
+            summary=fl["summary"],
+            n_candidates=len(res["candidates"]),
+            n_unsure=sum(c["verdict"] == "unsure" for c in res["candidates"]),
+        )
+    )
     for f in o["facts"]:
         facts.append(dict(company=r.company_name, **f))
 pd.DataFrame(rows).to_csv("data/eval/full_results.csv", index=False)
-pd.DataFrame(facts).to_csv("data/eval/full_facts.csv", index=False, quoting=csv.QUOTE_MINIMAL)
+pd.DataFrame(facts).to_csv(
+    "data/eval/full_facts.csv", index=False, quoting=csv.QUOTE_MINIMAL
+)
 d = pd.DataFrame(rows)
 print("seconds", round(time.time() - t0), d.status.value_counts().to_dict())
 with_f = d[d.n_loans > 0]
-print("with usable loan", len(with_f), {k: int(with_f[k].sum()) for k in ["below_90", "dropped", "lender_gap", "pik"]}, "levels", with_f.level.value_counts().to_dict())
-print(d.groupby("sponsor").apply(lambda g: f"{(g.n_loans > 0).sum()}/{len(g)}", include_groups=False).to_dict())
-print(with_f.sort_values("biggest_drop").head(12)[["company", "n_lenders", "lowest", "biggest_drop", "summary"]].to_string(index=False, max_colwidth=120))
+print(
+    "with usable loan",
+    len(with_f),
+    {k: int(with_f[k].sum()) for k in ["below_90", "dropped", "lender_gap", "pik"]},
+    "levels",
+    with_f.level.value_counts().to_dict(),
+)
+print(
+    d.groupby("sponsor")
+    .apply(lambda g: f"{(g.n_loans > 0).sum()}/{len(g)}", include_groups=False)
+    .to_dict()
+)
+print(
+    with_f.sort_values("biggest_drop")
+    .head(12)[["company", "n_lenders", "lowest", "biggest_drop", "summary"]]
+    .to_string(index=False, max_colwidth=120)
+)

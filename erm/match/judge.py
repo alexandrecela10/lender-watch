@@ -22,26 +22,41 @@ Keep the reason under 25 words and quote the words in the holding text that deci
 
 class Verdict(BaseModel):
     verdict: Literal["match", "no_match", "unsure"]
-    reason: str = Field(description="Under 25 words, quoting the holding text that decided it.")
+    reason: str = Field(
+        description="Under 25 words, quoting the holding text that decided it."
+    )
 
 
 OUTPUT_CONFIG = {
     "effort": "low",
-    "format": {"type": "json_schema", "schema": {
-        "type": "object",
-        "properties": {
-            "verdict": {"type": "string", "enum": ["match", "no_match", "unsure"]},
-            "reason": {"type": "string"},
+    "format": {
+        "type": "json_schema",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "verdict": {"type": "string", "enum": ["match", "no_match", "unsure"]},
+                "reason": {"type": "string"},
+            },
+            "required": ["verdict", "reason"],
+            "additionalProperties": False,
         },
-        "required": ["verdict", "reason"],
-        "additionalProperties": False,
-    }},
+    },
 }
 
 
-def user_message(name: str, sector: str | None, sponsor: str | None, candidate: str, examples: list[str]) -> str:
-    listed = f"Name: {name}\nSector: {sector or 'unknown'}\nOwner: {sponsor or 'unknown'}"
-    held = f"Borrower text: {candidate}\n" + "\n".join(f"Filing row: {e}" for e in examples if e)
+def user_message(
+    name: str,
+    sector: str | None,
+    sponsor: str | None,
+    candidate: str,
+    examples: list[str],
+) -> str:
+    listed = (
+        f"Name: {name}\nSector: {sector or 'unknown'}\nOwner: {sponsor or 'unknown'}"
+    )
+    held = f"Borrower text: {candidate}\n" + "\n".join(
+        f"Filing row: {e}" for e in examples if e
+    )
     return f"<listed>\n{listed}\n</listed>\n<holding>\n{held}\n</holding>"
 
 
@@ -51,7 +66,12 @@ def request_params(name, sector, sponsor, candidate, examples) -> dict:
         max_tokens=1024,
         system=SYSTEM,
         output_config=OUTPUT_CONFIG,
-        messages=[{"role": "user", "content": user_message(name, sector, sponsor, candidate, examples)}],
+        messages=[
+            {
+                "role": "user",
+                "content": user_message(name, sector, sponsor, candidate, examples),
+            }
+        ],
     )
 
 

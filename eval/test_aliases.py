@@ -1,5 +1,6 @@
 """Does automated alias research find the names that separate web research found, and what do wrong aliases cost?
 Sample: all 13 companies with a found or unsure alias, plus 7 with none. Enriched on purpose: not a rate for all names."""
+
 import concurrent.futures as cf
 import json
 
@@ -24,19 +25,41 @@ idx = Index.build(h[h.period == "2026-06-30"], semantic=False)
 
 def one(row):
     s = sp.loc[row.company_name]
-    al, u = research(c, row.company_name, s.sector if isinstance(s.sector, str) else None, row.sponsor)
+    al, u = research(
+        c,
+        row.company_name,
+        s.sector if isinstance(s.sector, str) else None,
+        row.sponsor,
+    )
     found = []
     for a in al:
         k = core(a["name"])
         if not k:
             continue
         pat = name_pattern(k)
-        rows = [i for i in idx.rarest_rows(k) if find_mention(idx.holdings.raw_text.iloc[i], pat)]
+        rows = [
+            i
+            for i in idx.rarest_rows(k)
+            if find_mention(idx.holdings.raw_text.iloc[i], pat)
+        ]
         if rows:
-            found.append(dict(alias=a["name"], source=a["source_url"], n_holdings=len(rows),
-                              n_lenders=int(idx.holdings.lender.iloc[rows].nunique()),
-                              example=idx.holdings.raw_text.iloc[rows[0]][:150]))
-    return dict(company=row.company_name, probe_verdict=row.verdict, probe_alias=row.alias_found_in_bdc, aliases=[a["name"] for a in al], hits=found, **u)
+            found.append(
+                dict(
+                    alias=a["name"],
+                    source=a["source_url"],
+                    n_holdings=len(rows),
+                    n_lenders=int(idx.holdings.lender.iloc[rows].nunique()),
+                    example=idx.holdings.raw_text.iloc[rows[0]][:150],
+                )
+            )
+    return dict(
+        company=row.company_name,
+        probe_verdict=row.verdict,
+        probe_alias=row.alias_found_in_bdc,
+        aliases=[a["name"] for a in al],
+        hits=found,
+        **u,
+    )
 
 
 with cf.ThreadPoolExecutor(5) as ex:
@@ -45,7 +68,19 @@ tin = sum(x["input_tokens"] for x in res)
 tout = sum(x["output_tokens"] for x in res)
 srch = sum(x["searches"] for x in res)
 usd = tin * 4e-6 + tout * 20e-6 + srch * 0.01
-json.dump(dict(results=res, usd=usd, input_tokens=tin, output_tokens=tout, searches=srch), open("data/eval/alias_test.json", "w"), indent=1)
+json.dump(
+    dict(results=res, usd=usd, input_tokens=tin, output_tokens=tout, searches=srch),
+    open("data/eval/alias_test.json", "w"),
+    indent=1,
+)
 for x in res:
-    print(x["company"], "|", x["probe_verdict"][:12], "|", [(h["alias"], h["n_lenders"]) for h in x["hits"]][:4], "| no hit:", [a for a in x["aliases"] if a not in [h["alias"] for h in x["hits"]]][:3])
+    print(
+        x["company"],
+        "|",
+        x["probe_verdict"][:12],
+        "|",
+        [(h["alias"], h["n_lenders"]) for h in x["hits"]][:4],
+        "| no hit:",
+        [a for a in x["aliases"] if a not in [h["alias"] for h in x["hits"]]][:3],
+    )
 print("usd", round(usd, 2), "searches", srch, "tokens", tin, tout)

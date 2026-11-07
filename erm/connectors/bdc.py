@@ -19,7 +19,10 @@ COLUMNS = {
     "Investment, Interest Rate, Paid in Kind": "pik_rate",
 }
 META = ["adsh", "cik", "name", "ddate", "qtrs", "period", "filed", "form", "inlineurl"]
-MIN_PCT_PAR, MAX_PCT_PAR = 5.0, 130.0  # outside this a value/par ratio is a data problem, not a price
+MIN_PCT_PAR, MAX_PCT_PAR = (
+    5.0,
+    130.0,
+)  # outside this a value/par ratio is a data problem, not a price
 # A real markdown has cost near par and fair value below it. Cost far from principal means a partly drawn loan or tags
 # that don't belong together, either of which would read as a false markdown.
 # Foreign loans have the same signature: filers tag principal in local currency and cost and value in US dollars, so a
@@ -31,10 +34,14 @@ MIN_COST_RATIO, MAX_COST_RATIO = 0.80, 1.15
 def load_soi(paths: list[str | Path]) -> pd.DataFrame:
     frames = []
     for path in paths:
-        if Path(path).stat().st_size == 0:  # SEC publishes empty tables for months with no filings
+        if (
+            Path(path).stat().st_size == 0
+        ):  # SEC publishes empty tables for months with no filings
             continue
         df = pd.read_csv(path, sep="\t", dtype=str, low_memory=False)
-        df = df[META + [c for c in COLUMNS if c in df]].rename(columns=COLUMNS | {"name": "lender"})
+        df = df[META + [c for c in COLUMNS if c in df]].rename(
+            columns=COLUMNS | {"name": "lender"}
+        )
         # Each filing also repeats the prior year-end schedule. ddate says which date a row's values are for.
         df = df[df.raw_text.notna() & (df.qtrs == "0")]
         frames.append(df.assign(period=df.ddate).drop(columns=["ddate", "qtrs"]))
@@ -55,10 +62,14 @@ def enrich(h: pd.DataFrame) -> pd.DataFrame:
     reason[~h.funded_debt] = "not funded debt"
     reason[(reason == "") & ~(h.principal > 0)] = "no principal"
     reason[(reason == "") & ~(h.fair_value > 0)] = "no fair value"
-    reason[(reason == "") & ~h.pct_par.between(MIN_PCT_PAR, MAX_PCT_PAR)] = "implausible value"
+    reason[(reason == "") & ~h.pct_par.between(MIN_PCT_PAR, MAX_PCT_PAR)] = (
+        "implausible value"
+    )
     ratio = h.cost / h.principal
     reason[(reason == "") & h.cost.isna()] = "no cost to check against"
-    reason[(reason == "") & ~ratio.between(MIN_COST_RATIO, MAX_COST_RATIO)] = "amounts don't line up"
+    reason[(reason == "") & ~ratio.between(MIN_COST_RATIO, MAX_COST_RATIO)] = (
+        "amounts don't line up"
+    )
     h["excluded_reason"] = reason
     h["holding_id"] = h.adsh + ":" + h.groupby("adsh").cumcount().astype(str)
     return h

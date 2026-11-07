@@ -22,17 +22,25 @@ def levels(f: Features) -> dict[str, str]:
     """Discretise features so that each level has enough examples to estimate m and u."""
     return {
         "name": (
-            "exact" if f.exact_core
-            else "contained" if f.contained
-            else "close" if f.name_score >= 85
-            else "partial" if f.name_score >= 65
+            "exact"
+            if f.exact_core
+            else "contained"
+            if f.contained
+            else "close"
+            if f.name_score >= 85
+            else "partial"
+            if f.name_score >= 65
             else "far"
         ),
         "extra": "0" if f.extra_words == 0 else "1" if f.extra_words == 1 else "2+",
         "extra_generic": "0" if f.extra_generic == 0 else "1+",
         "left": "0" if f.left_words == 0 else "1+",
         "trade": str(f.trade_name),
-        "distinct": "high" if f.distinctiveness >= 0.75 else "mid" if f.distinctiveness >= 0.5 else "low",
+        "distinct": "high"
+        if f.distinctiveness >= 0.75
+        else "mid"
+        if f.distinctiveness >= 0.5
+        else "low",
         "shape": "short" if f.short_name else "single" if f.single_word else "multi",
     }
 
@@ -43,7 +51,9 @@ class LinkageModel:
     prior_log2_odds: float
 
     @classmethod
-    def fit(cls, feats: list[Features], labels: list[bool], smoothing: float = 0.5) -> "LinkageModel":
+    def fit(
+        cls, feats: list[Features], labels: list[bool], smoothing: float = 0.5
+    ) -> "LinkageModel":
         pos = Counter()
         neg = Counter()
         seen = defaultdict(set)
@@ -63,7 +73,12 @@ class LinkageModel:
         return cls(dict(weights), prior)
 
     def score(self, f: Features) -> float:
-        return self.prior_log2_odds + sum(self.weights.get(k, {}).get(v, 0.0) for k, v in levels(f).items())
+        return self.prior_log2_odds + sum(
+            self.weights.get(k, {}).get(v, 0.0) for k, v in levels(f).items()
+        )
 
     def explain(self, f: Features) -> dict[str, float]:
-        return {f"{k}={v}": round(self.weights.get(k, {}).get(v, 0.0), 2) for k, v in levels(f).items()}
+        return {
+            f"{k}={v}": round(self.weights.get(k, {}).get(v, 0.0), 2)
+            for k, v in levels(f).items()
+        }

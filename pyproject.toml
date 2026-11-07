@@ -26,3 +26,20 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]  # eval/test_aliases.py is a paid script, not a test
 pythonpath = ["."]
+
+[tool.ruff.lint]
+# Day-1 baseline (2026-11-07): these rules fail on existing code. Ruff marks every
+# fix for them as unsafe, and day 1 changes no behaviour, so they are ignored here.
+# Remove one at a time with its own fix and a re-run of the evals.
+# B023 in eval/verify_flags.py (loop variable `window` not bound) may be a real bug.
+ignore = [
+    "B023",    # function uses loop variable
+    "C408",    # dict()/list() call instead of literal
+    "FLY002",  # static join to f-string
+    "FURB167", # regex flag alias
+    "I001",    # unsorted imports
+    "RUF046",  # int() cast on an int
+    "SIM115",  # open() without a context manager
+    "SIM905",  # split on a static string
+    "UP037",   # quoted annotation
+]

@@ -45,17 +45,34 @@ class Store:
         self.db.commit()
 
     def add_alias(self, name: str, alias: str, source_url: str = "") -> None:
-        self.db.execute("INSERT OR REPLACE INTO aliases VALUES (?,?,?)", (core(name), alias, source_url))
+        self.db.execute(
+            "INSERT OR REPLACE INTO aliases VALUES (?,?,?)",
+            (core(name), alias, source_url),
+        )
         self.db.commit()
 
     def aliases(self, name: str) -> list[str]:
-        return [r[0] for r in self.db.execute("SELECT alias FROM aliases WHERE name_core = ?", (core(name),))]
+        return [
+            r[0]
+            for r in self.db.execute(
+                "SELECT alias FROM aliases WHERE name_core = ?", (core(name),)
+            )
+        ]
 
     def get(self, pid: str) -> Decision | None:
-        row = self.db.execute("SELECT * FROM decisions WHERE pair_id = ?", (pid,)).fetchone()
+        row = self.db.execute(
+            "SELECT * FROM decisions WHERE pair_id = ?", (pid,)
+        ).fetchone()
         return Decision(*row) if row else None
 
-    def save(self, name: str, mention_key: str, verdict: str, decided_by: str, reason: str = "") -> Decision:
+    def save(
+        self,
+        name: str,
+        mention_key: str,
+        verdict: str,
+        decided_by: str,
+        reason: str = "",
+    ) -> Decision:
         if verdict not in {"match", "no_match", "unsure"}:
             raise ValueError(f"unknown verdict: {verdict}")
         pid = pair_id(name, mention_key)
@@ -74,9 +91,17 @@ class Store:
         existing = self.get(pid)
         if not existing:
             raise KeyError(f"no such pair: {pid}")
-        return self.save(existing.name, existing.mention_key, "match" if accept else "no_match", PERSON, reason)
+        return self.save(
+            existing.name,
+            existing.mention_key,
+            "match" if accept else "no_match",
+            PERSON,
+            reason,
+        )
 
     def pending(self, names: set[str] | None = None) -> list[Decision]:
         """Open questions, limited to a list of names when given, so one list's questions don't reach another's user."""
-        rows = self.db.execute("SELECT * FROM decisions WHERE verdict = 'unsure' ORDER BY name").fetchall()
+        rows = self.db.execute(
+            "SELECT * FROM decisions WHERE verdict = 'unsure' ORDER BY name"
+        ).fetchall()
         return [Decision(*r) for r in rows if names is None or r[1] in names]

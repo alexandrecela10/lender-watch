@@ -19,19 +19,25 @@ _engine: Engine | None = None
 def engine() -> Engine:
     global _engine
     if _engine is None:
-        _engine = Engine(client=default_client() if os.environ.get("ERM_USE_JUDGE") == "1" else None)
+        _engine = Engine(
+            client=default_client() if os.environ.get("ERM_USE_JUDGE") == "1" else None
+        )
     return _engine
 
 
 @mcp.tool()
-def resolve_entity(name: str, sector: str | None = None, sponsor: str | None = None) -> dict:
+def resolve_entity(
+    name: str, sector: str | None = None, sponsor: str | None = None
+) -> dict:
     """Find a company in public BDC lender filings. Returns status (matched, needs_review, not_found), the borrower
     name lenders use, and every candidate with the reason it was accepted or rejected."""
     return asdict(engine().resolve_entity(name, {"sector": sector, "sponsor": sponsor}))
 
 
 @mcp.tool()
-def gather_facts(name: str, sector: str | None = None, sponsor: str | None = None) -> dict:
+def gather_facts(
+    name: str, sector: str | None = None, sponsor: str | None = None
+) -> dict:
     """Latest-quarter loan values for a company, from each lender, with last quarter's value when the same loan can be
     paired. Every fact has a filing link and the filing's row text. Values are the lender's estimate, not a market price."""
     return engine().gather_facts(name, {"sector": sector, "sponsor": sponsor})

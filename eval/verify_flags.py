@@ -2,6 +2,7 @@
 This checks the data pipeline, not the match; a person checks matches.
 Usage: PYTHONPATH=. uv run python eval/verify_flags.py data/eval/flag_sample.csv  (columns: lender, borrower_word, fair_value, principal, filing_url)
 """
+
 import hashlib
 import html
 import os
@@ -15,7 +16,9 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv(".env")
-UA = os.environ.get("SEC_USER_AGENT", "EntityReconciliationMachine research admin@example.org")
+UA = os.environ.get(
+    "SEC_USER_AGENT", "EntityReconciliationMachine research admin@example.org"
+)
 CACHE = Path("data/raw/filings")
 CACHE.mkdir(parents=True, exist_ok=True)
 
@@ -40,7 +43,12 @@ def visible(doc: str) -> str:
 def forms(value: float) -> list[str]:
     """How a value may be printed: dollars, thousands or millions."""
     v = int(round(value))
-    return [f"{v:,}", f"{round(value / 1000):,}", f"{value / 1e6:,.1f}", f"{value / 1e6:,.2f}"]
+    return [
+        f"{v:,}",
+        f"{round(value / 1000):,}",
+        f"{value / 1e6:,.1f}",
+        f"{value / 1e6:,.2f}",
+    ]
 
 
 def check(text: str, word: str, fair_value: float, principal: float) -> str:
@@ -50,7 +58,9 @@ def check(text: str, word: str, fair_value: float, principal: float) -> str:
     fv, pr = forms(fair_value), forms(principal)
     for p in pos:
         window = text[p : p + 1200]
-        has = lambda ns: any(re.search(r"(?<![\d,.])" + re.escape(n) + r"(?![\d,])", window) for n in ns)
+        has = lambda ns: any(
+            re.search(r"(?<![\d,.])" + re.escape(n) + r"(?![\d,])", window) for n in ns
+        )
         if has(fv) and has(pr):
             return "confirmed"
     return "name found, values not next to it"
@@ -61,7 +71,9 @@ def main(path: str) -> None:
     out = []
     for r in s.itertuples():
         try:
-            res = check(visible(fetch(r.filing_url)), r.borrower_word, r.fair_value, r.principal)
+            res = check(
+                visible(fetch(r.filing_url)), r.borrower_word, r.fair_value, r.principal
+            )
         except requests.RequestException as e:
             res = f"fetch failed: {type(e).__name__}"
         out.append(res)

@@ -20,7 +20,11 @@ def name_variants(name: str) -> list[str]:
     c = core(name)
     out = [c] if c else []
     toks = c.split()
-    if len(toks) >= 3 and toks[-1] in GENERIC | {"investments", "investment", "advisors"}:
+    if len(toks) >= 3 and toks[-1] in GENERIC | {
+        "investments",
+        "investment",
+        "advisors",
+    }:
         out.append(" ".join(toks[:-1]))
     return out
 
@@ -59,13 +63,17 @@ class Index:
                 rows[b].append(i)
         idx = cls(h, dict(tokens), sorted(rows), dict(rows))
         if semantic:
-            idx.tfidf = TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 4), min_df=1, lowercase=True)
+            idx.tfidf = TfidfVectorizer(
+                analyzer="char_wb", ngram_range=(3, 4), min_df=1, lowercase=True
+            )
             idx.tfidf_matrix = idx.tfidf.fit_transform([norm(b) for b in idx.borrowers])
             from model2vec import StaticModel
 
             idx.embedder = StaticModel.from_pretrained("minishlab/potion-base-8M")
             e = idx.embedder.encode([norm(b) for b in idx.borrowers])
-            idx.embeddings = e / np.clip(np.linalg.norm(e, axis=1, keepdims=True), 1e-9, None)
+            idx.embeddings = e / np.clip(
+                np.linalg.norm(e, axis=1, keepdims=True), 1e-9, None
+            )
         return idx
 
     def rarest_rows(self, core_name: str) -> set[int]:
@@ -79,30 +87,46 @@ class Index:
         variants = name_variants(name)
         first = core(name).split()[0] if core(name) else ""
         # A rare, long first word finds renamed combinations: "Jeppesen ForeFlight" -> "Jeppesen Holdings".
-        if len(core(name).split()) >= 2 and len(first) >= 6 and first not in GENERIC and len(self.tokens.get(first, ())) <= RARE_ROWS:
+        if (
+            len(core(name).split()) >= 2
+            and len(first) >= 6
+            and first not in GENERIC
+            and len(self.tokens.get(first, ())) <= RARE_ROWS
+        ):
             variants.append(first)
         for c in variants:
             pat = name_pattern(c)
             for i in self.rarest_rows(c):
-                if i not in out and (m := find_mention(self.holdings.raw_text.iloc[i], pat)):
+                if i not in out and (
+                    m := find_mention(self.holdings.raw_text.iloc[i], pat)
+                ):
                     out[i] = m
         for b in self.borrowers:  # spacing differences only
             if compact_hit(name, b):
                 pat = name_pattern(core(b))
                 for i in self.borrower_rows[b]:
-                    if i not in out and (m := find_mention(self.holdings.raw_text.iloc[i], pat)):
+                    if i not in out and (
+                        m := find_mention(self.holdings.raw_text.iloc[i], pat)
+                    ):
                         out[i] = m
         return list(out.items())
 
     def fuzzy_borrowers(self, name: str, k: int = 5) -> list[str]:
-        return [r[0] for r in process.extract(core(name), self.borrowers, scorer=fuzz.WRatio, processor=norm, limit=k)]
+        return [
+            r[0]
+            for r in process.extract(
+                core(name), self.borrowers, scorer=fuzz.WRatio, processor=norm, limit=k
+            )
+        ]
 
     def tfidf_borrowers(self, name: str, k: int = 5) -> list[str]:
         q = self.tfidf.transform([core(name)])
         s = (self.tfidf_matrix @ q.T).toarray().ravel()
         return [self.borrowers[i] for i in np.argsort(-s)[:k] if s[i] > 0]
 
-    def embedding_borrowers(self, name: str, context: str = "", k: int = 5) -> list[str]:
+    def embedding_borrowers(
+        self, name: str, context: str = "", k: int = 5
+    ) -> list[str]:
         e = self.embedder.encode([norm(f"{name} {context}")])[0]
         e = e / max(np.linalg.norm(e), 1e-9)
         s = self.embeddings @ e

@@ -99,7 +99,11 @@ def find_mention(raw: str, pattern: re.Pattern[str]) -> Mention | None:
     seg = re.split(r"\||\(|\)|;|\s[-–]\s", after, maxsplit=1)[0]
     parts = [p.strip() for p in seg.split(",")]
     name_part = parts[0]
-    if len(parts) > 1 and parts[1] and _clean_word(_words(parts[1])[0] if _words(parts[1]) else "") in _LEGAL_WORDS:
+    if (
+        len(parts) > 1
+        and parts[1]
+        and _clean_word(_words(parts[1])[0] if _words(parts[1]) else "") in _LEGAL_WORDS
+    ):
         name_part = f"{parts[0]} {_words(parts[1])[0]}"
     right_words: list[str] = []
     legal = False
@@ -121,13 +125,19 @@ def find_mention(raw: str, pattern: re.Pattern[str]) -> Mention | None:
     left_words: list[str] = []
     for w in reversed(_words(left_seg)):
         c = _clean_word(w)
-        if c in _STOP_LEFT or c in {"dba", "fka", "nka", "formerly"} or re.fullmatch(r"\d[\d/.\-%]*", w):
+        if (
+            c in _STOP_LEFT
+            or c in {"dba", "fka", "nka", "formerly"}
+            or re.fullmatch(r"\d[\d/.\-%]*", w)
+        ):
             break
         left_words.insert(0, w)
         if len(left_words) >= 3:
             break
 
-    right_clean = tuple(c for c in map(_clean_word, right_words) if c not in _LEGAL_WORDS)
+    right_clean = tuple(
+        c for c in map(_clean_word, right_words) if c not in _LEGAL_WORDS
+    )
     left_clean = tuple(map(_clean_word, left_words))
     return Mention(
         text=" ".join([*left_words, hit, *right_words]),
@@ -152,7 +162,9 @@ def borrowers_in(raw: str) -> list[str]:
         for m in _BORROWER_RX.finditer(seg):
             words = _words(m.group(1))
             while words and (
-                _clean_word(words[0]) in _STOP_LEFT or _clean_word(words[0]) in _STOP_RIGHT or words[0][0].isdigit()
+                _clean_word(words[0]) in _STOP_LEFT
+                or _clean_word(words[0]) in _STOP_RIGHT
+                or words[0][0].isdigit()
             ):
                 words = words[1:]
             if len(words) >= 2:
@@ -164,9 +176,14 @@ def borrowers_in(raw: str) -> list[str]:
 _LIEN = [
     ("second lien", r"second[\s-]*lien|2nd\s*lien"),
     ("subordinated", r"subordinated|mezzanine"),
-    ("first lien", r"first[\s-]*lien|1st\s*lien|\bflss?d?\b|one\s*stop|unitranche|senior\s*secured"),
+    (
+        "first lien",
+        r"first[\s-]*lien|1st\s*lien|\bflss?d?\b|one\s*stop|unitranche|senior\s*secured",
+    ),
 ]
-_DATE = re.compile(r"(?:due|maturity(?:\s*date)?|mat)\s*:?\s*(\d{1,2})/(?:\d{1,2}/)?(\d{2,4})", re.I)
+_DATE = re.compile(
+    r"(?:due|maturity(?:\s*date)?|mat)\s*:?\s*(\d{1,2})/(?:\d{1,2}/)?(\d{2,4})", re.I
+)
 _NOT_FUNDED_DEBT = re.compile(
     r"undrawn|unfunded|commitment|revolv|delayed\s*draw|ddtl|\bequity\b|\bunits?\b|\bstock\b|warrant|preferred|\bshares\b|lp interest",
     re.I,

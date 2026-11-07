@@ -29,7 +29,9 @@ class Features:
     extra_generic: int  # candidate words beyond the listed core that are generic
     left_words: int  # name words before the hit ("wheel" in "Wheel Pros")
     trade_name: bool  # hit is a stated trade name in brackets
-    distinctiveness: float  # rarity of the listed core's rarest word across the source, 0-1
+    distinctiveness: (
+        float  # rarity of the listed core's rarest word across the source, 0-1
+    )
     single_word: bool
     short_name: bool  # four letters or fewer
 

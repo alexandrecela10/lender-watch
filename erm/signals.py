@@ -19,7 +19,9 @@ from erm.textparse import norm
 BELOW_PAR = 90.0
 DROP_POINTS = 5.0
 GAP_POINTS = 5.0
-MAX_PRINCIPAL_CHANGE = 0.25  # above this a "same" loan was likely resized or isn't the same loan
+MAX_PRINCIPAL_CHANGE = (
+    0.25  # above this a "same" loan was likely resized or isn't the same loan
+)
 MIN_PAIRED_SHARE = 0.5  # a company-level change needs last quarter's value for at least half the debt by size
 
 
@@ -49,7 +51,9 @@ def _descriptor(raw: str) -> str:
 def usable(rows: pd.DataFrame) -> pd.DataFrame:
     """Funded debt with a plausible value, one row per loan position."""
     u = rows[rows.excluded_reason == ""]
-    return u.drop_duplicates(["lender", "period", "principal", "fair_value", "lien", "maturity"])
+    return u.drop_duplicates(
+        ["lender", "period", "principal", "fair_value", "lien", "maturity"]
+    )
 
 
 def pair_quarters(latest: pd.DataFrame, prior: pd.DataFrame) -> dict[int, float]:
@@ -60,7 +64,11 @@ def pair_quarters(latest: pd.DataFrame, prior: pd.DataFrame) -> dict[int, float]
     prior = prior.assign(_d=prior.raw_text.map(_descriptor))
     # Unchanged positions first, so a 1.50M loan can't steal the prior row of a different 1.49M loan.
     for i, r in latest.iterrows():
-        same = prior[(prior.lender == r.lender) & (prior.principal == r.principal) & (prior.fair_value == r.fair_value)]
+        same = prior[
+            (prior.lender == r.lender)
+            & (prior.principal == r.principal)
+            & (prior.fair_value == r.fair_value)
+        ]
         same = same[~same.index.isin(used)]
         if len(same):
             j = same.index[0]
@@ -69,7 +77,9 @@ def pair_quarters(latest: pd.DataFrame, prior: pd.DataFrame) -> dict[int, float]
     for i, r in latest.iterrows():
         if i in out:
             continue
-        c = prior[(prior.lender == r.lender) & (prior._d == r._d) & ~prior.index.isin(used)]
+        c = prior[
+            (prior.lender == r.lender) & (prior._d == r._d) & ~prior.index.isin(used)
+        ]
         if r.maturity is not None:
             c = c[c.maturity.isna() | (c.maturity == r.maturity)]
         if not len(c):
@@ -82,7 +92,9 @@ def pair_quarters(latest: pd.DataFrame, prior: pd.DataFrame) -> dict[int, float]
     return out
 
 
-def facts_for(rows: pd.DataFrame, latest_period: str, prior_period: str | None) -> list[Fact]:
+def facts_for(
+    rows: pd.DataFrame, latest_period: str, prior_period: str | None
+) -> list[Fact]:
     u = usable(rows)
     latest = u[u.period == latest_period]
     prior = u[u.period == prior_period] if prior_period else u.iloc[0:0]
@@ -93,13 +105,20 @@ def facts_for(rows: pd.DataFrame, latest_period: str, prior_period: str | None) 
         pik = pd.notna(r.pik_rate) and r.pik_rate > 0
         out.append(
             Fact(
-                lender=r.lender, period=r.period, loan=r.raw_text[:160],
+                lender=r.lender,
+                period=r.period,
+                loan=r.raw_text[:160],
                 lien=r.lien if isinstance(r.lien, str) else None,
                 maturity=r.maturity if isinstance(r.maturity, str) else None,
-                principal=float(r.principal), fair_value=float(r.fair_value), pct_par=round(float(r.pct_par), 1),
-                pik=bool(pik), previous_pct_par=round(float(p), 1) if p is not None else None,
+                principal=float(r.principal),
+                fair_value=float(r.fair_value),
+                pct_par=round(float(r.pct_par), 1),
+                pik=bool(pik),
+                previous_pct_par=round(float(p), 1) if p is not None else None,
                 change=round(float(r.pct_par - p), 1) if p is not None else None,
-                filing_url=r.inlineurl, filing_row=r.raw_text, filed=r.filed,
+                filing_url=r.inlineurl,
+                filing_row=r.raw_text,
+                filed=r.filed,
             )
         )
     return sorted(out, key=lambda f: f.pct_par)
@@ -110,7 +129,9 @@ class Flags:
     level: str  # flagged, worth_a_look or none
     n_lenders: int
     n_loans: int
-    weighted_pct_par: float | None  # average value of the company's debt, weighted by loan size
+    weighted_pct_par: (
+        float | None
+    )  # average value of the company's debt, weighted by loan size
     weighted_change: float | None  # same average on loans paired with last quarter
     lowest_pct_par: float | None
     biggest_drop: float | None
@@ -125,7 +146,32 @@ class Flags:
         return self.level != "none"
 
 
-_KEEP_UPPER = {"BDC", "LLC", "KKR", "FS", "SLR", "SCP", "TCP", "BSP", "AB", "MSC", "PGIM", "HPS", "TPG", "NMF", "CCS", "SL", "II", "III", "IV", "L.L.C.", "LP", "OHA", "WTI", "CION"}
+_KEEP_UPPER = {
+    "BDC",
+    "LLC",
+    "KKR",
+    "FS",
+    "SLR",
+    "SCP",
+    "TCP",
+    "BSP",
+    "AB",
+    "MSC",
+    "PGIM",
+    "HPS",
+    "TPG",
+    "NMF",
+    "CCS",
+    "SL",
+    "II",
+    "III",
+    "IV",
+    "L.L.C.",
+    "LP",
+    "OHA",
+    "WTI",
+    "CION",
+}
 
 
 def _short(lender: str) -> str:
@@ -145,7 +191,11 @@ def _weighted(facts: list[Fact]) -> tuple[float, float | None]:
     avg = sum(f.pct_par * f.principal for f in facts) / total
     paired = [f for f in facts if f.change is not None]
     held = sum(f.principal for f in paired)
-    change = sum(f.change * f.principal for f in paired) / held if held >= total * MIN_PAIRED_SHARE else None
+    change = (
+        sum(f.change * f.principal for f in paired) / held
+        if held >= total * MIN_PAIRED_SHARE
+        else None
+    )
     return round(avg, 1), round(change, 1) if change is not None else None
 
 
@@ -155,12 +205,28 @@ def flags_for(facts: list[Fact]) -> Flags:
     Bullhorn has 52 positions averaging 98.2% of par. One $68k position at 80.9% makes it worth a look, not flagged.
     """
     if not facts:
-        return Flags("none", 0, 0, None, None, None, None, False, False, False, False, "No funded loan with a usable value in this quarter.")
+        return Flags(
+            "none",
+            0,
+            0,
+            None,
+            None,
+            None,
+            None,
+            False,
+            False,
+            False,
+            False,
+            "No funded loan with a usable value in this quarter.",
+        )
     avg, change = _weighted(facts)
     low = min(facts, key=lambda f: f.pct_par)
     drops = [f for f in facts if f.change is not None]
     worst = min(drops, key=lambda f: f.change) if drops else None
-    below, dropped = low.pct_par < BELOW_PAR, bool(worst and worst.change <= -DROP_POINTS)
+    below, dropped = (
+        low.pct_par < BELOW_PAR,
+        bool(worst and worst.change <= -DROP_POINTS),
+    )
 
     gap = None
     groups: dict[tuple, list[Fact]] = {}
@@ -170,31 +236,58 @@ def flags_for(facts: list[Fact]) -> Flags:
     for fs in groups.values():
         if len({f.lender for f in fs}) >= 2:
             hi, lo = max(fs, key=lambda f: f.pct_par), min(fs, key=lambda f: f.pct_par)
-            if hi.pct_par - lo.pct_par >= GAP_POINTS and (gap is None or hi.pct_par - lo.pct_par > gap[0].pct_par - gap[1].pct_par):
+            if hi.pct_par - lo.pct_par >= GAP_POINTS and (
+                gap is None or hi.pct_par - lo.pct_par > gap[0].pct_par - gap[1].pct_par
+            ):
                 gap = (hi, lo)
 
     flagged = avg < BELOW_PAR or (change is not None and change <= -DROP_POINTS)
-    level = "flagged" if flagged else "worth_a_look" if below or dropped or gap else "none"
+    level = (
+        "flagged" if flagged else "worth_a_look" if below or dropped or gap else "none"
+    )
 
     parts = []
     if level == "none":
-        parts.append(f"Lenders value this debt at {avg:.1f}% of the amount owed on average, with no large fall.")
+        parts.append(
+            f"Lenders value this debt at {avg:.1f}% of the amount owed on average, with no large fall."
+        )
     else:
-        moved = f", {'down' if change < 0 else 'up'} {abs(change):.1f} points in a quarter" if change is not None and abs(change) >= 1 else ""
-        parts.append(f"Lenders value this debt at {avg:.1f}% of the amount owed on average{moved}.")
+        moved = (
+            f", {'down' if change < 0 else 'up'} {abs(change):.1f} points in a quarter"
+            if change is not None and abs(change) >= 1
+            else ""
+        )
+        parts.append(
+            f"Lenders value this debt at {avg:.1f}% of the amount owed on average{moved}."
+        )
     if dropped:
-        parts.append(f"Largest fall: {_short(worst.lender)} cut a {_money(worst.principal)} loan from {worst.previous_pct_par:.1f}% to {worst.pct_par:.1f}%.")
+        parts.append(
+            f"Largest fall: {_short(worst.lender)} cut a {_money(worst.principal)} loan from {worst.previous_pct_par:.1f}% to {worst.pct_par:.1f}%."
+        )
     elif below:
-        parts.append(f"Lowest: {_short(low.lender)} values a {_money(low.principal)} loan at {low.pct_par:.1f}%.")
+        parts.append(
+            f"Lowest: {_short(low.lender)} values a {_money(low.principal)} loan at {low.pct_par:.1f}%."
+        )
     if gap:
-        parts.append(f"On what looks like the same loan, {_short(gap[0].lender)} says {gap[0].pct_par:.1f}% and {_short(gap[1].lender)} says {gap[1].pct_par:.1f}%.")
+        parts.append(
+            f"On what looks like the same loan, {_short(gap[0].lender)} says {gap[0].pct_par:.1f}% and {_short(gap[1].lender)} says {gap[1].pct_par:.1f}%."
+        )
     pik = any(f.pik for f in facts)
     if pik:
         parts.append("Some interest is paid with more debt instead of cash.")
     return Flags(
-        level=level, n_lenders=len({f.lender for f in facts}), n_loans=len(facts), weighted_pct_par=avg, weighted_change=change,
-        lowest_pct_par=low.pct_par, biggest_drop=worst.change if worst else None, below_90=below, dropped=dropped,
-        lender_gap=bool(gap), pik=pik, summary=" ".join(parts),
+        level=level,
+        n_lenders=len({f.lender for f in facts}),
+        n_loans=len(facts),
+        weighted_pct_par=avg,
+        weighted_change=change,
+        lowest_pct_par=low.pct_par,
+        biggest_drop=worst.change if worst else None,
+        below_90=below,
+        dropped=dropped,
+        lender_gap=bool(gap),
+        pik=pik,
+        summary=" ".join(parts),
     )
 
 

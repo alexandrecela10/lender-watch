@@ -42,9 +42,15 @@ def load() -> pd.DataFrame:
     p = pd.read_csv("data/eval_pool.csv").fillna("")
     key = pd.read_csv("data/eval/answer_key.csv")
     d = p.merge(key[["pair_id", "label"]], on="pair_id")
-    d = d.merge(pd.read_csv("data/eval/judge_results.csv")[["pair_id", "verdict"]], on="pair_id", how="left")
+    d = d.merge(
+        pd.read_csv("data/eval/judge_results.csv")[["pair_id", "verdict"]],
+        on="pair_id",
+        how="left",
+    )
     text = [" ".join([r.candidate, r.example_1, r.example_2]) for r in d.itertuples()]
-    d["is_name_hit"] = [bool(name_pattern(core(n)).search(t)) for n, t in zip(d.company_name, text)]
+    d["is_name_hit"] = [
+        bool(name_pattern(core(n)).search(t)) for n, t in zip(d.company_name, text)
+    ]
     d["is_wide_hit"] = [
         any(name_pattern(v).search(t) for v in name_variants(n)) or compact_hit(n, r)
         for n, t, r in zip(d.company_name, text, d.candidate)
@@ -92,7 +98,9 @@ def score(pred, d: pd.DataFrame) -> dict:
         "pair_recall": round(tp / max(tp + fn, 1), 3),
         "loan_precision": round(tpw / max(tpw + fpw, 1), 3),
         "loan_recall": round(tpw / max(tpw + fnw, 1), 3),
-        "tp": int(tp), "fp": int(fp), "fn": int(fn),
+        "tp": int(tp),
+        "fp": int(fp),
+        "fn": int(fn),
         "companies_found": f"{len(found & truth)} of {len(truth)}",
         "companies_with_a_wrong_pair": len(wrong_co),
     }
@@ -124,18 +132,29 @@ def main() -> None:
         test = d.company_id.map(fold).values == k
         tr = ~test & lab & hit
         f_tr = [f for f, a in zip(feats, tr) if a]
-        y_tr = (d.label.values[tr] == "match")
+        y_tr = d.label.values[tr] == "match"
         model = LinkageModel.fit(f_tr, list(y_tr))
         accept = tune_accept(np.array([model.score(f) for f in f_tr]), y_tr)
         accepts.append(accept)
         for i in np.where(test & hit)[0]:
-            s[i] = model.score(feats[i]) - accept  # above 0 means accepted under this fold's bar
+            s[i] = (
+                model.score(feats[i]) - accept
+            )  # above 0 means accepted under this fold's bar
     d["link_margin"] = s
 
     verdict_match = (d.verdict == "match").values
     verdict_unsure = (d.verdict == "unsure").values
     no_left = np.array([f.left_words for f in feats]) == 0
-    exact = np.array([f.exact_core and f.distinctiveness >= 0.75 and not f.short_name for f in feats]) & hit & no_left
+    exact = (
+        np.array(
+            [
+                f.exact_core and f.distinctiveness >= 0.75 and not f.short_name
+                for f in feats
+            ]
+        )
+        & hit
+        & no_left
+    )
 
     approaches = {
         "a_name_hit_baseline": hit,
@@ -152,7 +171,11 @@ def main() -> None:
 
     def review(mask):
         names = d[mask].company_id.nunique()
-        return {"names": int(names), "share_of_names": round(names / n, 3), "pairs": int(mask.sum())}
+        return {
+            "names": int(names),
+            "share_of_names": round(names / n, 3),
+            "pairs": int(mask.sum()),
+        }
 
     load_review = {
         "judge_on_name_hits": review(verdict_unsure & hit),
@@ -172,8 +195,13 @@ def main() -> None:
 
     rule_fp = d[exact & (d.label == "no_match").values][["company_name", "candidate"]]
     report = {
-        "answer_key": {"companies": n, "pairs": len(d), "match": int((d.label == "match").sum()),
-                       "no_match": int((d.label == "no_match").sum()), "unsure": int((d.label == "unsure").sum())},
+        "answer_key": {
+            "companies": n,
+            "pairs": len(d),
+            "match": int((d.label == "match").sum()),
+            "no_match": int((d.label == "no_match").sum()),
+            "unsure": int((d.label == "unsure").sum()),
+        },
         "results": results,
         "pairs_needing_person": load_review,
         "batch_usd_per_100_listed_names": cost_per_100,
@@ -181,16 +209,42 @@ def main() -> None:
         "exact_name_rule": {"pairs": int(exact.sum()), "wrong": len(rule_fp)},
         "judge_cost_total": cost,
     }
-    json.dump(report, open("data/eval/compare_report.json", "w"), indent=1, default=float)
+    json.dump(
+        report, open("data/eval/compare_report.json", "w"), indent=1, default=float
+    )
     d.to_csv("data/eval/scored_pairs.csv", index=False)
     for k, v in results.items():
-        print(f"{k:32s} loan P {v['loan_precision']:.3f} R {v['loan_recall']:.3f} | pair P {v['pair_precision']:.3f} {v['pair_precision_95ci']} R {v['pair_recall']:.3f} | fp {v['fp']} fn {v['fn']} | co {v['companies_found']}, wrong {v['companies_with_a_wrong_pair']}")
-    print(json.dumps({k: report[k] for k in ["answer_key", "pairs_needing_person", "batch_usd_per_100_listed_names", "scoring_model_accept_bar_by_fold", "exact_name_rule"]}, default=float))
+        print(
+            f"{k:32s} loan P {v['loan_precision']:.3f} R {v['loan_recall']:.3f} | pair P {v['pair_precision']:.3f} {v['pair_precision_95ci']} R {v['pair_recall']:.3f} | fp {v['fp']} fn {v['fn']} | co {v['companies_found']}, wrong {v['companies_with_a_wrong_pair']}"
+        )
+    print(
+        json.dumps(
+            {
+                k: report[k]
+                for k in [
+                    "answer_key",
+                    "pairs_needing_person",
+                    "batch_usd_per_100_listed_names",
+                    "scoring_model_accept_bar_by_fold",
+                    "exact_name_rule",
+                ]
+            },
+            default=float,
+        )
+    )
     print(rule_fp.to_string(index=False))
-    miss = d[(d.label == "match").values & ~(verdict_match & d.is_wide_hit.values)][["company_name", "candidate", "verdict", "is_wide_hit"]]
-    print("missed by judge on wider hits:\n", miss.to_string(index=False, max_colwidth=60))
-    fp = d[(d.label == "no_match").values & verdict_match][["company_name", "candidate"]]
-    print("judge says match, key says no:\n", fp.to_string(index=False, max_colwidth=60))
+    miss = d[(d.label == "match").values & ~(verdict_match & d.is_wide_hit.values)][
+        ["company_name", "candidate", "verdict", "is_wide_hit"]
+    ]
+    print(
+        "missed by judge on wider hits:\n", miss.to_string(index=False, max_colwidth=60)
+    )
+    fp = d[(d.label == "no_match").values & verdict_match][
+        ["company_name", "candidate"]
+    ]
+    print(
+        "judge says match, key says no:\n", fp.to_string(index=False, max_colwidth=60)
+    )
 
 
 if __name__ == "__main__":
