@@ -7,3 +7,4 @@ One row per build step. A departure is a file the step changed that its plan ste
 | 2026-11-07 | I1 | `.claude/agents/verifier.md`, `CLAUDE.md`, `eval/plan_drift.py` | none |
 | 2026-11-07 | I2 | `.claude/agents/verifier.md`, `CLAUDE.md`, `erm/telemetry.py` | none |
 | 2026-11-07 | I3 | `.claude/agents/verifier.md`, `CLAUDE.md`, `erm/match/judge.py` | none |
+| 2026-11-07 | I4 | `.claude/agents/verifier.md`, `CLAUDE.md`, `erm/telemetry.py`, `tests/test_app.py` | none |

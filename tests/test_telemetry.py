@@ -2,6 +2,7 @@ import io
 import json
 import logging
 import sqlite3
+from pathlib import Path
 from types import SimpleNamespace
 
 import anthropic
@@ -317,3 +318,78 @@ def test_trace_payload_real_sdk_exports_only_our_fields(monkeypatch):
     assert "Orion" not in json.dumps(
         {k: str(v) for s in spans for k, v in s.attributes.items()}
     )
+
+
+# I4: entry points.
+ROOT = Path(__file__).resolve().parents[1]
+DEMO = ROOT / "data" / "demo" / "sample_list.csv"
+
+
+def test_enrich_counts_match_each_name(lines, tmp_path, monkeypatch):
+    """Spec check 1 and 2 on a real run: public sample data, demo list, judge off."""
+    import shutil
+    import tempfile
+
+    import pandas as pd
+
+    from erm.api import Engine
+
+    monkeypatch.chdir(ROOT)
+    shutil.copy("data/public/decisions.sqlite", tmp_path / "d.sqlite")
+    engine = Engine(
+        holdings_path="data/public/holdings.parquet",
+        store_path=tmp_path / "d.sqlite",
+        index_cache=str(Path(tempfile.gettempdir()) / "erm_index.pkl"),
+        client=None,
+    )
+    db = tmp_path / "m.sqlite"
+    with telemetry.run("cli", metrics_path=db):
+        engine.enrich_table(DEMO, "Company", tmp_path / "o.xlsx", "Sector", "Owner")
+    demo = pd.read_csv(DEMO)
+    statuses = [
+        engine.resolve_entity(
+            r.Company, {"sector": r.Sector, "sponsor": r.Owner}
+        ).status
+        for r in demo.itertuples()
+    ]
+    [row] = rows(db)
+    assert row["names_in"] == len(demo)
+    assert row["names_matched"] == statuses.count("matched")
+    assert row["names_needing_review"] == statuses.count("needs_review")
+    out = lines()
+    assert len({x["request_id"] for x in out}) == 1
+    text = json.dumps(out)
+    assert not [n for n in demo.Company if n in text]
+
+
+def test_mcp_stdout_carries_protocol_only(capsys):
+    """Spec check 7: logs go to stderr, and the server's stdout answers in JSON-RPC only."""
+    import subprocess
+
+    telemetry.configure()
+    logging.getLogger("erm.test").info("run_started")
+    cap = capsys.readouterr()
+    assert cap.out == "" and "run_started" in cap.err
+    telemetry.configure()
+
+    init = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+            "protocolVersion": "2025-06-18",
+            "capabilities": {},
+            "clientInfo": {"name": "test", "version": "0"},
+        },
+    }
+    p = subprocess.run(
+        ["uv", "run", "python", "-m", "erm.mcp_server"],
+        input=json.dumps(init) + "\n",
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        timeout=60,
+        check=False,
+    )
+    out = [json.loads(x) for x in p.stdout.splitlines() if x.strip()]
+    assert out and all(x.get("jsonrpc") == "2.0" for x in out)

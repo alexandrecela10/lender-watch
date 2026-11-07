@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 
+from erm import telemetry
 from erm.api import Engine, default_client
 
 
@@ -27,13 +28,15 @@ def main() -> None:
         help="Send unclear names, with sector and owner, to Anthropic to judge. Off by default: nothing leaves this machine",
     )
     a = ap.parse_args()
+    telemetry.configure()
     client = default_client() if a.use_judge else None
     if a.use_judge and client is None:
         ap.error("--use-judge needs ANTHROPIC_API_KEY in .env")
     engine = Engine(client=client)
-    t = engine.enrich_table(
-        a.file, a.name_column, a.out, a.sector_column, a.sponsor_column
-    )
+    with telemetry.run("cli", judge_on=client is not None):
+        t = engine.enrich_table(
+            a.file, a.name_column, a.out, a.sector_column, a.sponsor_column
+        )
     counts = t["Lender data"].value_counts().to_dict()
     flags = t["Flag"].value_counts().to_dict()
     print(f"{len(t)} names: {counts}. Flags: {flags}. Saved to {a.out}.")

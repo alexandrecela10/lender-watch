@@ -21,7 +21,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
-METRICS_PATH = Path("data/metrics.sqlite")
+# ERM_METRICS_PATH moves the file, for tests or a hosted app with another writable folder.
+METRICS_PATH = "data/metrics.sqlite"
 
 COUNTS = (
     "names_in",
@@ -122,6 +123,11 @@ class RunStats:
     judge_cost_usd: float | None = 0.0
 
 
+def count_result(out: dict) -> None:
+    """Count one name from a gather_facts result."""
+    count(out["resolution"]["status"], out["flags"]["level"] if out["facts"] else None)
+
+
 def count(status: str, flag_level: str | None = None) -> None:
     """Add one name to the current run. Does nothing outside a run."""
     s = _stats.get()
@@ -164,7 +170,7 @@ def write_metrics(path: Path, row: dict) -> None:
 
 @contextmanager
 def run(
-    source: str, judge_on: bool = False, metrics_path: Path = METRICS_PATH
+    source: str, judge_on: bool = False, metrics_path: Path | None = None
 ) -> Iterator[RunStats]:
     """One run: a fresh request id for every log line inside, one run_metrics row on exit."""
     stats = RunStats()
@@ -194,7 +200,10 @@ def run(
             "judge_cost_usd": stats.judge_cost_usd,
         }
         try:
-            write_metrics(Path(metrics_path), row)
+            write_metrics(
+                Path(metrics_path or os.environ.get("ERM_METRICS_PATH", METRICS_PATH)),
+                row,
+            )
         except (sqlite3.Error, OSError) as e:
             log.warning("metrics_write_failed", extra={"error_type": type(e).__name__})
         fields = {

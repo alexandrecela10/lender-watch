@@ -17,10 +17,14 @@ import pytest
 import streamlit as st
 from streamlit.testing.v1 import AppTest
 
+from erm import telemetry
+
 ROOT = Path(__file__).resolve().parents[1]
 APP = str(ROOT / "app" / "review.py")
 DEMO = ROOT / "data" / "demo" / "sample_list.csv"
 SEC = "https://www.sec.gov/"
+METRICS = Path(tempfile.mkdtemp()) / "metrics.sqlite"
+LANGFUSE_MADE: list = []
 TIMEOUT = 300  # the first run on a machine builds the search index (about 100 seconds), later runs reuse it
 
 
@@ -31,6 +35,12 @@ def checked() -> AppTest:
     mp.chdir(ROOT)
     mp.delenv("ANTHROPIC_API_KEY", raising=False)
     mp.setenv("ERM_PUBLIC", "1")
+    # Instrumentation: run records go to a temp file, and a Langfuse client must never be made (judge off).
+    mp.setenv("ERM_METRICS_PATH", str(METRICS))
+    mp.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
+    mp.setenv("LANGFUSE_SECRET_KEY", "test-only")
+    mp.setattr(telemetry, "_make_langfuse", lambda **kw: LANGFUSE_MADE.append(1))
+    mp.setattr(telemetry, "_lf_tried", False)
     st.cache_resource.clear()
     at = AppTest.from_file(APP, default_timeout=TIMEOUT).run()
     at.text_area[0].input("\n".join(pd.read_csv(DEMO).Company)).run()
@@ -104,3 +114,14 @@ def test_local_mode_judge_checkbox_is_off_by_default(checked, monkeypatch):
     judge = [c for c in at.checkbox if c.label.startswith("Send unclear names")]
     assert len(judge) == 1
     assert judge[0].value is False
+
+
+def test_app_run_writes_one_run_record_and_no_langfuse(checked):
+    import sqlite3
+
+    with sqlite3.connect(METRICS) as con:
+        rows = con.execute(
+            "select source, names_in, judge_on, judge_calls from run_metrics"
+        ).fetchall()
+    assert rows == [("app", len(pd.read_csv(DEMO)), 0, 0)]
+    assert LANGFUSE_MADE == []

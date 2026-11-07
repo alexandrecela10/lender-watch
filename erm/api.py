@@ -320,6 +320,7 @@ class Engine:
             }
             name = str(r[name_column])
             out = self.gather_facts(name, ctx)
+            telemetry.count_result(out)
             summary.append(summary_row(out))
             loans += loan_rows(name, out)
         result = pd.concat([t, pd.DataFrame(summary)], axis=1)
@@ -328,14 +329,16 @@ class Engine:
 
     def answer(self, name: str, mention_key: str, same: bool, reason: str = "") -> dict:
         """A person's answer on any candidate, including one the name rule accepted and so never saved."""
-        return asdict(
-            self.store.save(
-                name, mention_key, "match" if same else "no_match", PERSON, reason
-            )
+        d = self.store.save(
+            name, mention_key, "match" if same else "no_match", PERSON, reason
         )
+        log.info("person_answer", extra={"decided_by": PERSON, "verdict": d.verdict})
+        return asdict(d)
 
     def review(self, pair: str, accept: bool, reason: str = "") -> dict:
-        return asdict(self.store.review(pair, accept, reason))
+        d = self.store.review(pair, accept, reason)
+        log.info("person_answer", extra={"decided_by": PERSON, "verdict": d.verdict})
+        return asdict(d)
 
 
 def lender_data_label(out: dict) -> str:

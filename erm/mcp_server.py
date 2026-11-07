@@ -10,6 +10,7 @@ from dataclasses import asdict
 
 from mcp.server.mcpserver import MCPServer
 
+from erm import telemetry
 from erm.api import Engine, default_client
 
 mcp = MCPServer("entity-reconciliation")
@@ -31,7 +32,11 @@ def resolve_entity(
 ) -> dict:
     """Find a company in public BDC lender filings. Returns status (matched, needs_review, not_found), the borrower
     name lenders use, and every candidate with the reason it was accepted or rejected."""
-    return asdict(engine().resolve_entity(name, {"sector": sector, "sponsor": sponsor}))
+    e = engine()
+    with telemetry.run("mcp", judge_on=e.client is not None):
+        res = e.resolve_entity(name, {"sector": sector, "sponsor": sponsor})
+        telemetry.count(res.status)
+    return asdict(res)
 
 
 @mcp.tool()
@@ -40,15 +45,22 @@ def gather_facts(
 ) -> dict:
     """Latest-quarter loan values for a company, from each lender, with last quarter's value when the same loan can be
     paired. Every fact has a filing link and the filing's row text. Values are the lender's estimate, not a market price."""
-    return engine().gather_facts(name, {"sector": sector, "sponsor": sponsor})
+    e = engine()
+    with telemetry.run("mcp", judge_on=e.client is not None):
+        out = e.gather_facts(name, {"sector": sector, "sponsor": sponsor})
+        telemetry.count_result(out)
+    return out
 
 
 @mcp.tool()
 def review(pair_id: str, accept: bool, reason: str = "") -> dict:
     """Record a person's decision on an unclear match. It overrides automation and is never asked again.
     Call this only when a person has told you the answer."""
-    return engine().review(pair_id, accept, reason)
+    e = engine()
+    with telemetry.run("mcp", judge_on=e.client is not None):
+        return e.review(pair_id, accept, reason)
 
 
 if __name__ == "__main__":
+    telemetry.configure()  # stderr only: stdout carries the MCP protocol
     mcp.run()

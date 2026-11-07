@@ -11,12 +11,14 @@ import os
 import shutil
 import sys
 import tempfile
+import uuid
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from erm import telemetry
 from erm.api import (
     FLAG_LABELS,
     FLAG_RULE,
@@ -89,13 +91,13 @@ def run(
 ) -> list[dict]:
     out, bar = [], st.progress(0.0, "Checking lender filings")
     records = names.to_dict("records")
-    for i, r in enumerate(records):
-        ctx = {"sector": r.get(sector_col), "sponsor": r.get(owner_col)}
-        out.append(
-            engine.gather_facts(str(r[name_col]), ctx)
-            | {"row": r, "name": str(r[name_col]), "ctx": ctx}
-        )
-        bar.progress((i + 1) / len(records), f"Checked {i + 1} of {len(records)}")
+    with telemetry.run("app", judge_on=engine.client is not None):
+        for i, r in enumerate(records):
+            ctx = {"sector": r.get(sector_col), "sponsor": r.get(owner_col)}
+            facts = engine.gather_facts(str(r[name_col]), ctx)
+            telemetry.count_result(facts)
+            out.append(facts | {"row": r, "name": str(r[name_col]), "ctx": ctx})
+            bar.progress((i + 1) / len(records), f"Checked {i + 1} of {len(records)}")
     bar.empty()
     return out
 
@@ -104,11 +106,12 @@ def answer(
     engine: Engine, results: list[dict], mention_key: str, name: str, same: bool
 ) -> None:
     """Save the answer, then work that company out again straight away."""
-    engine.answer(name, mention_key, same)
-    for r in results:
-        if r["name"] == name:
-            r.update(engine.gather_facts(name, r["ctx"]))
-    st.rerun()
+    with telemetry.run("app_answer", judge_on=engine.client is not None):
+        engine.answer(name, mention_key, same)
+        for r in results:
+            if r["name"] == name:
+                r.update(engine.gather_facts(name, r["ctx"]))
+    st.rerun()  # outside the run: Streamlit's rerun is an exception, not an error
 
 
 def sample_choice() -> pd.DataFrame:
@@ -348,6 +351,8 @@ def show_review(engine: Engine, results: list[dict]) -> None:
                     answer(engine, results, c["mention_key"], name, not same)
 
 
+telemetry.configure()
+telemetry.set_session(st.session_state.setdefault("erm_session_id", str(uuid.uuid4())))
 engine = get_engine()
 st.title("Lender Watch")
 st.write(
