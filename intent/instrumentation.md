@@ -14,7 +14,10 @@ So we can't answer the value gate's first question, "did analysts use it?", and 
 
 ## Proposed outcome
 
-Every run leaves a record I can read after it ends. For each run: where it came from (the app, the command line or an AI agent), how many names went in, how many matched, how many need a person, how many were flagged, and how long it took. For each AI judge call: what it cost, how long it took, and its answer. Each run gets one tracking number, so all its records can be found together.
+- Every run leaves a record I can read after it ends.
+- For each run: where it came from (the app, the command line or an AI agent), names in, names matched, names needing a person, names flagged, and time taken.
+- For each AI judge call: its cost, its time and its answer.
+- Each run gets one tracking number, so all its records can be found together.
 
 What should change:
 - Runs with a usage record: from 0% today (observed: no logging exists) to 100%.

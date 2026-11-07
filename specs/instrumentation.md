@@ -5,9 +5,11 @@ Evidence: the repo's code and one offline evaluation. No LP analyst has been int
 
 ## Bottom line
 
-Every time someone runs a list, the engine keeps a short record: where the run came from, how many names went in, how many matched, how many need a person, and how long it took.
-When the AI judge is used, we also record what each call cost and how long it took. That record also goes to Langfuse, an outside monitoring service.
-No company name leaves your machine through this record keeping, even with the judge on. That is stricter than the original brief; concern 1 explains why.
+- Every run of a list leaves a short record: where it came from, names in, names matched, names needing a person, and time taken.
+- Each AI judge call also records its cost and time.
+- That judge record also goes to Langfuse, an outside monitoring service.
+- No company name leaves your machine through this, even with the judge on.
+- That is stricter than the original brief; concern 1 explains why.
 
 ## Concerns and resolutions
 

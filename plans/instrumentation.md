@@ -6,14 +6,17 @@ Evidence: the repo's code and one offline evaluation. No LP analyst has been int
 
 ## Summary
 
-We build in five steps, one session each. Each step must pass the tests before it's saved.
+- Five steps, one build session each.
+- Each step must pass the tests before it's saved.
+
 1. The record keeping on its own, not yet switched on anywhere.
 2. The cost and time of each AI judge call.
 3. Sending that cost to Langfuse, an outside monitoring service, with no company names.
 4. Switching record keeping on in the command line, the app and the AI agent tool.
 5. A separate checker agent confirms it all works.
 
-Step 3 is the riskiest: it's the only one that sends anything off your machine. Matching, flags and the values shown don't change.
+- Step 3 is the riskiest: it's the only one that sends anything off your machine.
+- Matching, flags and the values shown don't change.
 
 Scope: the spec's sections 1 to 3 and its "Concerns and resolutions" table. Every step ends with `make test` and `make lint` green, and a commit.
 
