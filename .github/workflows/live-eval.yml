@@ -40,15 +40,15 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: live-eval
+  group: live-eval-${{ github.event_name }}
   cancel-in-progress: false
 
 jobs:
   live:
     runs-on: ubuntu-latest
+    # 45, not the spec's 20: a run by hand with repeat 3 takes about 25 minutes (plan D3).
     timeout-minutes: 45
     env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       GH_TOKEN: ${{ github.token }}
       HISTORY: "Live judge check history"
     steps:
@@ -67,11 +67,15 @@ jobs:
           fi
       - name: Live check
         id: run
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REPEAT: ${{ inputs.repeat || '1' }}
+          WRITE_REFERENCE: ${{ inputs.write_reference }}
         run: |
           ref=""
-          if [ "${{ inputs.write_reference }}" = "true" ]; then ref="--write-reference live_reference.csv"; fi
+          if [ "$WRITE_REFERENCE" = "true" ]; then ref="--write-reference live_reference.csv"; fi
           set +e
-          uv run python -m eval.live --live --last last.md --summary summary.md --repeat "${{ inputs.repeat || '1' }}" $ref
+          uv run python -m eval.live --live --last last.md --summary summary.md --repeat "$REPEAT" $ref
           echo "code=$?" >> "$GITHUB_OUTPUT"
           if [ -f summary.md ]; then cat summary.md >> "$GITHUB_STEP_SUMMARY"; fi
       - name: Record the result
@@ -79,6 +83,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             gh pr comment "${{ github.event.pull_request.number }}" --body-file summary.md
+          elif [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "Run on ${{ github.ref }}, not main: result kept in the job summary only."
           else
             if [ -z "$ISSUE" ]; then
               ISSUE=$(gh issue create --title "$HISTORY" \

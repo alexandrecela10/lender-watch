@@ -147,10 +147,18 @@ def compare_reference(res: Result, path: str | None = None) -> None:
     res.changed = sum(res.verdicts[p] != ref[p] for p in both)
 
 
+def parse_all(text: str) -> list[dict]:
+    """Every machine line in a comment, in order."""
+    return [
+        json.loads(m)
+        for m in re.findall(re.escape(MARKER) + r"(\{.*?\}) -->", text or "")
+    ]
+
+
 def parse_last(text: str) -> dict | None:
-    """The last machine line in a history comment: date, status, scores. None if absent."""
-    found = re.findall(re.escape(MARKER) + r"(\{.*?\}) -->", text or "")
-    return json.loads(found[-1]) if found else None
+    """The last completed result (PASS or FAIL) in a history comment. ERROR and INCOMPLETE are skipped."""
+    done = [m for m in parse_all(text) if m.get("status") in ("PASS", "FAIL")]
+    return done[-1] if done else None
 
 
 def summary(

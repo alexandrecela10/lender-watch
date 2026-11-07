@@ -40,7 +40,8 @@ jobs:
                 --jq '[.comments[] | select(.body | contains("\"status\": \"PASS\"") or contains("\"status\": \"FAIL\""))] | last | .createdAt // empty')
           if [ -z "$d" ]; then echo "::warning::No completed live judge check on main yet."; exit 0; fi
           age=$(( ( $(date +%s) - $(date -d "$d" +%s) ) / 86400 ))
-          if [ "$age" -gt 8 ]; then
+          limit=$(uv run python -c "import yaml; print(yaml.safe_load(open('evals/thresholds.yaml'))['live']['stale_days'])")
+          if [ "$age" -gt "$limit" ]; then
             echo "::warning::The last live judge check on main was $age days ago. GitHub may have turned the weekly schedule off."
           else
             echo "Last live judge check on main: $age days ago."
