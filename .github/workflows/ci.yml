@@ -1,0 +1,29 @@
+# Runs the repo's own checks on a clean machine: every pull request, every push to main, and nightly.
+# No keys are used: the AI judge stays off, so nothing is sent to Anthropic or Langfuse.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv python install 3.12
+      - run: uv sync
+      - name: Tests
+        run: make test
+      - name: Style check
+        run: make lint
+      - name: Evals (offline gate, thresholds in evals/thresholds.yaml)
+        run: make evals
