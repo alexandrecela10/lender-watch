@@ -2,19 +2,27 @@
   "spec": "specs/ai-drift-tracking.md",
   "intent": "intent/ai-drift-tracking.md (739c5d9)",
   "date": "2026-11-07",
-  "status": "draft, pending Alexandre's review",
+  "status": "revised after AI review on PR #2 (3 Important, 5 nits addressed)",
   "decided": [
     "Live calls, not batch: fits a CI job; saving under $0.50 a run",
     "Ask only the 145 pairs the chosen method sends to the judge",
     "Fail on the existing floors (precision 0.97, recall 0.90); warn on any false match above 0",
     "Cost cap $3 and call cap 250 per run",
     "Runs on judge-related pull requests and weekly on Monday 04:00 UTC",
-    "Move is_clear_exact into one shared function used by product and eval"
+    "Move is_clear_exact into one shared function used by product, scorer and gate",
+    "First live run becomes the reference; batch answers of 2 November are reported once, not compared",
+    "Run history kept as comments on one GitHub issue, read back by the next run",
+    "Unknown-cost calls count $0.05 toward the $3 cap",
+    "CI warns when the last live run is more than 8 days old"
   ],
   "open": [
     "Run-to-run variation: measure with 3 live runs before setting any tolerance",
     "Who labels new-quarter pairs for the answer key",
     "Stage 6 alerts on real-use run records: needs real runs first"
   ],
-  "verified": {"pairs_to_judge": 145, "exact_rule_settled": 39, "wheel_pros_pair_in_set": true}
+  "verified": {
+    "pairs_to_judge": 145,
+    "exact_rule_settled": 39,
+    "wheel_pros_pair_in_set": true
+  }
 }

@@ -2,7 +2,7 @@
 
 Author: Alexandre Cela, writing as the person who runs and maintains the engine. Status: draft, awaiting correction by the author.
 Source: no opportunity analysis. This follows the instrumentation work (`intent/instrumentation.md`) and the playbook's Stage 4 (continuous evals) and Stage 6 (closing the loop).
-Evidence: the repo's code and one offline evaluation. No LP analyst has been interviewed. The pain is inferred.
+Evidence: the repo's code, one batch run of the judge and one live run on the demo list. No LP analyst has been interviewed. The pain is inferred.
 
 ## Problem
 
@@ -20,8 +20,8 @@ Evidence: the repo's code and one offline evaluation. No LP analyst has been int
 
 What should change:
 - Time from a drop in judge quality to someone knowing: today unbounded, because it's only noticed when a wrong loan is spotted. Target: before merge for our own changes, within 7 days for a model change.
-- Live judge runs on the answer key: 1 so far (2 November 2026). Target: one per judge change, plus one a week.
-- Cost of one live run: unobserved. Estimate: under $1, about 145 to 184 judge calls at roughly $0.005 each, from today's live run.
+- Live judge runs on the answer key: 0 so far. The 2 November answers came from one batch run. Target: one per judge change, plus one a week.
+- Cost of one live run: unobserved. Estimate: under $1, about 145 judge calls at roughly $0.005 each, from the 7 November live run on the demo list (24 calls, $0.109).
 
 What must not get worse:
 - Precision 1.000 and recall 0.936 on the answer key, as measured on 2 November.
