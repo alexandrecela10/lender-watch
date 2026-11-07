@@ -14,7 +14,24 @@
 
 **Stack:** Python 3.12 via `uv`. Engine in `erm/`, app in `app/`, measurement in `eval/`, data in `data/`. See `README.md`.
 
-**Data rules learned the hard way**
+## Commands
+
+Run from the repo root. Healthy output in brackets.
+- `make test`: runs `uv run pytest` [`31 passed`]
+- `make lint`: runs `ruff check` and `ruff format --check` [`All checks passed!` then `43 files already formatted`]
+- `make evals`: offline eval gate, `uv run python -m eval.offline` [exits 1 until M4 of `plans/sdlc-day1.md` adds the script]
+- `make run`: the review app, `uv run streamlit run app/review.py` [Streamlit prints a local URL]
+- `make mcp`: the tool server for AI agents, `uv run python -m erm.mcp_server` [no output; it serves over stdin and exits when stdin closes]
+
+## Verifying your work
+
+- Run `make test` and `make lint` before reporting any task done. Paste their output in the report.
+- When a test fails, fix the code, not the test.
+- Never skip, mark as expected to fail, or delete a failing test.
+
+## Things Claude gets wrong
+
+Data rules learned the hard way:
 - In SEC's `soi.tsv`, use `ddate` as the period. About half the rows are prior-period comparison schedules.
 - Check any column or claim against a real filing before relying on it.
 - All labels so far are Claude's. Never describe them as human or hand-labelled.
