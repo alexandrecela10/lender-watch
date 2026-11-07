@@ -59,3 +59,7 @@ Exit criteria
 ## Order
 
 M6 (30 min) → M7 (1.5 hours) → M8 (1 hour). M7 and M8 can run in parallel worktrees: they touch different files.
+
+## After day 2: GitHub review workflow
+
+- 2026-11-07: `.github/workflows/review.yml` runs `REVIEW.md` on every pull request. It comments with the run's own `GITHUB_TOKEN` (read code, comment on pull requests), not the Claude GitHub App, so no outside app gets standing access to the repo. Chosen by Alexandre in PR #3.
