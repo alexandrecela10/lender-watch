@@ -4,3 +4,10 @@
 method: e_exact_name_rule_then_judge
 pair_precision: 0.97
 pair_recall: 0.90
+# Live judge check (eval/live.py, specs/ai-drift-tracking.md). Same floors as above.
+live:
+  cost_cap_usd: 3.0
+  call_cap: 250
+  unknown_call_usd: 0.05  # a call with no known price counts this much toward the cap
+  max_error_share: 0.10   # more failed calls than this marks the run ERROR, not FAIL
+  stale_days: 8
