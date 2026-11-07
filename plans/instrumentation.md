@@ -4,7 +4,18 @@ Date: 2026-11-07. Owner: Alexandre. Build: day 3, one step per Claude Code sessi
 Source: `specs/instrumentation.md` (commit `057f508`), from `intent/instrumentation.md` (commit `9bddf51`).
 Evidence: the repo's code and one offline evaluation. No LP analyst has been interviewed. The analyst-side pain is inferred.
 
-Scope: the spec's sections 1 to 3 and its "Concerns and resolutions" table. No change to matching, flags or returned values. Every step ends with `make test` and `make lint` green, and a commit.
+## Summary
+
+We build in five steps, one session each. Each step must pass the tests before it's saved.
+1. The record keeping on its own, not yet switched on anywhere.
+2. The cost and time of each AI judge call.
+3. Sending that cost to Langfuse, an outside monitoring service, with no company names.
+4. Switching record keeping on in the command line, the app and the AI agent tool.
+5. A separate checker agent confirms it all works.
+
+Step 3 is the riskiest: it's the only one that sends anything off your machine. Matching, flags and the values shown don't change.
+
+Scope: the spec's sections 1 to 3 and its "Concerns and resolutions" table. Every step ends with `make test` and `make lint` green, and a commit.
 
 ## Files that change
 
