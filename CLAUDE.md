@@ -17,17 +17,19 @@
 ## Commands
 
 Run from the repo root. Healthy output in brackets.
-- `make test`: runs `uv run pytest` [`33 passed`, about 30 seconds]
+- `make test`: runs `uv run pytest` [`39 passed`, about 45 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
 - `make lint`: runs `ruff check` and `ruff format --check` [`All checks passed!` then `N files already formatted`; any `Would reformat` line is a failure]
 - `make evals`: offline eval gate, `uv run python -m eval.offline`, thresholds in `evals/thresholds.yaml` [`precision 1.000`, `recall 0.936`, `PASS`]. It replays saved name-search hits and judge verdicts, so it only re-tests the exact-name rule live.
 - `make run`: the review app, `uv run streamlit run app/review.py` [Streamlit prints a local URL]
 - `make mcp`: the tool server for AI agents, `uv run python -m erm.mcp_server` [no output; it serves over stdin and exits when stdin closes]
+- `make hooks`: run once after cloning: installs the git pre-commit key scan [`pre-commit key scan installed`]
 
 ## Verifying your work
 
 - Run `make test` and `make lint` before reporting any task done. Paste their output in the report.
 - When a test fails, fix the code, not the test.
 - Never skip, mark as expected to fail, or delete a failing test.
+- For any change under `app/`, also run the verifier's browser step (`.claude/agents/verifier.md` step 6). It checks screenshots against `specs/review-app-acceptance.md`.
 
 ## Things Claude gets wrong
 
