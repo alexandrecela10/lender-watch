@@ -157,7 +157,14 @@ def parse_all(text: str) -> list[dict]:
 
 def parse_last(text: str) -> dict | None:
     """The last completed result (PASS or FAIL) in a history comment. ERROR and INCOMPLETE are skipped."""
-    done = [m for m in parse_all(text) if m.get("status") in ("PASS", "FAIL")]
+
+    def valid(m: dict) -> bool:
+        nums = [m[k] for k in ("precision", "recall", "fp") if k in m]
+        return m.get("status") in ("PASS", "FAIL") and all(
+            isinstance(x, (int, float)) for x in nums
+        )
+
+    done = [m for m in parse_all(text) if valid(m)]
     return done[-1] if done else None
 
 
@@ -195,9 +202,10 @@ def summary(
         f"errors {res.errors}  cost ${res.cost_usd:.2f}  time {res.seconds // 60}m {res.seconds % 60}s"
     )
     lines.append("labels are Claude's, not checked by a person")
-    last_fp = last.get("fp") if last else None
-    if s and (s["fp"] > last_fp if last_fp is not None else s["fp"] > 0):
-        lines.append(f"WARN false matches rose to {s['fp']}")
+    if s and s["fp"] > 0:
+        lines.append(
+            f"WARN {s['fp']} false matches (spec concern 2: any false match warns)"
+        )
     lines.append(res.status + (f": {res.stop}" if res.stop else ""))
     machine = {
         "date": today,

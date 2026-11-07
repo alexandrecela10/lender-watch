@@ -33,11 +33,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           HISTORY: "Live judge check history"
         run: |
-          n=$(gh issue list --state all --search "in:title \"$HISTORY\"" --json number,title \
+          n=$(gh issue list --state all --author "app/github-actions" --search "in:title \"$HISTORY\"" --json number,title \
                 --jq "[.[] | select(.title == \"$HISTORY\")][0].number // empty")
           if [ -z "$n" ]; then echo "::warning::No live judge check on main yet."; exit 0; fi
           d=$(gh issue view "$n" --json comments \
-                --jq '[.comments[] | select(.body | contains("\"status\": \"PASS\"") or contains("\"status\": \"FAIL\""))] | last | .createdAt // empty')
+                --jq '[.comments[] | select(.author.login == "github-actions") | select(.body | contains("\"status\": \"PASS\"") or contains("\"status\": \"FAIL\""))] | last | .createdAt // empty')
           if [ -z "$d" ]; then echo "::warning::No completed live judge check on main yet."; exit 0; fi
           age=$(( ( $(date +%s) - $(date -d "$d" +%s) ) / 86400 ))
           limit=$(uv run python -c "import yaml; print(yaml.safe_load(open('evals/thresholds.yaml'))['live']['stale_days'])")

@@ -104,7 +104,7 @@ def test_six_wrong_pairs_fail_one_warns(at_root, tmp_path):
     assert code == 1 and live.parse_last(text)["status"] == "FAIL"
     (tmp_path / "one").mkdir()
     code, text = run(tmp_path / "one", fake(flipped(1)))
-    assert code == 0 and "WARN false matches rose to 1" in text
+    assert code == 0 and "WARN 1 false matches" in text
 
 
 def test_cost_cap_stops_the_run(at_root, tmp_path):
@@ -150,7 +150,7 @@ def test_history_comment_parses_back_and_compares(at_root, tmp_path):
     text = second.read_text()
     assert "false matches 1 (last run 0)" in text
     assert "precision 0.994 (floor 0.97, last run 1.000)" in text
-    assert "WARN false matches rose to 1" in text
+    assert "WARN 1 false matches" in text
 
 
 def test_errors_mark_the_run_error_not_fail(at_root, tmp_path):
@@ -193,3 +193,5 @@ def test_parse_last_takes_the_last_result():
     assert live.parse_last(f"run 1\n{a}\nrun 2\n{b}\n")["fp"] == 7
     assert live.parse_last(f"{a}\n{c}\n")["fp"] == 0
     assert live.parse_last("no marker") is None
+    bad = live.MARKER + '{"status": "PASS", "fp": "999"} -->'
+    assert live.parse_last(f"{a}\n{bad}\n")["fp"] == 0

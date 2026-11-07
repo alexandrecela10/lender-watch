@@ -58,12 +58,12 @@ jobs:
       - run: uv sync
       - name: Last completed run on main
         run: |
-          n=$(gh issue list --state all --search "in:title \"$HISTORY\"" --json number,title \
+          n=$(gh issue list --state all --author "app/github-actions" --search "in:title \"$HISTORY\"" --json number,title \
                 --jq "[.[] | select(.title == \"$HISTORY\")][0].number // empty")
           echo "ISSUE=$n" >> "$GITHUB_ENV"
           if [ -n "$n" ]; then
             gh issue view "$n" --json comments \
-              --jq '[.comments[] | select(.body | contains("\"status\": \"PASS\"") or contains("\"status\": \"FAIL\""))] | last | .body // ""' > last.md
+              --jq '[.comments[] | select(.author.login == "github-actions") | select(.body | contains("\"status\": \"PASS\"") or contains("\"status\": \"FAIL\""))] | last | .body // ""' > last.md
           fi
       - name: Live check
         id: run
