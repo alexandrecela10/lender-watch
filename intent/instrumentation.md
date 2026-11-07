@@ -6,11 +6,10 @@ Evidence: the repo's code and one offline evaluation run. No LP analyst has been
 
 ## Problem
 
-When a list runs through the engine, nothing is kept. We can't tell who ran a list, how many names needed a person to review, what the AI judge cost, or whether match quality is drifting between quarters.
-
-One case: the offline evaluation on the answer key sent 3 of 84 companies to a person and cost $0.40 per 100 names at batch prices (`outputs/analyses/matching-comparison.md`). Those are the only cost and review numbers we have. A live run through the app, the command line or the MCP tool server records neither. The command line prints totals to the screen and then they're gone. The judge returns its token counts, and `erm/api.py` discards them (`v, _usage = ...`). There is no `logging` call anywhere in `erm/` or `app/`.
-
-So we can't answer the value gate's first question, "did analysts use it?", and we can't see a drop in match quality until someone spots a wrong loan by hand.
+- After a list runs, nothing is kept.
+- So we can't tell how often the engine is used, how many names need a person, or what the AI judge costs.
+- We can't see matching get worse until someone spots a wrong loan by hand.
+- Our only numbers come from one offline test: 3 of 84 companies needed a person, and the judge cost $0.40 per 100 names (`outputs/analyses/matching-comparison.md`).
 
 ## Proposed outcome
 

@@ -9,11 +9,11 @@ description: Writes an intent file in intent/ for this repo. Use when someone as
 2. Look for a matching opportunity analysis in `outputs/opportunity-analyses/`. If one exists, pull the problem, the pain example, the numbers and the open questions from it, and name it on a `Source:` line.
 3. Start with a header: author, status (draft), source, and an evidence line saying what the pain is based on. Until real users are interviewed, say the pain is inferred from public signals.
 4. Write these sections, in this order:
-   - **Problem**: who has it, what they do today, why it fails, and one concrete case with real public names and dates.
+   - **Problem**: 3 to 5 short bullets: who has it, what goes wrong, why it matters, and one concrete case with a number and its source. No file paths, function names or code; that proof goes in the spec.
    - **Proposed outcome**: what the user puts in and gets back. Then "What should change" with metric, baseline and target, and "What must not get worse".
    - **Affected users and systems**: users now and later; data sources and repo modules touched.
    - **Constraints**: the hard rules from `CLAUDE.md` that apply, plus any new ones.
    - **Open questions**: what we don't know, and what answer would change the decision.
 5. Never invent a number. If a baseline or target isn't observed, name the metric and its direction and write "unobserved".
-6. Write in plain English: short factual sentences, no em dashes, no sales words. Never name an organisation Alexandre is applying to. Company names from public sources are fine.
+6. Write in plain English for a reader who doesn't know the code: bullets, short factual sentences, no em dashes, no sales words. Never name an organisation Alexandre is applying to. Company names from public sources are fine.
 7. Tell the PM the file path and list every value marked unobserved.
