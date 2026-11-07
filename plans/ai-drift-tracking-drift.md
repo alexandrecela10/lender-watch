@@ -12,3 +12,6 @@ Notes:
 - Every step changed `CLAUDE.md` and the verifier, only to update the healthy test count.
 - D3: `eval/live.py` now reads the last result in a comment, not the first, and has a test for it.
 - D3: the data-handling skill line landed in this plan pull request (#5) instead.
+| 2026-11-07 | D4 | none | none |
+
+D4 ran on this machine with the `.env` key instead of on `main`, because merges wait for Alexandre. Same code, same 145 pairs. Three runs: precision 1.000 and recall 0.936 each time, 0 false matches, 1 of 145 verdicts changed once, $1.97 in total.

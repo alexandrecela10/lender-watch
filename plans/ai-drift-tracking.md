@@ -58,7 +58,7 @@ Files: `.github/workflows/live-eval.yml`, `.github/workflows/ci.yml`, `README.md
 
 Rules from the third spec review (0 Important, 5 nits):
 - Only runs on `main` add to the history issue, by schedule or by hand. A pull-request run comments on its own pull request, so an unmerged judge never becomes "the last run".
-- The staleness warning and the last-run comparison read only completed `main` runs (PASS or FAIL). ERROR, INCOMPLETE and skipped runs don't reset the clock.
+- The staleness warning and the last-run comparison read only completed `main` runs (PASS or FAIL), posted by `github-actions`. ERROR, INCOMPLETE and skipped runs don't reset the clock, and nobody else's comment counts.
 - ERROR and INCOMPLETE exit 1, so a judge change can't merge green during an outage.
 - The caps apply to each repeat: `--repeat 3` may spend up to $9, about $2 expected.
 - The job timeout is 45 minutes, not the spec's 20, because a run by hand with repeat 3 takes about 25 minutes.
@@ -66,7 +66,7 @@ Rules from the third spec review (0 Important, 5 nits):
 - Trigger paths add `erm/textparse.py`, `data/public/holdings.parquet` and `.github/workflows/live-eval.yml`.
 
 Exit criteria
-- The pull request runs the live check, because it touches `evals/`. It completes under $3 and posts one history comment. This is the first live run.
+- The pull request runs the live check, because it touches `evals/`. It completes under $3 and comments on the pull request, not the history issue. This is the first live run on GitHub.
 - Every YAML file parses (`uv run python -c "import yaml,glob; [yaml.safe_load(open(f)) for f in glob.glob('.github/workflows/*.yml')]"`).
 - CI on the pull request shows the stale-schedule step.
 - Pull request merged.
@@ -94,7 +94,7 @@ Exit criteria
 
 | Risk | What it would break | Mitigation |
 |---|---|---|
-| A rate limit or outage mid-run | A failed run reads as drift | A failed call counts as "unsure" and is reported as an error count; over 10% errors marks the run ERROR, not FAIL |
+| A rate limit or outage mid-run | A failed run reads as drift | A failed call is counted as an error and left out of the scores (spec concern 13). Over 10% errors marks the run ERROR, not FAIL, and stops it early |
 | The cap stops a run early | Scores computed on part of the key | A capped run is marked INCOMPLETE and never compared |
 | D1 changes what the rule returns | Matching changes in the product | `make evals` must still print 1.000 and 0.936, and the shared function keeps the product's exact logic |
 | A company name in a log or comment | A leak against the logging rules | Spec check 7 scans every output line for every answer-key name |
