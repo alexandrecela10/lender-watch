@@ -131,6 +131,19 @@ def count(status: str, flag_level: str | None = None) -> None:
     s.worth_a_look += flag_level == "worth_a_look"
 
 
+def add_judge_call(cost: float | None) -> None:
+    """Add one live judge call to the current run. One unpriced call makes the run's total unknown (None)."""
+    s = _stats.get()
+    if s is None:
+        return
+    s.judge_calls += 1
+    s.judge_cost_usd = (
+        None
+        if cost is None or s.judge_cost_usd is None
+        else round(s.judge_cost_usd + cost, 6)
+    )
+
+
 def write_metrics(path: Path, row: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with sqlite3.connect(path) as con:

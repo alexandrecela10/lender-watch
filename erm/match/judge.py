@@ -9,6 +9,31 @@ from pydantic import BaseModel, Field
 
 MODEL = "claude-opus-5-5"
 
+# US dollars per million tokens. Source: platform.claude.com/docs/en/about-claude/pricing, read 2026-11-07.
+# Cache write is the 5-minute rate. A model missing here (for example a refusal fallback) gets cost None, never a guess.
+PRICES = {
+    "claude-opus-5-5": {
+        "input": 4.00,
+        "output": 20.00,
+        "cache_read": 0.20,
+        "cache_write": 5.00,
+    },
+}
+
+
+def cost_usd(model: str, usage) -> float | None:
+    p = PRICES.get(model)
+    if p is None:
+        return None
+    tokens = {
+        "input": usage.input_tokens,
+        "output": usage.output_tokens,
+        "cache_read": getattr(usage, "cache_read_input_tokens", 0),
+        "cache_write": getattr(usage, "cache_creation_input_tokens", 0),
+    }
+    return round(sum((tokens[k] or 0) * p[k] for k in p) / 1_000_000, 6)
+
+
 SYSTEM = """You decide whether a holding in a lender's filing belongs to a specific company in an investor's list.
 
 Answer "match" if the holding's borrower is that company, a holding or deal vehicle that owns it, or a legal name it borrows under. A stated trade name ("dba X", "(X)") counts as evidence for X.
@@ -87,10 +112,11 @@ def parse(message) -> Verdict:
 
 
 def judge(client, name, sector, sponsor, candidate, examples) -> tuple[Verdict, object]:
-    """Single live call with server-side refusal fallback. Batch runs in eval/ use request_params directly."""
+    """Single live call with server-side refusal fallback. Returns the verdict and the raw message (model, usage).
+    Batch runs in eval/ use request_params directly."""
     message = client.beta.messages.create(
         betas=["server-side-fallback-2026-07-01"],
         fallbacks="default",
         **request_params(name, sector, sponsor, candidate, examples),
     )
-    return parse(message), message.usage
+    return parse(message), message

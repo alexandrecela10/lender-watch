@@ -10,6 +10,8 @@ With no client, nothing leaves the machine and unclear names go to a person.
 from __future__ import annotations
 
 import hashlib
+import logging
+import time
 import pickle
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -17,6 +19,7 @@ from pathlib import Path
 import anthropic
 import pandas as pd
 
+from erm import telemetry
 from erm.match import judge as judge_mod
 from erm.match.features import compute
 from erm.retrieve import Index
@@ -36,6 +39,43 @@ FLAG_RULE = (
     "average fell 5 points or more in a quarter. Worth a look: one loan is below 90% or fell 5 points or more, or two lenders "
     "are 5 points apart on what looks like the same loan. Not flagged only covers lenders that publish their loans. Banks don't."
 )
+
+
+log = logging.getLogger("erm.api")
+
+
+def call_judge(client, name, sector, sponsor, candidate, examples):
+    """One live judge call, logged with verdict, tokens, cost and time, never the names or the reason.
+    Raises anthropic.APIError after logging it, so the caller keeps its own fallback."""
+    t0 = time.monotonic()
+    try:
+        v, message = judge_mod.judge(client, name, sector, sponsor, candidate, examples)
+    except anthropic.APIError as e:
+        log.warning(
+            "judge_error",
+            extra={
+                "error_type": type(e).__name__,
+                "latency_ms": int((time.monotonic() - t0) * 1000),
+            },
+        )
+        raise
+    u = message.usage
+    cost = judge_mod.cost_usd(message.model, u)
+    log.info(
+        "judge_call",
+        extra={
+            "verdict": v.verdict,
+            "model": message.model,
+            "input_tokens": u.input_tokens,
+            "output_tokens": u.output_tokens,
+            "cache_read_tokens": getattr(u, "cache_read_input_tokens", 0),
+            "cache_write_tokens": getattr(u, "cache_creation_input_tokens", 0),
+            "cost_usd": cost,
+            "latency_ms": int((time.monotonic() - t0) * 1000),
+        },
+    )
+    telemetry.add_judge_call(cost)
+    return v
 
 
 @dataclass
@@ -160,9 +200,7 @@ class Engine:
                 **base, verdict=d.verdict, decided_by=d.decided_by, reason=d.reason
             )
         try:
-            v, _usage = judge_mod.judge(
-                self.client, name, sector, sponsor, m.text, examples
-            )
+            v = call_judge(self.client, name, sector, sponsor, m.text, examples)
         except (
             anthropic.APIError
         ):  # one failed call shouldn't stop the list; ask again next run

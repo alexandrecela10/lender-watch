@@ -2,10 +2,15 @@ import io
 import json
 import logging
 import sqlite3
+from types import SimpleNamespace
 
+import anthropic
+import httpx2 as httpx
 import pytest
 
 from erm import telemetry
+from erm.api import call_judge
+from erm.match.judge import cost_usd
 
 log = logging.getLogger("erm.test")
 
@@ -98,3 +103,84 @@ def test_metrics_write_failure_never_fails_the_run(lines, tmp_path):
 
 def test_count_outside_a_run_does_nothing():
     telemetry.count("matched")
+
+
+# I2: judge cost and time, with a fake client. Nothing is sent anywhere.
+
+
+def fake_client(model="claude-opus-5-5", error=None):
+    def create(**kw):
+        if error:
+            raise error
+        return SimpleNamespace(
+            model=model,
+            stop_reason="end_turn",
+            content=[
+                SimpleNamespace(
+                    type="text",
+                    text='{"verdict": "match", "reason": "Orion Group Holdings LLC"}',
+                )
+            ],
+            usage=SimpleNamespace(
+                input_tokens=1000,
+                output_tokens=100,
+                cache_read_input_tokens=0,
+                cache_creation_input_tokens=0,
+            ),
+        )
+
+    return SimpleNamespace(
+        beta=SimpleNamespace(messages=SimpleNamespace(create=create))
+    )
+
+
+ARGS = (
+    "Orion Group",
+    "Software",
+    "Example Capital",
+    "Orion Group Holdings LLC",
+    ["Orion Group Holdings LLC | First Lien"],
+)
+
+
+def test_judge_call_logs_verdict_tokens_cost_and_time(lines, tmp_path):
+    db = tmp_path / "m.sqlite"
+    with telemetry.run("cli", judge_on=True, metrics_path=db):
+        assert call_judge(fake_client(), *ARGS).verdict == "match"
+    out = lines()
+    [call] = [x for x in out if x["event"] == "judge_call"]
+    assert (
+        call["verdict"] == "match"
+        and call["input_tokens"] == 1000
+        and call["output_tokens"] == 100
+    )
+    assert call["cost_usd"] == 0.006 and call["latency_ms"] >= 0
+    assert "Orion" not in json.dumps(out) and "Example Capital" not in json.dumps(out)
+    [row] = rows(db)
+    assert (row["judge_calls"], row["judge_cost_usd"]) == (1, 0.006)
+
+
+def test_judge_call_unknown_model_logs_null_cost(lines, tmp_path):
+    db = tmp_path / "m.sqlite"
+    with telemetry.run("cli", judge_on=True, metrics_path=db):
+        call_judge(fake_client(model="some-fallback-model"), *ARGS)
+    [call] = [x for x in lines() if x["event"] == "judge_call"]
+    assert call["cost_usd"] is None
+    assert rows(db)[0]["judge_cost_usd"] is None
+
+
+def test_judge_call_error_is_logged_by_type_and_reraised(lines, tmp_path):
+    err = anthropic.APIConnectionError(
+        request=httpx.Request("POST", "https://api.anthropic.com")
+    )
+    with (
+        pytest.raises(anthropic.APIError),
+        telemetry.run("cli", judge_on=True, metrics_path=tmp_path / "m.sqlite"),
+    ):
+        call_judge(fake_client(error=err), *ARGS)
+    [e] = [x for x in lines() if x["event"] == "judge_error"]
+    assert e["error_type"] == "APIConnectionError"
+
+
+def test_unknown_model_cost_is_none():
+    assert cost_usd("unknown", SimpleNamespace(input_tokens=1, output_tokens=1)) is None
