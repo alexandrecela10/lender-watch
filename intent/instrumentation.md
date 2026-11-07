@@ -38,7 +38,7 @@ Systems: `erm/api.py` (the Engine, where runs start and the judge is called), `e
 - Never log a company list, a company name from an uploaded list, a key, or a prompt or response body. Log counts and ids (`api-and-logging` rule 2).
 - Logs are JSON, one object per line, with a request id, using the standard `logging` module (`api-and-logging` rule 1).
 - The judge stays off by default. Turning on instrumentation must not turn on any new outside call that carries company names (`data-handling` check 3).
-- Langfuse is a third party. Anything sent there follows the same rule as the judge: no company names unless the person running the list has agreed to send names out.
+- Langfuse is a third party. No company name, prompt or reply goes there, with the judge on or off (spec concern 1).
 - Keys live in `.env`. Never printed, logged or committed.
 - A person's saved answer still overrides every automated answer. Instrumentation reads decisions; it never changes them.
 - Every new public function ships with a test.
@@ -46,6 +46,5 @@ Systems: `erm/api.py` (the Engine, where runs start and the judge is called), `e
 ## Open questions
 
 - "Who ran a list": the public app has no login. Is a run source (app, command line, MCP) plus an anonymous session id enough? If the value gate needs named users, we need a login first, and that's a separate decision.
-- Should Langfuse receive anything when the judge is off? If not, runs with the judge off are visible only in local logs and the `run_metrics` table.
 - What counts as drift? Candidates: share of names needing review, share matched, judge "unsure" rate. Each needs one quarter of runs before a threshold means anything. Unobserved.
 - Where do public app visitors' run records go? The hosted app copies the decision store per visitor into a temporary folder, so a local table there is lost when the session ends.

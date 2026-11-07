@@ -19,8 +19,6 @@ Scope: the spec's sections 1 to 3 and its "Concerns and resolutions" table. No c
 | `.gitignore` | Changed | Add `data/metrics.sqlite` |
 | `tests/test_telemetry.py` | New | Acceptance checks 1 to 8 from the spec |
 
-`tests/` and `CLAUDE.md` are also touched by M7. Merge M7 before day 3 starts so the two never edit the same files at once.
-
 ## Order
 
 ### I1. Telemetry core, no wiring
@@ -88,13 +86,6 @@ A live judge-on run with real Langfuse keys sends names to Anthropic. It needs A
 | A new field added later carries a name | A leak in logs | The allowlist drops unknown fields; spec check 3 covers it |
 
 **Riskiest step: I3.** It's the only step that sends anything off the machine, and its safety depends on SDK behaviour we haven't read yet. Everything else fails locally and visibly. I3 can fail silently by sending more than it shows.
-
-## What this plan does not do
-
-- Drift thresholds. Needs one quarter of runs.
-- Named users. Needs a login, which is a separate decision.
-- Durable storage for hosted-app run records.
-- The private-mode shared-engine bug in `app/review.py` (spec resolution 12). Separate follow-up.
 
 ## Kickoff prompt for each build step (day 3)
 

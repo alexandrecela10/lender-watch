@@ -15,5 +15,5 @@ description: Writes an intent file in intent/ for this repo. Use when someone as
    - **Constraints**: the hard rules from `CLAUDE.md` that apply, plus any new ones.
    - **Open questions**: what we don't know, and what answer would change the decision.
 5. Never invent a number. If a baseline or target isn't observed, name the metric and its direction and write "unobserved".
-6. Write in plain English: short factual sentences, no em dashes, no sales words. No employer, client or counterparty names.
+6. Write in plain English: short factual sentences, no em dashes, no sales words. Never name an organisation Alexandre is applying to. Company names from public sources are fine.
 7. Tell the PM the file path and list every value marked unobserved.
