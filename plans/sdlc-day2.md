@@ -59,3 +59,12 @@ Exit criteria
 ## Order
 
 M6 (30 min) → M7 (1.5 hours) → M8 (1 hour). M7 and M8 can run in parallel worktrees: they touch different files.
+
+## Follow-up: GitHub review workflow
+
+Done on 2026-11-07, the same day as M6 to M8. The 2026-11-08 date above was the day planned for them.
+
+- `.github/workflows/review.yml` runs `REVIEW.md` on every pull request.
+- It uses the run's own `GITHUB_TOKEN`, not the Claude GitHub App, so no outside app gets standing access to the repo. Chosen by Alexandre in PR #3.
+- The token can read code and act on pull requests: comment, edit a title or description, close or reopen, label, request reviewers. It can't push or merge, because code access is read-only.
+- The model is narrower still: its tools are limited to reading the diff and pull request, and posting a comment.
