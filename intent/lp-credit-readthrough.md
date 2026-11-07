@@ -23,7 +23,7 @@ Systems: SEC BDC data sets (monthly), sponsor websites (company lists), the matc
 
 ## Constraints
 
-- Public data only. No employer, client or counterparty data or names in code, fixtures, docs or demo text.
+- Public data only. No employer, client or counterparty data in code, fixtures, docs or demo text. Never name an organisation Alexandre is applying to; company names from public sources are fine.
 - Every value keeps its filing URL and row. No uncited value is ever shown.
 - The AI judge sends company names to a third party. Off by default. A list under fund confidentiality terms must run with it off, or with a model inside the LP's perimeter.
 - A person's answer on a match overrides every automated answer and persists across runs.

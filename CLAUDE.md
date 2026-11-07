@@ -5,7 +5,7 @@
 **Brief and decisions:** `outputs/opportunity-analyses/`, then `outputs/prds/`. Earlier drafts: `docs/archive/PRD_1.md`, `docs/archive/CLAUDE_1.md` (context only, not binding).
 
 **Hard constraints**
-- Public data only (SEC EDGAR, SEC BDC data sets, sponsor websites). No employer, client or counterparty data or names.
+- Public data only (SEC EDGAR, SEC BDC data sets, sponsor websites). No employer, client or counterparty data. Never name an organisation Alexandre is applying to; company names from public sources are fine.
 - Every fact keeps its source (filing URL + row). No uncited value is ever shown.
 - Pain is inferred from public signals until real LP users are interviewed. Say so in every document.
 - Core engine stays source-agnostic so other side projects and customers can plug in their own lists and sources.
