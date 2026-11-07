@@ -2,6 +2,12 @@
 # PostToolUse hook on Edit and Write. Formats and lints the Python file just changed.
 # Exit 2 shows the lint errors to Claude so it fixes them before moving on.
 
+# Fail closed: without jq the input can't be read, so block rather than allow.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Blocked: jq is not installed, so this safety check cannot run. Install it with \`brew install jq\`." >&2
+  exit 2
+fi
+
 file=$(jq -r '.tool_input.file_path // empty')
 case "$file" in *.py) ;; *) exit 0 ;; esac
 [ -f "$file" ] || exit 0

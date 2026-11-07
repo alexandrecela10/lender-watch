@@ -4,6 +4,12 @@
 # Blocked when ERM_FIX_TASK=1: tests/ (a fix task changes the code, never the test).
 # Exit 2 tells Claude Code to refuse the tool call and show the reason to Claude.
 
+# Fail closed: without jq the input can't be read, so block rather than allow.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Blocked: jq is not installed, so this safety check cannot run. Install it with \`brew install jq\`." >&2
+  exit 2
+fi
+
 file=$(jq -r '.tool_input.file_path // empty')
 [ -z "$file" ] && exit 0
 
