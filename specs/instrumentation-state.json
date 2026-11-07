@@ -1,0 +1,28 @@
+{
+  "spec": "specs/instrumentation.md",
+  "intent": "intent/instrumentation.md",
+  "updated": "2026-11-07",
+  "status": "draft, concerns resolved by the M8 session, pending Alexandre's review",
+  "open": [
+    "Is source plus anonymous session id enough for the value gate",
+    "Durable storage for hosted-app run records",
+    "Verify Langfuse SDK 5.1.0 option names, IO capture off, and span export filtering"
+  ],
+  "found_not_fixed": [
+    "app/review.py private mode shares one cached Engine and mutates engine.client per click"
+  ],
+  "decisions": [
+    "No company name, prompt, reply, reason or name-derived id is sent to Langfuse, judge on or off",
+    "Judge on means engine.client is not None; ERM_USE_JUDGE is read only by the MCP entry point",
+    "No name-derived id (pair_id, entity_id) in any log or trace; request_id is a random UUID",
+    "All logs go to stderr so MCP stdout stays clean",
+    "run_metrics lives in data/metrics.sqlite, separate from the decision store",
+    "Langfuse client created only when the judge is on and both Langfuse keys are set",
+    "No file paths or exception messages in logs; exception type only",
+    "Verdict word only in logs and traces, never the reason",
+    "Flags stored as two columns: flagged and worth_a_look",
+    "run_metrics also holds judge_calls and judge_cost_usd",
+    "Token prices come from Anthropic's pricing page via the claude-api skill, cited with date; unknown model logs cost_usd null",
+    "Intent line 41 (names to Langfuse with consent) is superseded: no names to Langfuse ever"
+  ]
+}
