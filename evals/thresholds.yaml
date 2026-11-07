@@ -1,0 +1,6 @@
+# Offline eval gate. `make evals` fails when a score drops below these.
+# Observed on 2026-11-02 (outputs/analyses/matching-comparison.md): precision 1.000, recall 0.936.
+# The floors sit below the observed values so normal noise doesn't fail the gate.
+method: e_exact_name_rule_then_judge
+pair_precision: 0.97
+pair_recall: 0.90
