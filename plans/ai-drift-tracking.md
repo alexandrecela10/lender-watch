@@ -61,6 +61,8 @@ Rules from the third spec review (0 Important, 5 nits):
 - The staleness warning and the last-run comparison read only completed `main` runs (PASS or FAIL). ERROR, INCOMPLETE and skipped runs don't reset the clock.
 - ERROR and INCOMPLETE exit 1, so a judge change can't merge green during an outage.
 - The caps apply to each repeat: `--repeat 3` may spend up to $9, about $2 expected.
+- The job timeout is 45 minutes, not the spec's 20, because a run by hand with repeat 3 takes about 25 minutes.
+- `eval.live` calls Anthropic only with `--live`, so running the module by mistake sends nothing (AI review on #6).
 - Trigger paths add `erm/textparse.py`, `data/public/holdings.parquet` and `.github/workflows/live-eval.yml`.
 
 Exit criteria
