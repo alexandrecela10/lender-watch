@@ -54,3 +54,9 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 | `erm/api.py` | `resolve_entity`, `gather_facts`, `enrich_table`, `review` |
 | `eval/` | Answer key, method comparison, filing check |
 | `erm/match/linkage.py`, `features.py` | Scoring model, tested and dropped; kept for the comparison |
+
+## Checks on GitHub
+
+- **CI** (`.github/workflows/ci.yml`): tests, style check and the offline eval gate on every pull request, every push to `main` and nightly.
+- **AI review** (`.github/workflows/review.yml`): `REVIEW.md` on every pull request. It reports; a person merges.
+- **Live judge check** (`.github/workflows/live-eval.yml`): asks the AI judge again about 145 answer-key pairs, on judge changes and every Monday. It fails below precision 0.97 or recall 0.90. Results on `main` go to the issue "Live judge check history". GitHub turns a weekly schedule off after 60 days with no repo activity; CI warns when the last check is more than 8 days old.

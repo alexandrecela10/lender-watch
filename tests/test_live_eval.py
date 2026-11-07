@@ -162,3 +162,10 @@ def test_reference_counts_changed_verdicts(at_root, tmp_path):
         live.REFERENCE = old
     assert "verdicts changed since the reference: 2 of 145" in text
     assert json.loads(text.split(live.MARKER)[1].split(" -->")[0])["fp"] == 2
+
+
+def test_parse_last_takes_the_last_result():
+    a = live.MARKER + '{"status": "PASS", "fp": 0} -->'
+    b = live.MARKER + '{"status": "FAIL", "fp": 7} -->'
+    assert live.parse_last(f"run 1\n{a}\nrun 2\n{b}\n")["fp"] == 7
+    assert live.parse_last("no marker") is None

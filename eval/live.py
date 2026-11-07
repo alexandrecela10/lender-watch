@@ -142,9 +142,9 @@ def compare_reference(res: Result, path: str | None = None) -> None:
 
 
 def parse_last(text: str) -> dict | None:
-    """The machine line in the last history comment: date, status, scores. None if absent."""
-    m = re.search(re.escape(MARKER) + r"(\{.*?\}) -->", text or "")
-    return json.loads(m.group(1)) if m else None
+    """The last machine line in a history comment: date, status, scores. None if absent."""
+    found = re.findall(re.escape(MARKER) + r"(\{.*?\}) -->", text or "")
+    return json.loads(found[-1]) if found else None
 
 
 def summary(
