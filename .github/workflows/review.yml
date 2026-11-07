@@ -1,5 +1,6 @@
 # AI review of every pull request against REVIEW.md (playbook Stage 5). It reports; a person approves.
 # Needs the repo secret ANTHROPIC_API_KEY; without it the job says so and skips.
+# Comments with the run's own GITHUB_TOKEN (permissions below), so no GitHub App is installed.
 # Plain pull_request, never pull_request_target, so fork pull requests never get the secret.
 name: AI review
 on:
@@ -13,7 +14,6 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      id-token: write
     steps:
       - name: Check for the API key
         id: key
@@ -29,6 +29,7 @@ jobs:
         if: steps.key.outputs.present == 'true'
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           use_sticky_comment: true
           prompt: |
             REPO: ${{ github.repository }}
