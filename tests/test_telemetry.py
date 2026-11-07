@@ -184,3 +184,136 @@ def test_judge_call_error_is_logged_by_type_and_reraised(lines, tmp_path):
 
 def test_unknown_model_cost_is_none():
     assert cost_usd("unknown", SimpleNamespace(input_tokens=1, output_tokens=1)) is None
+
+
+# I3: Langfuse traces. A fake Langfuse records what would be sent; nothing leaves the machine.
+class FakeObservation:
+    def __init__(self, sent):
+        self.sent = sent
+
+    def update(self, **kw):
+        self.sent.append(("update", kw))
+
+    def end(self):
+        self.sent.append(("end", {}))
+
+
+class FakeLangfuse:
+    def __init__(self, fail=False):
+        self.sent, self.fail = [], fail
+
+    def start_observation(self, **kw):
+        if self.fail:
+            raise ConnectionError("langfuse down")
+        self.sent.append(("start", kw))
+        return FakeObservation(self.sent)
+
+    def flush(self):
+        self.sent.append(("flush", {}))
+
+
+@pytest.fixture
+def fake_langfuse(monkeypatch):
+    def install(fail=False):
+        fake = FakeLangfuse(fail)
+        monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
+        monkeypatch.setenv("LANGFUSE_SECRET_KEY", "test-only")
+        monkeypatch.setattr(telemetry, "_make_langfuse", lambda: fake)
+        monkeypatch.setattr(telemetry, "_lf", None)
+        monkeypatch.setattr(telemetry, "_lf_tried", False)
+        return fake
+
+    return install
+
+
+def test_trace_payload_holds_no_names_or_ids(lines, tmp_path, fake_langfuse):
+    from erm.store import pair_id
+
+    fake = fake_langfuse()
+    with telemetry.run("cli", judge_on=True, metrics_path=tmp_path / "m.sqlite"):
+        call_judge(fake_client(), *ARGS)
+    sent = json.dumps(fake.sent, default=str)
+    for secret in [
+        *ARGS[:4],
+        ARGS[4][0],
+        pair_id(ARGS[0], "orion group holdings"),
+        "Orion",
+        "Software",
+    ]:
+        assert secret not in sent
+    [(_, start)] = [x for x in fake.sent if x[0] == "start"]
+    assert start["input"] == {"has_sector": True, "has_owner": True, "n_examples": 1}
+    [(_, upd)] = [x for x in fake.sent if x[0] == "update"]
+    assert upd["output"] == {"verdict": "match", "stop_reason": "end_turn"}
+    assert upd["cost_details"] == {"total": 0.006}
+    assert ("flush", {}) in fake.sent
+
+
+def test_trace_send_failed_leaves_the_verdict_unchanged(lines, tmp_path, fake_langfuse):
+    fake_langfuse(fail=True)
+    with telemetry.run("cli", judge_on=True, metrics_path=tmp_path / "m.sqlite"):
+        assert call_judge(fake_client(), *ARGS).verdict == "match"
+    events = [x["event"] for x in lines()]
+    assert "trace_send_failed" in events and "judge_call" in events
+
+
+def test_no_langfuse_when_judge_off_cli_and_mcp(monkeypatch, fake_langfuse):
+    """With the judge off, the entry points build an Engine without a judge client, so no judge call and no Langfuse client."""
+    import sys
+
+    from erm import cli, mcp_server
+
+    fake_langfuse()
+    made = []
+    monkeypatch.setattr(telemetry, "_make_langfuse", lambda: made.append(1))
+    seen = []
+
+    class Stop(Exception):
+        pass
+
+    def fake_engine(client=None, **kw):
+        seen.append(client)
+        raise Stop
+
+    monkeypatch.setattr(cli, "Engine", fake_engine)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["erm", "enrich", "in.csv", "--name-column", "Company", "--out", "o.xlsx"],
+    )
+    with pytest.raises(Stop):
+        cli.main()
+    monkeypatch.delenv("ERM_USE_JUDGE", raising=False)
+    monkeypatch.setattr(mcp_server, "Engine", fake_engine)
+    monkeypatch.setattr(mcp_server, "_engine", None)
+    with pytest.raises(Stop):
+        mcp_server.engine()
+    assert seen == [None, None] and made == []
+
+
+def test_trace_payload_real_sdk_exports_only_our_fields(monkeypatch):
+    """The installed Langfuse SDK, recording to memory. A span from another library, even one carrying a
+    company name in a gen_ai attribute, must not be exported."""
+    from opentelemetry import trace
+    from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
+        InMemorySpanExporter,
+    )
+
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-lf-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "local-only")
+    monkeypatch.setenv("LANGFUSE_BASE_URL", "http://127.0.0.1:9")
+    exp = InMemorySpanExporter()
+    lf = telemetry._make_langfuse(span_exporter=exp)
+    with trace.get_tracer("some.other.library").start_as_current_span("chat") as other:
+        other.set_attribute("gen_ai.prompt", "Is Orion Group the borrower?")
+    obs = lf.start_observation(
+        name="judge_call", as_type="generation", input={"n_examples": 1}
+    )
+    obs.update(output={"verdict": "match", "stop_reason": "end_turn"})
+    obs.end()
+    lf.flush()
+    spans = exp.get_finished_spans()
+    assert [s.name for s in spans] == ["judge_call"]
+    assert "Orion" not in json.dumps(
+        {k: str(v) for s in spans for k, v in s.attributes.items()}
+    )

@@ -66,6 +66,9 @@ _request_id: contextvars.ContextVar[str | None] = contextvars.ContextVar(
 _session_id: contextvars.ContextVar[str] = contextvars.ContextVar(
     "session_id", default=str(uuid.uuid4())
 )
+_source: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "source", default=None
+)
 _stats: contextvars.ContextVar[RunStats | None] = contextvars.ContextVar(
     "run_stats", default=None
 )
@@ -166,6 +169,7 @@ def run(
     """One run: a fresh request id for every log line inside, one run_metrics row on exit."""
     stats = RunStats()
     rid_token = _request_id.set(str(uuid.uuid4()))
+    src_token = _source.set(source)
     stats_token = _stats.set(stats)
     started_at = dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     t0 = time.monotonic()
@@ -200,5 +204,89 @@ def run(
         }
         fields["judge_on"] = judge_on
         log.info("run_finished", extra={**fields, "error_type": error_type})
+        flush_traces()
         _stats.reset(stats_token)
+        _source.reset(src_token)
         _request_id.reset(rid_token)
+
+
+# --- Langfuse traces on judge calls (spec section 3) ---------------------------------------------
+# A client exists only after a live judge call asked for one (so only with the judge on) and only when
+# both keys are set. It gets a private OpenTelemetry provider and exports Langfuse's own spans only,
+# so spans from other libraries (for example an instrumented Anthropic SDK carrying prompts) never leave.
+# Every trace field is set explicitly below; no decorator captures function arguments.
+
+_lf = None
+_lf_tried = False
+
+
+def _make_langfuse(**kw):
+    from langfuse import Langfuse
+    from langfuse.span_filter import is_langfuse_span
+    from opentelemetry.sdk.trace import TracerProvider
+
+    return Langfuse(
+        tracer_provider=TracerProvider(), should_export_span=is_langfuse_span, **kw
+    )
+
+
+def langfuse():
+    """The Langfuse client, or None when either key is missing or it failed to start."""
+    global _lf, _lf_tried
+    if not _lf_tried:
+        _lf_tried = True
+        if os.environ.get("LANGFUSE_PUBLIC_KEY") and os.environ.get(
+            "LANGFUSE_SECRET_KEY"
+        ):
+            try:
+                _lf = _make_langfuse()
+            except Exception as e:  # noqa: BLE001 - tracing must never stop a run
+                log.warning("trace_send_failed", extra={"error_type": type(e).__name__})
+    return _lf
+
+
+def start_judge_trace(
+    has_sector: bool, has_owner: bool, n_examples: int, prompt_version: str
+):
+    """Open one generation for a judge call. Input is counts and flags only. Returns None when off or failing."""
+    lf = langfuse()
+    if lf is None:
+        return None
+    try:
+        return lf.start_observation(
+            name="judge_call",
+            as_type="generation",
+            input={
+                "has_sector": has_sector,
+                "has_owner": has_owner,
+                "n_examples": n_examples,
+            },
+            metadata={
+                "request_id": _request_id.get(),
+                "source": _source.get(),
+                "prompt_version": prompt_version,
+            },
+        )
+    except Exception as e:  # noqa: BLE001
+        log.warning("trace_send_failed", extra={"error_type": type(e).__name__})
+        return None
+
+
+def end_judge_trace(obs, **fields) -> None:
+    """Close the generation with model, usage, cost and verdict, or with an error type."""
+    if obs is None:
+        return
+    try:
+        obs.update(**fields)
+        obs.end()
+    except Exception as e:  # noqa: BLE001
+        log.warning("trace_send_failed", extra={"error_type": type(e).__name__})
+
+
+def flush_traces() -> None:
+    if _lf is None:
+        return
+    try:
+        _lf.flush()
+    except Exception as e:  # noqa: BLE001
+        log.warning("trace_send_failed", extra={"error_type": type(e).__name__})

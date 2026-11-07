@@ -47,10 +47,17 @@ log = logging.getLogger("erm.api")
 def call_judge(client, name, sector, sponsor, candidate, examples):
     """One live judge call, logged with verdict, tokens, cost and time, never the names or the reason.
     Raises anthropic.APIError after logging it, so the caller keeps its own fallback."""
+    obs = telemetry.start_judge_trace(
+        has_sector=bool(sector),
+        has_owner=bool(sponsor),
+        n_examples=len([e for e in examples if e]),
+        prompt_version=judge_mod.PROMPT_VERSION,
+    )
     t0 = time.monotonic()
     try:
         v, message = judge_mod.judge(client, name, sector, sponsor, candidate, examples)
     except anthropic.APIError as e:
+        telemetry.end_judge_trace(obs, level="ERROR", status_message=type(e).__name__)
         log.warning(
             "judge_error",
             extra={
@@ -75,6 +82,19 @@ def call_judge(client, name, sector, sponsor, candidate, examples):
         },
     )
     telemetry.add_judge_call(cost)
+    telemetry.end_judge_trace(
+        obs,
+        model=message.model,
+        usage_details={
+            "input": u.input_tokens,
+            "output": u.output_tokens,
+            "cache_read_input_tokens": getattr(u, "cache_read_input_tokens", 0) or 0,
+            "cache_creation_input_tokens": getattr(u, "cache_creation_input_tokens", 0)
+            or 0,
+        },
+        cost_details=None if cost is None else {"total": cost},
+        output={"verdict": v.verdict, "stop_reason": message.stop_reason},
+    )
     return v
 
 
