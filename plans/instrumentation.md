@@ -107,7 +107,7 @@ A live judge-on run with real Langfuse keys sends names to Anthropic. It needs A
 | Streamlit's `st.rerun()` raises inside `answer()` | `run()` records a normal rerun as `status: error` | `run()` treats Streamlit's rerun and stop exceptions as `ok`; covered in I4 |
 | Price table wrong or stale | Cost reads wrong with no warning | Price comes from the pricing page with its date; unknown model logs null |
 | Hosted app disk is read-only or resets | `run_metrics` rows lost on the demo | Write failure logs `metrics_write_failed` and never fails the run; `run_finished` repeats every count |
-| Counting twice: `gather_facts` calls `resolve_entity` | Inflated `names_in` | Runs open and count at entry points only, never inside the engine |
+| Counting twice: `gather_facts` calls `resolve_entity` | Inflated `names_in` | Runs open at entry points only. Each name is counted once: in `enrich_table` for the CLI, at the entry point for the app and MCP, never in `gather_facts` or `resolve_entity` |
 | A new field added later carries a name | A leak in logs | The allowlist drops unknown fields; spec check 3 covers it |
 
 **Riskiest step: I3.** It's the only step that sends anything off the machine, and its safety depends on SDK behaviour we haven't read yet. Everything else fails locally and visibly. I3 can fail silently by sending more than it shows.

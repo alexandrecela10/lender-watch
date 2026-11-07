@@ -92,6 +92,16 @@ def test_metrics_write_records_error_and_reraises(lines, tmp_path):
     assert "Orion Group" not in json.dumps(lines())
 
 
+def test_metrics_write_streamlit_rerun_counts_as_ok(lines, tmp_path):
+    from streamlit.runtime.scriptrunner_utils.exceptions import StopException
+
+    db = tmp_path / "m.sqlite"
+    with pytest.raises(StopException), telemetry.run("app", metrics_path=db):
+        raise StopException()
+    assert rows(db)[0]["status"] == "ok"
+    assert lines()[-1]["error_type"] is None
+
+
 def test_metrics_write_failure_never_fails_the_run(lines, tmp_path):
     bad = tmp_path / "is_a_folder"
     bad.mkdir()
@@ -346,20 +356,27 @@ def test_enrich_counts_match_each_name(lines, tmp_path, monkeypatch):
     with telemetry.run("cli", metrics_path=db):
         engine.enrich_table(DEMO, "Company", tmp_path / "o.xlsx", "Sector", "Owner")
     demo = pd.read_csv(DEMO)
-    statuses = [
-        engine.resolve_entity(
-            r.Company, {"sector": r.Sector, "sponsor": r.Owner}
-        ).status
+    results = [
+        engine.gather_facts(r.Company, {"sector": r.Sector, "sponsor": r.Owner})
         for r in demo.itertuples()
     ]
+    statuses = [x["resolution"]["status"] for x in results]
+    levels = [x["flags"]["level"] if x["facts"] else None for x in results]
     [row] = rows(db)
     assert row["names_in"] == len(demo)
     assert row["names_matched"] == statuses.count("matched")
     assert row["names_needing_review"] == statuses.count("needs_review")
+    assert row["flagged"] == levels.count("flagged")
+    assert row["worth_a_look"] == levels.count("worth_a_look")
     out = lines()
     assert len({x["request_id"] for x in out}) == 1
     text = json.dumps(out)
     assert not [n for n in demo.Company if n in text]
+    ids = {c["pair_id"] for x in results for c in x["resolution"]["candidates"]}
+    ids |= {
+        x["resolution"]["entity_id"] for x in results if x["resolution"]["entity_id"]
+    }
+    assert ids and not [i for i in ids if i in text]
 
 
 def test_mcp_stdout_carries_protocol_only(capsys):

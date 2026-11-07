@@ -52,7 +52,7 @@ One row per concern. "Fresh pass" means the separate spec process raised it. "M8
 
 **Run boundary.** One run is one list or one agent call:
 - CLI: one `enrich` command.
-- App: one click on "Check lender filings". A person's answer in the review tab is its own short run (`source="app_answer"`).
+- App: one click on "Check lender filings". A person's answer in the review tab is its own short run (`source="app_answer"`). It counts no names, so its counts read 0; the answer itself is the `person_answer` log line.
 - MCP: one tool call (`resolve_entity`, `gather_facts` or `review`).
 
 `gather_facts` calls `resolve_entity` inside it. Runs open at the entry points only, so one call never counts twice.

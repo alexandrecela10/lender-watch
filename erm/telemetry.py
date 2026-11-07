@@ -184,7 +184,10 @@ def run(
     try:
         yield stats
     except BaseException as e:
-        status, error_type = "error", type(e).__name__
+        # Streamlit restarts or stops a script by raising; that is a normal end, not an error.
+        # Matched by name so this library never imports Streamlit.
+        if not any(c.__name__ == "ScriptControlException" for c in type(e).__mro__):
+            status, error_type = "error", type(e).__name__
         raise
     finally:
         row = {
