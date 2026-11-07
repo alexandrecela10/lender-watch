@@ -10,10 +10,7 @@ data/*.parquet
 data/index.pkl
 data/decisions.sqlite
 # Private or draft material, kept out of the public repo
-PRD_1.md
-CLAUDE_1.md
-KICKOFF_PROMPTS.md
-CLAUDE.md
+docs/archive/
 context-library/
 outputs/research-synthesis/
 data/coverage/
