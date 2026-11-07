@@ -1,0 +1,10 @@
+{
+  "decision_id": "ERM-002",
+  "date": "2026-11-07",
+  "status": "active, pending move to context-library/decisions/",
+  "decided": "Langfuse receives counts, flags, verdict, model, tokens, cost and run id only; never a company name, prompt, reply, judge reason, pair_id or entity_id, with the judge on or off.",
+  "supersedes": "intent/instrumentation.md line 41",
+  "evidence": ["outputs/test-evidence/instrumentation-i5/5-live-run-and-langfuse.jpg", "tests/test_telemetry.py::test_trace_payload_real_sdk_exports_only_our_fields"],
+  "open": ["Group a run's judge calls as one Langfuse trace instead of one per call?"],
+  "review_triggers": ["customer asks for name-level debugging with a data agreement covering Langfuse", "judge moves to a model inside the LP's systems"]
+}
