@@ -71,7 +71,7 @@ jobs:
           ref=""
           if [ "${{ inputs.write_reference }}" = "true" ]; then ref="--write-reference live_reference.csv"; fi
           set +e
-          uv run python -m eval.live --last last.md --summary summary.md --repeat "${{ inputs.repeat || '1' }}" $ref
+          uv run python -m eval.live --live --last last.md --summary summary.md --repeat "${{ inputs.repeat || '1' }}" $ref
           echo "code=$?" >> "$GITHUB_OUTPUT"
           if [ -f summary.md ]; then cat summary.md >> "$GITHUB_STEP_SUMMARY"; fi
       - name: Record the result
