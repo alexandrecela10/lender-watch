@@ -2,12 +2,12 @@
 
 Spec: specs/ai-drift-tracking.md. Asks only the pairs the chosen method sends to the judge (a wider name hit that
 the exact-name rule doesn't settle), through erm.api.call_judge, the product's own call. Fails below the floors in
-evals/thresholds.yaml. Stops at a cost or call cap. Prints counts only: no company name reaches the output.
+evals/thresholds.yaml. Stops at a cost or call cap. Calls Anthropic only with --live: off by default. Prints counts only: no company name reaches the output.
 The labels are Claude's, not checked by a person.
 
 Usage:
     uv run python -m eval.live --dry-run
-    uv run python -m eval.live [--last LAST.md] [--summary OUT.md] [--repeat 3] [--write-reference PATH]
+    uv run python -m eval.live --live [--last LAST.md] [--summary OUT.md] [--repeat 3] [--write-reference PATH]
 """
 
 from __future__ import annotations
@@ -56,7 +56,7 @@ class Result:
     stop: str = ""
 
 
-def pairs_to_ask(d: pd.DataFrame) -> np.ndarray:
+def pairs_to_ask(d: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     """The pairs method e sends to the judge: a wider name hit the exact-name rule doesn't settle."""
     df, total = doc_freq_table()
     exact = (
@@ -101,6 +101,12 @@ def run_once(
             verdict, model, cost = judge(r)
         except anthropic.APIError:
             res.errors += 1
+            if res.calls >= 20 and res.errors > lim["max_error_share"] * res.calls:
+                res.status, res.stop = (
+                    "ERROR",
+                    f"{res.errors} of {res.calls} calls failed, stopped early",
+                )
+                break
             continue
         res.verdicts[int(r.pair_id)] = verdict
         res.models[model or "unknown"] += 1
@@ -108,7 +114,7 @@ def run_once(
             res.cost_usd + (lim["unknown_call_usd"] if cost is None else cost), 6
         )
     res.seconds = int(time.monotonic() - t0)
-    if res.status == "INCOMPLETE":
+    if res.status in ("INCOMPLETE", "ERROR"):
         return res
     if res.errors > lim["max_error_share"] * max(res.calls, 1):
         res.status, res.stop = "ERROR", f"{res.errors} of {res.calls} calls failed"
@@ -154,9 +160,15 @@ def summary(
     models = ", ".join(f"{m} ({n})" for m, n in res.models.most_common()) or "none"
     lines = [f"live judge check, {today}, model {models}, {res.calls} of {n_ask} calls"]
     if s:
+        lp = (
+            f", last run {last['precision']:.3f}"
+            if last and "precision" in last
+            else ""
+        )
+        lr = f", last run {last['recall']:.3f}" if last and "recall" in last else ""
         lines.append(
-            f"precision {s['pair_precision']:.3f} (floor {floors['pair_precision']:.2f})   "
-            f"recall {s['pair_recall']:.3f} (floor {floors['pair_recall']:.2f})"
+            f"precision {s['pair_precision']:.3f} (floor {floors['pair_precision']:.2f}{lp})   "
+            f"recall {s['pair_recall']:.3f} (floor {floors['pair_recall']:.2f}{lr})"
         )
         prev = (
             f"last run {last['fp']}"
@@ -175,9 +187,8 @@ def summary(
         f"errors {res.errors}  cost ${res.cost_usd:.2f}  time {res.seconds // 60}m {res.seconds % 60}s"
     )
     lines.append("labels are Claude's, not checked by a person")
-    if s and (
-        s["fp"] > 0 or (last and last.get("fp") is not None and s["fp"] > last["fp"])
-    ):
+    last_fp = last.get("fp") if last else None
+    if s and (s["fp"] > last_fp if last_fp is not None else s["fp"] > 0):
         lines.append(f"WARN false matches rose to {s['fp']}")
     lines.append(res.status + (f": {res.stop}" if res.stop else ""))
     machine = {
@@ -201,6 +212,11 @@ def summary(
 def main(argv: list[str] | None = None, judge: Judge | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument(
+        "--live",
+        action="store_true",
+        help="call the judge on Anthropic; off by default",
+    )
     ap.add_argument("--repeat", type=int, default=1)
     ap.add_argument("--last", help="file holding the last history comment")
     ap.add_argument("--summary", help="write the summary (history comment body) here")
@@ -222,6 +238,11 @@ def main(argv: list[str] | None = None, judge: Judge | None = None) -> int:
         print("pair ids: " + " ".join(map(str, ids)))
         return 0
     if judge is None:
+        if not a.live:
+            print(
+                "skipped: pass --live to call the judge (sends answer-key data to Anthropic)"
+            )
+            return 0
         from dotenv import load_dotenv
 
         load_dotenv(".env")
