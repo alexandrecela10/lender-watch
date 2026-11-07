@@ -11,8 +11,9 @@ from anthropic.types.message_create_params import MessageCreateParamsNonStreamin
 from anthropic.types.messages.batch_create_params import Request
 from dotenv import load_dotenv
 
-from erm.api import Engine, is_clear_exact
+from erm.api import Engine
 from erm.match.features import compute
+from erm.match.rules import is_clear_exact
 from erm.match.judge import parse, request_params
 from erm.store import JUDGE, pair_id
 

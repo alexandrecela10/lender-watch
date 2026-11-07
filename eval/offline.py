@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from erm.match.rules import is_clear_exact
 from eval.compare import pair_features, score
 
 ANSWER_KEY = "data/eval/answer_key.csv"
@@ -57,17 +58,7 @@ def predict(d: pd.DataFrame) -> np.ndarray:
     df, total = doc_freq_table()
     feats = pair_features(d, df, total)
     hit = d.is_name_hit.values
-    no_left = np.array([f.left_words for f in feats]) == 0
-    exact = (
-        np.array(
-            [
-                f.exact_core and f.distinctiveness >= 0.75 and not f.short_name
-                for f in feats
-            ]
-        )
-        & hit
-        & no_left
-    )
+    exact = np.array([is_clear_exact(f) for f in feats]) & hit
     verdict_match = (d.verdict == "match").values
     return exact | (verdict_match & d.is_wide_hit.values)
 
