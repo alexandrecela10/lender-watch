@@ -4,10 +4,9 @@ Compares the files a build step changed with the files its plan step names
 (the "Files:" line under "### <step>."), and appends one row per run to
 plans/<plan>-drift.md.
 
-Usage, from the repo root, before committing a step:
+Usage, from the repo root, right after committing a one-commit step:
     uv run python -m eval.plan_drift plans/instrumentation.md I1
-After committing, pass the commit before the step as the base:
-    uv run python -m eval.plan_drift plans/instrumentation.md I1 --base HEAD~1
+Then amend the commit with the log. For a longer step, pass --base <commit before it>.
 """
 
 from __future__ import annotations
@@ -54,16 +53,16 @@ def changed_files(base: str) -> set[str]:
         ).stdout
         return {p for p in out.splitlines() if p}
 
-    return git("diff", "--name-only", base) | git(
-        "ls-files", "--others", "--exclude-standard"
-    )
+    # Run after committing the step (--base <commit before it>), so files nobody
+    # committed, such as a local editor config, never count as drift.
+    return git("diff", "--name-only", base, "HEAD")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("plan")
     ap.add_argument("step")
-    ap.add_argument("--base", default="HEAD")
+    ap.add_argument("--base", default="HEAD~1")
     a = ap.parse_args()
 
     plan = Path(a.plan)

@@ -8,7 +8,7 @@ You verify this repo. You report. You never edit, fix, stage, commit or delete a
 
 Run these from the repo root, in order, even if an earlier one fails:
 
-1. `make test`. Record the last line (for example `41 passed`).
+1. `make test`. Record the last line (for example `47 passed`).
 2. `make lint`. Record `All checks passed!` or the errors, and any `Would reformat` line.
 3. `make evals`. Record the precision, recall, thresholds and PASS or FAIL.
 4. First run `rm -f /tmp/v.xlsx`, so an old file can't pass for a new one. If `data/holdings_clean.parquet` is missing, report step 4 as FAILED with "data missing: run from the main checkout" and step 5 as "not run", then go to step 6. Otherwise run `uv run python -m erm.cli enrich data/demo/sample_list.csv --name-column Company --sector-column Sector --sponsor-column Owner --out /tmp/v.xlsx`. Do not add `--use-judge`: it sends company names to Anthropic.
@@ -25,6 +25,6 @@ Run these from the repo root, in order, even if an earlier one fails:
    - Close the browser, then stop the app: `kill $(cat /tmp/erm-verify/app.pid)`. Confirm `lsof -i :8501` is empty.
 7. Plan check, only if you were given a plan file in `plans/`. Compare `git diff --name-only main...HEAD` with the plan's "Files that change" table. List files changed but not in the plan, and files in the plan but not changed. Each one is a departure from the plan, to report, not to judge.
 
-Healthy results today: 41 tests pass, lint passes, evals PASS at precision 1.000 and recall 0.936, the enrich prints `6 names`, the sheets are `Your list` 6 rows and `All loans` 65 rows, 0 loans lack a filing link, and every acceptance line in step 6 is met.
+Healthy results today: 47 tests pass, lint passes, evals PASS at precision 1.000 and recall 0.936, the enrich prints `6 names`, the sheets are `Your list` 6 rows and `All loans` 65 rows, 0 loans lack a filing link, and every acceptance line in step 6 is met.
 
 Report as one table: Check | Result | Healthy? Then a second table for step 6: Line | Met? | Screenshot path. Then the step 7 list, or "no plan given". Then one line: ALL GREEN, or the list of checks that failed with the exact error line. Quote outputs exactly. Don't guess causes beyond what the output shows. Never print the contents of `.env`.
