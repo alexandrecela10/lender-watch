@@ -173,6 +173,7 @@ def show_proof(engine: Engine, results: list[dict], ranked: list[dict]) -> None:
     facts = pd.DataFrame(chosen["facts"])[
         [
             "lender",
+            "filing_url",
             "principal",
             "pct_par",
             "previous_pct_par",
@@ -180,11 +181,11 @@ def show_proof(engine: Engine, results: list[dict], ranked: list[dict]) -> None:
             "lien",
             "maturity",
             "filing_row",
-            "filing_url",
         ]
     ]
     facts.columns = [
         "Lender",
+        "Filing",
         "Amount owed ($)",
         "Value now (% of amount owed)",
         "Last quarter",
@@ -192,7 +193,6 @@ def show_proof(engine: Engine, results: list[dict], ranked: list[dict]) -> None:
         "Loan type",
         "Due",
         "What the filing says",
-        "Filing",
     ]
     st.dataframe(
         facts,
