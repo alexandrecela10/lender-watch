@@ -5,8 +5,9 @@ Evidence: the repo's code and one offline evaluation. No LP analyst has been int
 
 ## Bottom line
 
-Every run of a list writes one JSON log stream with one request id, and one row in a new `run_metrics` table. Every live judge call also sends one Langfuse trace holding cost, latency and verdict.
-Nothing that names a company leaves the machine through this work, with the judge on or off. That is stricter than the scope line suggested, and concern 1 explains why.
+Every time someone runs a list, the engine keeps a short record: where the run came from, how many names went in, how many matched, how many need a person, and how long it took.
+When the AI judge is used, we also record what each call cost and how long it took. That record also goes to Langfuse, an outside monitoring service.
+No company name leaves your machine through this record keeping, even with the judge on. That is stricter than the original brief; concern 1 explains why.
 
 ## Concerns and resolutions
 
