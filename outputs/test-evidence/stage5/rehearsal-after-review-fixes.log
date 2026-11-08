@@ -1,0 +1,25 @@
+./scripts/rehearse-rollback.sh aa99136 f669337
+== Rehearsal 2026-11-08T18:38:55Z: project erm-rehearsal, port 18501
+== Step 1: deploy the good commit
+PASS: no .env, data/raw or key in erm-review:aa991360916d
+deployed commit=aa991360916d project=erm-rehearsal
+running: erm-review:aa991360916d, built from commit aa991360916d
+== Step 2: deploy the new commit
+PASS: no .env, data/raw or key in erm-review:f669337575c4
+deployed commit=f669337575c4 project=erm-rehearsal
+running: erm-review:f669337575c4, built from commit f669337575c4
+== Step 3: roll back
+rolled-back from=f669337575c4 to=aa991360916d project=erm-rehearsal
+rollback took 4 seconds
+running: erm-review:aa991360916d, built from commit aa991360916d
+== Step 4: a second rollback has nowhere to go and must refuse
+Nothing to roll back to: commit aa991360916d is the only good image on record.
+== Step 5: the app answers after the rollback
+image commit: aa991360916d
+KnowBe4: Flagged
+Not A Real Company Xyzzy: No public lender found
+== Audit log
+2026-11-08T18:39:03Z deployed commit=aa991360916d project=erm-rehearsal
+2026-11-08T18:39:10Z deployed commit=f669337575c4 project=erm-rehearsal
+2026-11-08T18:39:14Z rolled-back from=f669337575c4 to=aa991360916d project=erm-rehearsal
+== PASS
