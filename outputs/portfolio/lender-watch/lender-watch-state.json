@@ -1,10 +1,11 @@
 {
  "output": "outputs/portfolio/lender-watch/index.html",
- "date": "2026-11-02",
- "status": "Ready to publish, waiting on the PM's push",
+ "date": "2026-11-08",
+ "status": "Draft updated with how each change is checked. Not ready to publish.",
  "decided": [
   "Lead with the outcome, and show demand as unproven in the stat strip",
-  "Show first-wrong numbers as the main learning"
+  "Show first-wrong numbers as the main learning",
+  "Publish the checks with what each cannot show, including the shared-copy fault"
  ],
  "defaults_taken": [
   "Name: Lender Watch",
@@ -12,9 +13,9 @@
   "No demo or code button, since neither is public"
  ],
  "open": [
-  "Push repo and hub",
-  "Deploy Streamlit app",
-  "Check live links"
+  "Merge the Stage 5 and Stage 6 pull requests first: the rollback and review-load rows describe them",
+  "Run the full name audit with the PM list of names",
+  "Push hub, deploy Streamlit app, check live links"
  ],
  "next": [
   "PM spot check"
