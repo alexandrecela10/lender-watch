@@ -208,10 +208,14 @@ def summary(
             else " No last run to compare."
         )
         lines += [
-            f"- When it said two names are the same company, it was right {_pct(s['pair_precision'])} "
-            f"of the time. Minimum: {floors['pair_precision'] * 100:.0f}%.{lp}",
-            f"- It found {_pct(s['pair_recall'])} of the real matches. "
-            f"Minimum: {floors['pair_recall'] * 100:.0f}%.{lr}",
+            (
+                f"- When it said two names are the same company, it was right {_pct(s['pair_precision'])} "
+                f"of the time. Minimum: {floors['pair_precision'] * 100:.0f}%.{lp}"
+            ),
+            (
+                f"- It found {_pct(s['pair_recall'])} of the real matches. "
+                f"Minimum: {floors['pair_recall'] * 100:.0f}%.{lr}"
+            ),
             f"- Wrong matches: {s['fp']}.{lf}",
         ]
         if res.changed is not None:
