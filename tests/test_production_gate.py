@@ -353,3 +353,26 @@ def test_shell_commands_cannot_change_the_gate_even_with_approval(deploy, comman
 )
 def test_reading_or_mentioning_the_gate_files_is_allowed(deploy, command):
     assert bash(deploy, command).returncode == 0, command
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "(rm .claude/hooks/production-gate.sh)",
+        "{ rm .claude/hooks/production-gate.sh; }",
+        'echo "$(rm .claude/hooks/production-gate.sh)"',
+        "find .claude/hooks -name production-gate.sh -delete",
+    ],
+)
+def test_wrapped_shell_commands_cannot_change_the_gate(deploy, command):
+    approve(deploy)
+    assert bash(deploy, command).returncode == 2, command
+
+
+def test_a_chained_git_command_cannot_hide_a_production_change(deploy):
+    command = 'git status && echo "$(docker compose -p erm --profile prod down)"'
+    assert bash(deploy, command).returncode == 2
+
+
+def test_one_git_commit_may_mention_make_prod_in_backticks(deploy):
+    assert bash(deploy, "git commit -m 'run `make prod` later'").returncode == 0

@@ -29,6 +29,10 @@ audit() {
 
 is_real_prod() { [ "$ERM_PROD_PROJECT" = "erm" ]; }
 
+# A rehearsal builds under its own image name, so it can never replace an image real prod would roll back to.
+if is_real_prod; then ERM_IMAGE=erm-review; else ERM_IMAGE=erm-rehearsal; fi
+export ERM_IMAGE
+
 # Prints why there is no valid approval. Prints nothing when there is one.
 approval_problem() {
   [ -f "$APPROVAL" ] || {
@@ -104,10 +108,10 @@ stack_pop() {
   mv "$STACK.tmp" "$STACK"
 }
 
-image_exists() { docker image inspect "erm-review:$1" >/dev/null 2>&1; }
+image_exists() { docker image inspect "$ERM_IMAGE:$1" >/dev/null 2>&1; }
 
 # A tag can be moved, so each deploy records the exact image it ran. A rollback runs only that image.
-image_id() { docker image inspect -f '{{.Id}}' "erm-review:$1" 2>/dev/null; }
+image_id() { docker image inspect -f '{{.Id}}' "$ERM_IMAGE:$1" 2>/dev/null; }
 
 record_image() { echo "$1 $(image_id "$1")" >>"$ERM_DEPLOY_DIR/image-ids"; }
 
@@ -139,7 +143,7 @@ wait_healthy() {
 switch_to() {
   ERM_PROD_TAG="$1" compose up -d --no-build --pull never prod >/dev/null 2>&1 || return 1
   wait_healthy || return 1
-  [ "$(running_image)" = "erm-review:$1" ]
+  [ "$(running_image)" = "$ERM_IMAGE:$1" ]
 }
 
 # After a failed change: put back what was running, or stop if nothing was.

@@ -66,7 +66,7 @@ The image holds the public sample data only. It runs in public mode, so it has n
 - **Rehearse:** `make rehearse-rollback GOOD=<commit> NEW=<commit>` tries a rollback in a separate Docker project on port 18501. Real prod is not touched. Last run: [`outputs/test-evidence/stage5/rehearsal.log`](outputs/test-evidence/stage5/rehearsal.log).
 - **Stop prod:** `make prod-down` stops the app and keeps the images.
 - **Agents:** `.claude/hooks/production-gate.sh` blocks an agent from starting or changing prod until a person has approved. No agent can approve. Each decision is logged in `~/.erm/deploy/gate.log`.
-- **Limit:** the gate reads command text, so a script an agent wrote could hide a command. The deploy and rollback scripts check the approval again. The hook lives in the repo, so someone who can edit the repo can remove it.
+- **Limit:** the gate reads command text, so it stops an agent's mistakes, not a determined bypass. Unusual shell forms or a script file can hide a command, and the hook lives in the repo. The deploy and rollback scripts check the approval again; direct `docker` commands have no second check. A real barrier would be prod deploying only from GitHub, or agents having no Docker access.
 
 ## Checks on GitHub
 

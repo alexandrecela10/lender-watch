@@ -41,7 +41,7 @@ start=$(date +%s)
 "$here/rollback.sh"
 echo "rollback took $(($(date +%s) - start)) seconds"
 show
-[ "$(running_image)" = "erm-review:$(short "$good")" ] || die "FAIL: the good image is not running."
+[ "$(running_image)" = "$ERM_IMAGE:$(short "$good")" ] || die "FAIL: the good image is not running."
 
 echo "== Step 4: a second rollback has nowhere to go and must refuse"
 if "$here/rollback.sh"; then die "FAIL: the second rollback should have refused."; fi

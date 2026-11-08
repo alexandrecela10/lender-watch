@@ -24,7 +24,7 @@ services:
   prod:
     profiles: [prod]
     # The tag is a git commit. scripts/prod-deploy.sh and scripts/rollback.sh set it.
-    image: erm-review:${ERM_PROD_TAG:-tag-not-set}
+    image: ${ERM_IMAGE:-erm-review}:${ERM_PROD_TAG:-tag-not-set}
     pull_policy: never
     restart: unless-stopped
     # The app writes only temporary files (search index, run records). Kept in memory, so a full Docker disk can't stop it.

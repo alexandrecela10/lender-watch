@@ -11,7 +11,7 @@ require_committed_compose
 if is_real_prod && [ $# -gt 0 ]; then die "Refused: real prod deploys the approved commit only."; fi
 
 commit=$(git -C "$ROOT" rev-parse --short=12 "${1:-HEAD}")
-image="erm-review:$commit"
+image="$ERM_IMAGE:$commit"
 current=$(stack_top)
 
 # Always built from the commit, never reused by tag, so uncommitted files can't enter. Docker's cache keeps this quick.

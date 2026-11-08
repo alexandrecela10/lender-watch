@@ -19,13 +19,13 @@ echo "$*" >> "$FAKE/calls"
 case "$*" in
   *" up -d "*) echo "$ERM_PROD_TAG" > "$FAKE/running" ;;
   *" ps -q prod") [ -f "$FAKE/running" ] && echo container-id ;;
-  "inspect -f {{.Config.Image}} container-id") echo "erm-review:$(cat "$FAKE/running")" ;;
+  "inspect -f {{.Config.Image}} container-id") echo "$ERM_IMAGE:$(cat "$FAKE/running")" ;;
   "image inspect -f "*)
-    c="${5#erm-review:}"
+    c="${5#*:}"
     grep -qx "$c" "$FAKE/images" || exit 1
     if grep -qx "$c" "$FAKE/retagged"; then echo sha256:forged; else echo "sha256:$c"; fi
     ;;
-  "image inspect "*) grep -qx "${3#erm-review:}" "$FAKE/images"; exit $? ;;
+  "image inspect "*) grep -qx "${3#*:}" "$FAKE/images"; exit $? ;;
   build*) cat > /dev/null; for a in "$@"; do case "$a" in GIT_COMMIT=*) echo "${a#GIT_COMMIT=}" >> "$FAKE/images";; esac; done ;;
   run*) [ -f "$FAKE/key_in_image" ] && echo /app/.env ;;
 esac
@@ -261,3 +261,24 @@ def test_rollback_refuses_an_image_retagged_after_deploy(env):
     assert result.returncode == 1
     assert "not the image that was deployed" in result.stderr
     assert fake(env, "running").read_text().strip() == "bbb"
+
+
+def built_tags(env):
+    return [
+        c for c in fake(env, "calls").read_text().splitlines() if c.startswith("build")
+    ]
+
+
+def test_rehearsal_images_never_use_the_real_prod_name(env):
+    seed(env, "aaa")
+    assert run(env, "prod-deploy.sh", "HEAD").returncode == 0
+    assert "erm-rehearsal:" in built_tags(env)[0]
+    assert "erm-review:" not in built_tags(env)[0]
+
+
+def test_real_prod_uses_the_real_image_name(env):
+    env["ERM_PROD_PROJECT"] = "erm"
+    seed(env, "aaa")
+    approve(env)
+    assert run(env, "prod-deploy.sh").returncode == 0
+    assert "erm-review:" in built_tags(env)[0]

@@ -99,6 +99,7 @@ writes_guarded() {
     case "$word" in
       rm | mv | cp | tee | truncate | ln | chmod | chown | touch | dd | install | patch | rsync | tar | unzip | awk | ed | ex | vi | vim | nano) return 0 ;;
       sed | gsed) printf '%s' "$line" | grep -qE "$S-[a-zA-Z]*i|$S--in-place" && return 0 ;;
+      find) printf '%s' "$line" | grep -qE "$S-(delete|exec|execdir|ok)($S|\$)" && return 0 ;;
       git)
         sub=$(printf '%s' "$line" | sed -E 's/^[[:space:]]*git([[:space:]]+-[Cc][[:space:]]+[^[:space:]]+)*[[:space:]]+//' | awk '{print $1}')
         case "$sub" in
@@ -106,7 +107,7 @@ writes_guarded() {
         esac
         ;;
     esac
-  done < <(printf '%s\n' "$cmd" | tr ';|&' '\n\n\n')
+  done < <(printf '%s\n' "$cmd" | tr ';|&(){}`' '\n\n\n\n\n\n\n\n')
   return 1
 }
 
@@ -120,10 +121,21 @@ text="$stripped"
 if printf '%s' "$stripped" | grep -qE "(^|$S|[;&|(/])(bash|sh|zsh|eval|xargs|script|python3?|perl|ruby|node|osascript)($S|\$)"; then
   text="$cmd"
 fi
+# One plain git command may hold backticks in its message. Anything chained to it is read in full.
+single_git=0
 case "$cmd" in
-  git$' '*) ;;
-  *'$('* | *'`'*) text="$cmd" ;;
+  git$' '*)
+    case "$stripped" in
+      *'&'* | *';'* | *'|'*) ;;
+      *) single_git=1 ;;
+    esac
+    ;;
 esac
+if [ "$single_git" -eq 0 ]; then
+  case "$cmd" in
+    *'$('* | *'`'*) text="$cmd" ;;
+  esac
+fi
 
 touches_prod() {
   has "(^|$S|/)g?make($S.*)?$S(prod|prod-down|rollback)($S|\$)" && return 0
