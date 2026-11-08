@@ -1,4 +1,4 @@
-.PHONY: test lint evals run mcp hooks
+.PHONY: test lint evals run mcp hooks dev
 
 test:
 	uv run pytest
@@ -19,3 +19,7 @@ mcp:
 hooks:
 	ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
 	@echo "pre-commit key scan installed"
+
+# The review app in Docker, with live code reload. Needs no key.
+dev:
+	docker compose --profile dev up --build

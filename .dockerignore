@@ -1,0 +1,17 @@
+# Allowlist: everything is left out unless named below.
+*
+!pyproject.toml
+!uv.lock
+!.python-version
+!Dockerfile
+!.streamlit/
+!app/
+!erm/
+!data/public/
+!data/sponsors/
+
+# Never in an image, even inside an allowed folder.
+**/.env
+**/.env.*
+**/__pycache__/
+data/raw/
