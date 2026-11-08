@@ -73,6 +73,13 @@ guard_rehearsal_port() {
   fi
 }
 
+# The image comes from the commit, but the container's settings come from compose.yaml in this folder.
+# Refuse if that file differs from the commit, so an uncommitted edit can't reach prod (for example, adding .env).
+require_committed_compose() {
+  git -C "$ROOT" diff --quiet HEAD -- compose.yaml ||
+    die "Refused: compose.yaml differs from the current commit. Commit or undo the change, then get a new approval."
+}
+
 compose() {
   docker compose -p "$ERM_PROD_PROJECT" -f "$ROOT/compose.yaml" --profile prod "$@"
 }

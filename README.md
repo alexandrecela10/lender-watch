@@ -60,7 +60,7 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 The image holds the public sample data only. It runs in public mode, so it has no AI judge and needs no key.
 
 - **Try it:** `make dev` builds the image and serves the app at `http://localhost:8501`. Code changes reload.
-- **Approve a prod change:** run `make approve-prod` in your own terminal and type the code it shows. One approval covers one change, for 15 minutes, at the current commit.
+- **Approve a prod change:** run `make approve-prod` in your own terminal and type the code it shows. One approval covers one change, for 15 minutes, at the current commit. Prod refuses to start or roll back if `compose.yaml` differs from the commit.
 - **Deploy:** `make prod` builds the current commit, refuses an image with a key or a `.env`, runs it, and records it as good once it answers its health check.
 - **Roll back:** `make rollback` returns prod to the previous good image. If that image fails its health check, the current one is put back.
 - **Rehearse:** `make rehearse-rollback GOOD=<commit> NEW=<commit>` tries a rollback in a separate Docker project on port 18501. Real prod is not touched. Last run: [`outputs/test-evidence/stage5/rehearsal.log`](outputs/test-evidence/stage5/rehearsal.log).

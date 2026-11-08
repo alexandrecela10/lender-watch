@@ -6,6 +6,7 @@ source "$(dirname "$0")/prod-lib.sh"
 
 guard_rehearsal_port
 require_approval
+require_committed_compose
 
 current=$(stack_top)
 previous=$(stack_previous)

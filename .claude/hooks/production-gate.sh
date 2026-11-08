@@ -31,13 +31,18 @@ never() {
 }
 
 # Allows the action if a person has approved it, else blocks it and says how to get approval.
+# One approval, one change: anything allowed here uses the approval up. The exception is `script`:
+# the deploy and rollback scripts check the approval again and use it up themselves when they succeed.
 needs_approval() {
-  local problem
+  local problem how="${1:-use}"
   # shellcheck source=scripts/prod-lib.sh
   source "$root/scripts/prod-lib.sh" 2>/dev/null || block "the approval check could not load, so production stays closed."
   problem=$(approval_problem)
   if [ -n "$problem" ]; then
     block "this starts or changes production, and $problem. Route: ask a person to run \`make approve-prod\` in their own terminal, then try again. Agents can't approve."
+  fi
+  if [ "$how" != script ]; then
+    rm -f "$APPROVAL" || block "the approval could not be used up, so production stays closed."
   fi
   log_decision "allow $tool: approved production change"
   exit 0
@@ -107,7 +112,15 @@ touches_prod() {
 
 has() { printf '%s' "$seg" | grep -qE "$1"; }
 
+# True when this segment only runs the deploy or rollback script, which use up the approval themselves.
+is_script_route() {
+  has "(^|$S|/)g?make($S.*)?${S}prod-down($S|\$)" && return 1
+  has "(^|$S|/)g?make($S.*)?$S(prod|rollback)($S|\$)" && return 0
+  has 'prod-deploy\.sh|scripts/rollback\.sh'
+}
+
 found_prod=0
+direct_prod=0
 while IFS= read -r seg; do
   # Reading or committing text about production changes nothing.
   first=$(printf '%s' "$seg" | sed -E 's/^[[:space:]]+//; s/^([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)+//')
@@ -116,8 +129,12 @@ while IFS= read -r seg; do
     git | grep | egrep | rg | ls | cat | head | tail | wc | diff) continue ;;
   esac
   has 'approve-prod|prod-approval|\.erm/deploy' && never
-  touches_prod && found_prod=1
+  if touches_prod; then
+    found_prod=1
+    is_script_route || direct_prod=1
+  fi
 done < <(printf '%s\n' "$text" | tr ';|&()`"'"'" '\n\n\n\n\n\n\n\n')
 
-[ "$found_prod" -eq 1 ] && needs_approval
+[ "$direct_prod" -eq 1 ] && needs_approval use
+[ "$found_prod" -eq 1 ] && needs_approval script
 exit 0

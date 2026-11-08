@@ -201,3 +201,40 @@ def test_rehearsal_cannot_use_the_real_prod_port(env):
     assert result.returncode == 1
     assert "8501" in result.stderr
     assert fake(env, "calls").read_text() == ""
+
+
+@pytest.mark.parametrize("script", ["prod-deploy.sh", "rollback.sh"])
+def test_prod_refuses_a_compose_file_that_differs_from_the_commit(
+    env, tmp_path, script
+):
+    """A copy of the repo's scripts in a throwaway git repo, so the real compose.yaml is never touched."""
+    repo = tmp_path / "repo"
+    (repo / "scripts").mkdir(parents=True)
+    for f in (ROOT / "scripts").iterdir():
+        if f.is_file():
+            target = repo / "scripts" / f.name
+            target.write_bytes(f.read_bytes())
+            target.chmod(f.stat().st_mode)
+    (repo / "compose.yaml").write_text("services: {}\n")
+    git = [
+        "git",
+        "-C",
+        str(repo),
+        "-c",
+        "user.name=t",
+        "-c",
+        "user.email=t@example.com",
+    ]
+    subprocess.run([*git, "init", "-q"], check=True)
+    subprocess.run([*git, "add", "."], check=True)
+    subprocess.run([*git, "commit", "-qm", "base"], check=True)
+    (repo / "compose.yaml").write_text("services: {prod: {env_file: .env}}\n")
+    r = subprocess.run(
+        [str(repo / "scripts" / script)],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert r.returncode == 1 and "compose.yaml differs" in r.stderr
+    assert " up -d " not in Path(env["FAKE"], "calls").read_text()

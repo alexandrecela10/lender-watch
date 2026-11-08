@@ -276,3 +276,44 @@ def test_a_person_at_a_terminal_opens_the_gate(deploy):
     assert code == 0, output
     assert bash(deploy, "make rollback").returncode == 0
     assert (deploy / "prod-approval").stat().st_mode & 0o077 == 0
+
+
+def approval_left(deploy):
+    return (deploy / "prod-approval").exists()
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "make prod-down",
+        "docker compose -p erm --profile prod down",
+        "docker rm -f erm-prod-1",
+    ],
+)
+def test_one_approval_covers_one_direct_change(deploy, command):
+    approve(deploy)
+    assert bash(deploy, command).returncode == 0
+    assert not approval_left(deploy)
+    assert bash(deploy, command).returncode == 2
+
+
+def test_one_approval_covers_one_file_edit(deploy):
+    approve(deploy)
+    assert gate(deploy, "Edit", {"file_path": "compose.yaml"}).returncode == 0
+    assert not approval_left(deploy)
+    assert gate(deploy, "Edit", {"file_path": "compose.yaml"}).returncode == 2
+
+
+@pytest.mark.parametrize(
+    "command", ["make prod", "make rollback", "./scripts/prod-deploy.sh"]
+)
+def test_deploy_scripts_keep_the_approval_for_their_own_check(deploy, command):
+    approve(deploy)
+    assert bash(deploy, command).returncode == 0
+    assert approval_left(deploy)
+
+
+def test_a_script_joined_to_a_direct_change_uses_the_approval(deploy):
+    approve(deploy)
+    assert bash(deploy, "make prod; docker rm -f erm-prod-1").returncode == 0
+    assert not approval_left(deploy)

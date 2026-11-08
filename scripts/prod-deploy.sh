@@ -7,6 +7,7 @@ source "$(dirname "$0")/prod-lib.sh"
 
 guard_rehearsal_port
 require_approval
+require_committed_compose
 if is_real_prod && [ $# -gt 0 ]; then die "Refused: real prod deploys the approved commit only."; fi
 
 commit=$(git -C "$ROOT" rev-parse --short=12 "${1:-HEAD}")
