@@ -9,6 +9,10 @@ lint:
 evals:
 	uv run python -m eval.offline
 
+.PHONY: bands
+bands:
+	uv run python -m eval.bands
+
 run:
 	uv run streamlit run app/review.py
 

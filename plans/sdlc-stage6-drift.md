@@ -5,3 +5,4 @@ One row per build step. A departure is a file the step changed that its plan ste
 | Date | Step | Changed, not planned | Planned, not changed |
 |---|---|---|---|
 | 2026-11-08 | S1 | none | none |
+| 2026-11-08 | S2 | none | none |
