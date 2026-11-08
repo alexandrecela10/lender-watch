@@ -17,7 +17,7 @@
 ## Commands
 
 Run from the repo root. Healthy output in brackets.
-- `make test`: runs `uv run pytest` [`223 passed`, about 1 minute; the first run on a machine adds about 100 seconds to build the app's search index]
+- `make test`: runs `uv run pytest` [`264 passed`, about 80 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
 - `make lint`: runs `ruff check` and `ruff format --check` [`All checks passed!` then `N files already formatted`; any `Would reformat` line is a failure]
 - `make evals`: offline eval gate, `uv run python -m eval.offline`, thresholds in `evals/thresholds.yaml` [`precision 1.000`, `recall 0.936`, `PASS`]. It replays saved name-search hits and judge verdicts, so it only re-tests the exact-name rule live.
 - `make bands`: compares the share of names needing a person's review with the provisional range in `evals/bands.yaml`, `uv run python -m eval.bands` [`No check made` until enough runs exist, or `No action needed`; it exits 1 and writes a draft intent when the share is outside the range]
