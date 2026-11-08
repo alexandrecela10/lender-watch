@@ -125,6 +125,10 @@
   details table { display:block; overflow-x:auto; }
   details code { overflow-wrap:anywhere; }
   .deck { width:100%; height:80vh; border:1px solid var(--line); border-radius:12px; background:#fff; }
+  /* Demo video and the three ways in */
+  .film { margin:26px 0 0; }
+  .film video { width:100%; display:block; border:1px solid var(--line); border-radius:12px; background:#000; }
+  h3.sub { font-size:22px; margin:40px 0 14px; font-weight:900; }
   /* Technique pills: the technical craft behind each project */
   .craft { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:26px 0 0; }
   .craft .lbl { color:var(--dim); font-size:12px; text-transform:uppercase; letter-spacing:.08em; margin-right:6px; }
@@ -140,40 +144,42 @@
 <header class="hero">
   <div class="eyebrow">Case study · Private equity and private lending · Working prototype</div>
   <h1>See when lenders start doubting the companies you've invested in, with the public filing as proof.</h1>
-  <p class="lede">You invest in private equity funds, which own companies you rarely hear about between reports. Some of those companies' lenders must publish what each loan is worth today. Lender Watch finds those loans for your list of companies and shows you which values have dropped.</p>
+  <p class="lede">Your funds own companies you rarely hear about between reports. Some of their lenders must publish what each loan is worth. Lender Watch finds those loans for your list and shows which values dropped.</p>
   <div class="cta">
     <a class="btn" href="https://lender-watch.streamlit.app">Try the demo</a>
+    <a class="btn off" href="#watch">Watch 59 seconds</a>
     <a class="btn off" href="https://github.com/alexandrecela10/lender-watch">Code</a>
-    <span class="dim" style="font-size:14px">Real public data from US regulator filings. No investor has tested it yet.</span>
+    <span class="dim" style="font-size:14px">Real data from public US regulator filings.</span>
   </div>
   <div class="stats">
     <div class="stat"><b>144 of 291</b><span>sample companies have a lender's value we could use</span></div>
-    <div class="stat"><b>14</b><span>of those 144 are flagged: lenders value their debt below 90 cents per dollar owed, on average</span></div>
-    <div class="stat"><b>6 to 0</b><span>wrong loans per 100, plain name search against this tool. An AI wrote the test answers, and a person hasn't checked them yet</span></div>
-    <div class="stat"><b>0</b><span>investors interviewed so far, so nobody has yet confirmed they want this</span></div>
+    <div class="stat"><b>14</b><span>of those are flagged: lenders value their debt below 90 cents per dollar owed</span></div>
+    <div class="stat"><b>6 to 0</b><span>wrong loans per 100, plain search against this tool, on answers an AI wrote and no person has checked</span></div>
+    <div class="stat"><b>0</b><span>investors interviewed, so demand is unconfirmed</span></div>
   </div>
   <dl class="glance">
     <div><dt>For</dt><dd>Investors in private equity funds</dd></div>
-    <div><dt>Users</dt><dd>You, the analyst, and your boss, who decides what to raise with the fund</dd></div>
+    <div><dt>Users</dt><dd>You, the analyst, and the boss who decides what to raise with the fund</dd></div>
     <div><dt>Data</dt><dd>US regulator (SEC) filings, 2 quarters of 2026: about 65,000 holdings a quarter from 172 lenders</dd></div>
-    <div><dt>Built with</dt><dd>Python, Claude API, Streamlit</dd></div>
+    <div><dt>Built with</dt><dd>Python, Claude API, MCP (how AI apps call tools), Streamlit</dd></div>
   </dl>
-  <div class="craft"><span class="lbl">Techniques</span><span class="pill ai"><b>AI</b>AI judge for unclear names</span><span class="pill ai"><b>AI</b>Tool that AI agents can call</span><span class="pill de"><b>Data eng</b>Cleaning regulator data</span><span class="pill de"><b>Data eng</b>Matching loans across quarters</span><span class="pill ds"><b>Data science</b>Answer key, five methods compared</span><span class="pill ds"><b>Data science</b>Tested and dropped a scoring model</span></div>
+  <div class="craft"><span class="lbl">Techniques</span><span class="pill ai"><b>AI</b>AI judge for unclear names</span><span class="pill ai"><b>AI</b>One connector behind Claude and Excel</span><span class="pill de"><b>Data eng</b>Cleaning regulator data</span><span class="pill de"><b>Data eng</b>Matching loans across quarters</span><span class="pill ds"><b>Data science</b>Answer key, five methods compared</span><span class="pill ds"><b>Data science</b>Tested and dropped a scoring model</span></div>
 </header>
 
 <section class="read">
   <div class="num">01 · VISION</div>
   <h2>A company name gets matched once, and everyone reuses the answer.</h2>
-  <p>Today, every team matches company names by hand and starts again each quarter. In this vision, a person confirms a match once, with the source as proof. This tool is the first use of that idea.</p>
+  <p>Today, every team matches company names by hand, again each quarter. Instead, a person confirms a match once, with the source as proof, and the answer reaches you in your workbook.</p>
 </section>
 
 <section>
   <div class="num">02 · THE PROBLEM</div>
-  <h2 class="read">3 things go wrong today.</h2>
+  <h2 class="read">4 things go wrong today.</h2>
   <div class="cards">
     <div class="card"><div class="k">1 · You can't find the loans</div><p>172 lenders publish, each in its own wording. One company, KnowBe4, sits with 10 funds under 9 different descriptions.</p></div>
     <div class="card"><div class="k">2 · A wrong match looks foolish</div><p>Searching "Ascend" also finds Ascend Learning, a different business. Ask a fund manager about that loan and you've questioned the wrong company.</p></div>
     <div class="card"><div class="k">3 · You hear late</div><p>Lenders publish about 6 weeks after a quarter ends. Fund reports take 2 to 4 months, and they give the owner's view, not the lender's.</p></div>
+    <div class="card"><div class="k">4 · The fix isn't where you work</div><p>A spreadsheet lookup needs identical text, so it found 0 of 5 names in our sample tabs. Nothing tells you why.</p></div>
   </div>
 </section>
 
@@ -182,9 +188,31 @@
   <h2 class="read">Code matches the clear names. You settle the unclear ones. No AI ever produces a number.</h2>
   <div class="cards">
     <div class="card"><div class="k">What it is</div><p>A quarterly check of what lenders think your companies' loans are worth.</p></div>
-    <div class="card"><div class="k">What it does</div><p>Takes your list of names and finds each company's loans. It compares values across lenders and quarters, then flags debt that's been marked down.</p></div>
+    <div class="card"><div class="k">What it does</div><p>Finds each company's loans, compares values across lenders and quarters, and flags debt that's been marked down.</p></div>
     <div class="card"><div class="k">What you get</div><p>Your spreadsheet back, with a flag per company and a link to the filing for each loan.</p></div>
   </div>
+
+  <h3 class="sub read" id="watch">You reach it from your workbook, three ways.</h3>
+  <div class="cards">
+    <div class="card"><div class="k">You know the tool</div><p>You type a formula, or tell Claude to run it. Results fill the sheet beside your list.</p></div>
+    <div class="card"><div class="k">You know the problem</div><p>You ask "how would I reconcile these companies?" You get the steps, the limits and an offer to run it.</p></div>
+    <div class="card"><div class="k">You know neither</div><p>Your lookup between two tabs returns #N/A. The assistant says why and offers the fix, without being asked.</p></div>
+  </div>
+  <figure class="film">
+    <video controls playsinline preload="none" poster="analyst-desk-poster.jpg" aria-label="59-second demo of the three ways to reach the tool from a workbook"><source src="analyst-desk-demo.mp4" type="video/mp4"></video>
+    <figcaption>No sound. The working app on real filings, with waits shortened. The workbook is a stand-in, not Microsoft Excel.</figcaption>
+  </figure>
+  <p class="pull">Exabeam appears in filings only as LogRhythm, so here you see its loans at 86.2% of the amount owed. A lookup returns #N/A. A looser match would link "Foundation" to Foundation Risk Partners, a different company.</p>
+  <p class="dim read">The Exabeam link is an AI check no person has confirmed.</p>
+
+  <h3 class="sub read">The AI understands the question. Code does the maths. You decide what's unclear.</h3>
+  <div class="scroll"><table>
+    <tr><th>Layer</th><th>What it does here</th><th>Who owns it</th></tr>
+    <tr><td><b>Where you work</b></td><td>A workbook formula, a question, or an offer at a failed lookup</td><td>Investment teams</td></tr>
+    <tr><td><b>Tested tools</b></td><td>Code links the names and calculates each value. Claude only picks the tool</td><td>Applied AI team</td></tr>
+    <tr><td><b>Organised data</b></td><td>Every name lenders use for a company, a filing behind each value, your saved answers</td><td>Data team</td></tr>
+  </table></div>
+  <p class="dim" style="margin-top:12px">Ownership is a proposed split, not yet tried.</p>
 </section>
 
 <section>
@@ -192,25 +220,26 @@
   <h2 class="read">One job, one bet, one number each.</h2>
   <div class="scroll"><table>
     <tr><th>Your job</th><th>Our bet</th><th>Target, then result</th><th>What changes for you</th></tr>
-    <tr><td>When I review my funds, I want every loan to my companies, so I don't search name by name.</td><td>If the tool searches all lenders for each name, you cover your whole list, because you stop searching by hand.</td><td>Find at least 90% of companies known to have loans. <b class="res">86%, target missed</b></td><td>Your whole list gets checked each quarter. Not yet seen with real users.</td></tr>
-    <tr><td>When I see a lender's value, I want to know it's the right company, so I don't raise a false alarm.</td><td>If an AI reads unclear names in context, wrong matches drop out, because it can tell two businesses apart.</td><td>At least 97% of loans correct. Plain search gets 94.4%. <b class="res">100%, on answers an AI wrote</b></td><td>Fewer false alarms. A person's check is still to come.</td></tr>
-    <tr><td>When lenders cut a company's value, I want to know before the fund's report, so I can ask about it.</td><td>If you compare values across quarters, you see cuts first, because lenders publish before most funds report.</td><td>A person confirms at least 90% of flags against the filing. <b class="res">Not done. A script found the lowest value for 14 of 14</b></td><td>About 2 months after quarter end as built, against 2 to 4 months for fund reports. Whether a flag predicts anything is unknown.</td></tr>
+    <tr><td>When I review my funds, I want every loan to my companies, so I don't search name by name.</td><td>If the tool searches all lenders, you cover your whole list, because you stop searching by hand.</td><td>Find at least 90% of companies known to have loans. <b class="res">86%, target missed</b></td><td>Your whole list gets checked each quarter. Unobserved.</td></tr>
+    <tr><td>When I see a lender's value, I want to know it's the right company, so I don't raise a false alarm.</td><td>If an AI reads unclear names in context, wrong matches drop out, because it can tell two businesses apart.</td><td>At least 97% of loans correct. Plain search gets 94.4%. <b class="res">100%, on answers an AI wrote</b></td><td>Fewer false alarms.</td></tr>
+    <tr><td>When lenders cut a company's value, I want to know before the fund's report, so I can ask about it.</td><td>If you compare values across quarters, you see cuts first, because lenders publish before most funds report.</td><td>A person confirms at least 90% of flags against the filing. <b class="res">Not done. A script found the lowest value for 14 of 14</b></td><td>About 2 months after quarter end, against 2 to 4 for fund reports.</td></tr>
+    <tr><td>When my lookup between two lists fails, I want to know why and what fixes it, so I don't retype names by hand.</td><td>If the offer appears at the failed lookup, you use a tool you'd never heard of, because it arrives when you need it.</td><td>Failed lookups that lead to an accepted link. No target yet. <b class="res">Unobserved: no users.</b> Claude chose the right way in on 15 of 15 test runs, too few to be a rate</td><td>Fewer names retyped by hand. Unobserved.</td></tr>
   </table></div>
-  <p class="dim" style="margin-top:12px">Must not get worse: values shown without a link to the filing, which stays at 0.</p>
+  <p class="dim" style="margin-top:12px">Must not get worse: values without a filing link stay at 0.</p>
 </section>
 
 <section>
   <div class="num">05 · THE VALUE</div>
   <h2 class="read">What it's worth, and what it asks of you.</h2>
   <p class="pull">On 30 June 2026, KnowBe4's lenders valued its debt at about 78 cents per dollar owed, down from about 89 cents three months earlier. All 9 funds with a usable value agree within a cent. <a href="https://www.sec.gov/ix?doc=/Archives/edgar/data/1930087/000193008726000099/gcred-20260630.htm">Here's one fund's filing</a>.</p>
-  <p class="dim">These are lenders' own estimates, not market prices. For an imagined investor with 500 companies: about $33k a year of analyst time, mostly work nobody does today, and about $14k to $240k of avoided losses. All of that is assumed. Only the share of companies covered and the share flagged are measured.</p>
+  <p class="dim">These are lenders' own estimates, not market prices. For an imagined investor with 500 companies, I assume about $33k a year of analyst time and $14k to $240k of avoided losses.</p>
   <div class="cards two" style="margin-top:22px">
     <div class="card"><div class="k">You, the analyst</div><dl>
       <dt>You get</dt><dd>"I go into the fund meeting knowing which of our companies lenders have marked down, with the filing to show."</dd>
-      <dt>Will you believe it?</dt><dd><span class="rate">Low at first.</span> One wrong loan raised with a manager ends your trust. The filing links are there to earn it.</dd>
-      <dt>How fast</dt><dd><span class="rate">Medium.</span> Results in minutes. You use them at your next quarterly review.</dd>
-      <dt>What it takes</dt><dd><span class="rate">Medium.</span> Export your list, if you keep one. Confirm 45% of names yourself, or 11% with the AI on.</dd>
-      <dt>What you give up</dt><dd><span class="rate">Little.</span> On your own computer, nothing leaves it unless you turn the AI on.</dd>
+      <dt>Will you believe it?</dt><dd><span class="rate">Low at first.</span> One wrong loan raised with a manager ends your trust. Filing links are there to earn it.</dd>
+      <dt>How fast</dt><dd><span class="rate">Medium.</span> Results in minutes, used at your next quarterly review.</dd>
+      <dt>What it takes</dt><dd><span class="rate">Medium.</span> Export your list. Confirm 45% of names yourself, or 11% with the AI on.</dd>
+      <dt>What you give up</dt><dd><span class="rate">Little.</span> Nothing leaves your computer unless you turn the AI on.</dd>
     </dl></div>
     <div class="card"><div class="k">Your boss</div><dl>
       <dt>They get</dt><dd>"We ask the fund about the right companies, earlier."</dd>
@@ -228,10 +257,12 @@
   <h2>What this doesn't prove yet.</h2>
   <ul>
     <li><strong>Users:</strong> no investor has seen it. The need is inferred from public sources.</li>
+    <li><strong>Excel:</strong> an add-in with <code>=ERM.RECONCILE()</code> and a web connector for Claude in Excel are built, and tested with a stand-in for Excel. Neither has run in real Excel or Claude in Excel.</li>
+    <li><strong>The offer:</strong> a code rule spots the failed lookup, so it only catches what that rule covers.</li>
     <li><strong>Accuracy:</strong> an AI wrote the test answers and an AI does the judging, so the 100% isn't independent. The test covers 84 companies.</li>
     <li><strong>Prediction:</strong> two quarters can't show a flag leads to anything. 9 of the 14 flagged were already below 90 cents a quarter earlier.</li>
     <li><strong>Coverage:</strong> banks don't publish loans, so "not flagged" only covers lenders that do. Only 8 of 59 companies from one firm show up.</li>
-    <li><strong>Timing:</strong> about 2 months after quarter end, because the regulator's data updates monthly. We couldn't confirm the exact date.</li>
+    <li><strong>Timing:</strong> the regulator's data updates monthly. We couldn't confirm the exact date.</li>
     <li><strong>Reuse:</strong> any list of names works. No second data source has been added.</li>
     <li><strong>Legal:</strong> no lawyer has reviewed it. This isn't investment advice.</li>
   </ul>
@@ -243,15 +274,14 @@
   <div class="cards two">
     <div class="card"><div class="k">Won't do</div><ul>
       <li><strong>Compare lenders with fund values.</strong> That needs private fund reports.</li>
-      <li><strong>Cover banks.</strong> They don't publish loan values.</li>
-      <li><strong>Predict defaults.</strong> We have no outcomes to test against.</li>
       <li><strong>Read fund PDFs.</strong> Only if investors turn out to keep no list.</li>
     </ul></div>
     <div class="card"><div class="k">Next</div><ol>
-      <li><strong>A person checks 50 matches.</strong> This makes the accuracy figure independent.</li>
-      <li><strong>Two vendor demos.</strong> They show whether this already exists for a client's own list.</li>
-      <li><strong>6 analyst interviews.</strong> They show which past decision a flag would have changed.</li>
-      <li><strong>A test on older filings.</strong> It shows whether flags come before later falls.</li>
+      <li><strong>Run the add-in in real Excel,</strong> to see if the formula and the offer work there.</li>
+      <li><strong>A person checks 50 matches,</strong> to make the accuracy figure independent.</li>
+      <li><strong>Two vendor demos,</strong> to see if this already exists.</li>
+      <li><strong>6 analyst interviews,</strong> to find which past decision a flag would have changed.</li>
+      <li><strong>A test on older filings,</strong> to see if flags come before later falls.</li>
     </ol></div>
   </div>
 </section>
@@ -262,23 +292,22 @@
 
   <details><summary>Try the demo, step by step <small>three steps, in order</small></summary>
     <div class="read"><ol class="steps">
-      <li><strong>Pick a private equity firm, then press Check lender filings.</strong> You're checking the companies that firm lists on its website. It takes about a minute.</li>
+      <li><strong>Pick a private equity firm, then press Check lender filings.</strong> It takes about a minute.</li>
       <li><strong>Read the result.</strong> Flagged companies come first. Pick one to see each lender's value and open its filing.</li>
       <li><strong>Confirm unclear matches in the next tab.</strong> Answer "Same company" or "Different", and the result updates. Your answers stay with you.</li>
     </ol></div>
   </details>
 
   <details><summary>Main learnings <small>every headline number started out wrong</small></summary><div class="read">
-    <p>Checking real rows changed each of these. Had I stopped at the first answer, the case would have rested on the left column.</p>
     <div class="scroll"><table>
     <tr><th>First answer</th><th>After checking</th><th>Why it was wrong</th></tr>
-    <tr><td>Plain name matching is 70% right</td><td>94%</td><td>A bug cut the name "Point C" to "point", which matched "Basis Point". Most of the gain I'd claimed was that bug.</td></tr>
+    <tr><td>Plain name matching is 70% right</td><td>94%</td><td>A bug cut "Point C" to "point", which matched "Basis Point".</td></tr>
     <tr><td>Many sudden falls</td><td>Far fewer</td><td>Half the regulator's rows repeat an older date, marked only in one column.</td></tr>
-    <tr><td>31 of 144 companies flagged</td><td>14, plus 16 worth a look</td><td>The rule used a company's lowest loan. One company was flagged over a $68k loan, while its debt averages 98 cents per dollar.</td></tr>
-    <tr><td>A Canadian company's loan worth 70 cents</td><td>Left out</td><td>Filings give the amount owed in Canadian dollars and the value in US dollars. A loan at full value still reads about 72 cents.</td></tr>
-    <tr><td>100% correct, so the tool is correct</td><td>Rejected loans were coming back</td><td>The test checked each decision, but the tool searched again afterwards. A landscaping firm's loans returned for a health care company with a similar name.</td></tr>
+    <tr><td>31 of 144 companies flagged</td><td>14, plus 16 worth a look</td><td>The rule used the lowest loan. One company was flagged over $68k while its debt averages 98 cents.</td></tr>
+    <tr><td>A Canadian company's loan worth 70 cents</td><td>Left out</td><td>Amount owed is in Canadian dollars, value in US dollars. A full-value loan reads about 72 cents.</td></tr>
+    <tr><td>100% correct, so the tool is correct</td><td>Rejected loans were coming back</td><td>The tool searched again after each decision. A landscaping firm's loans returned for a health care company.</td></tr>
     <tr><td>Results about 6 weeks after quarter end</td><td>About 2 months</td><td>6 weeks is when lenders file. The regulator's data updates monthly.</td></tr>
-    <tr><td>$540k a year of avoided losses</td><td>$14k to $240k, assumed</td><td>Fewer flags, plus a cautious case. Investing in a manager's next fund doesn't reduce what you already hold.</td></tr>
+    <tr><td>$540k a year of avoided losses</td><td>$14k to $240k, assumed</td><td>Fewer flags, and a cautious case.</td></tr>
     </table></div>
     <h4>What each matching method did</h4>
     <div class="scroll"><table>
@@ -300,6 +329,7 @@
     <tr><td>Seeing cuts early</td><td>Partly: about 2 months, not 6 weeks</td><td><code>erm/signals.py</code></td></tr>
     <tr><td>Bad data in filings</td><td>Solved, except euro loans, which read slightly high</td><td><code>erm/connectors/bdc.py</code></td></tr>
     <tr><td>Companies borrowing under other names</td><td>Partly: research tested, not in the product</td><td><code>erm/match/aliases.py</code></td></tr>
+    <tr><td>Reaching you where you work</td><td>Partly: built and tested with a stand-in, not run in real Excel</td><td><code>erm/assist.py</code>, <code>app/desk/</code>, <code>erm/mcp_remote.py</code></td></tr>
     <tr><td>Lender values against fund values</td><td>Not tackled: needs private reports</td><td>None</td></tr>
     </table></div>
   </details>
@@ -311,12 +341,19 @@
       <li><strong>Search:</strong> look for name forms, spacing differences and rare first words.</li>
       <li><strong>Decide:</strong> your saved answer first, then an exact-name rule, then the AI if it's on. Anything unclear goes to you.</li>
       <li><strong>Compare:</strong> pair each loan with last quarter, then average by loan size, so bigger loans count more.</li>
-      <li><strong>Out:</strong> a spreadsheet, a review app or a tool for AI agents. Every value links to its filing.</li>
+      <li><strong>Out:</strong> a spreadsheet, a review app, a workbook panel or a connector for AI apps. Every value links to its filing.</li>
     </ol>
+    <h4>How it reaches your workbook</h4>
+    <div class="scroll"><table>
+    <tr><th></th><th>Excel add-in</th><th>Claude in Excel</th></tr>
+    <tr><td>You get</td><td>A formula, and a panel that offers the fix at a failed lookup</td><td>Claude calls the engine from its own Excel panel</td></tr>
+    <tr><td>Your names go</td><td>Nowhere outside your computer, unless you turn Claude on</td><td>Through Anthropic to wherever the connector is hosted</td></tr>
+    </table></div>
+    <p>The web connector is limited to the public sample, 50 names and 4 tools, none of which reads files or changes saved answers.</p>
     <h4>How it was tested</h4>
     <p>84 companies and 1,028 name pairs, labelled by two separate AI runs that agreed on 98.5%. 20 unsure pairs are left out of the scores. Total AI cost for the project: about $6.20.</p>
     <h4>On this public demo</h4>
-    <p>It uses saved AI answers on the sample companies, makes no new AI calls and takes no uploads. For a private list, run the code on your own computer.</p>
+    <p>It uses saved AI answers and takes no uploads. For a private list, run the code on your own computer.</p>
   </div></details>
 
   <details><summary>How success is tracked <small>the numbers and their targets</small></summary>
@@ -327,6 +364,7 @@
     <tr><td>Flags confirmed by a person</td><td>Not tested</td><td>At least 90%</td></tr>
     <tr><td>Names you must confirm</td><td>11% with the AI, 45% without</td><td>At most 15%</td></tr>
     <tr><td>Values without a filing link</td><td>0</td><td>0</td></tr>
+    <tr><td>Failed name lookups that lead to an accepted link</td><td>Unobserved</td><td>Set in a pilot</td></tr>
     </table></div>
   </details>
 
@@ -336,6 +374,7 @@
     <tr><td>Fewer wrong loans</td><td>Finding more loans</td><td>Fewer false alarms</td><td>Some loans get missed</td></tr>
     <tr><td>AI off by default</td><td>AI on by default</td><td>A private list stays on your computer</td><td>You confirm 45% of names, not 11%</td></tr>
     <tr><td>Average by loan size</td><td>Lowest single loan</td><td>A shorter list</td><td>An early warning on a small loan only shows as "worth a look"</td></tr>
+    <tr><td>A code rule spots the failed lookup</td><td>Claude watching the sheet</td><td>No company name leaves your computer to make the offer</td><td>It only catches what the rule covers</td></tr>
     <tr><td>Regulator's monthly data</td><td>Reading each filing</td><td>Clean rows with links</td><td>About 3 weeks later</td></tr>
     </table></div>
   </details>
@@ -347,8 +386,10 @@
       <li><strong>Listed lender (a BDC):</strong> a stock-market-listed lender that must publish its loans.</li>
       <li><strong>Flag:</strong> on average, lenders value the debt below 90 cents per dollar owed, or that average fell 5 cents or more in a quarter.</li>
       <li><strong>Answer key:</strong> name pairs labelled in advance, used to score each method.</li>
+      <li><strong>Lookup:</strong> a spreadsheet formula, such as XLOOKUP, that finds a row by identical text.</li>
+      <li><strong>Connector:</strong> a way for an AI app such as Claude to call a tested tool.</li>
     </ul>
-    <p class="dim">The two documents below are working papers, so they use industry terms: LP means an investor in funds, GP means the fund manager, and par means the amount owed.</p>
+    <p class="dim">In the working papers below, LP means an investor in funds, GP the fund manager, and par the amount owed.</p>
   </details>
 
   <details><summary>Opportunity assessment <small>the go or no-go document, corrected after the build</small></summary><div class="doc"><h1>LP credit read-through: Opportunity Analysis</h1>

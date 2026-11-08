@@ -17,10 +17,13 @@
 ## Commands
 
 Run from the repo root. Healthy output in brackets.
-- `make test`: runs `uv run pytest` [`73 passed`, about 45 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
+- `make test`: runs `uv run pytest` [`114 passed`, about 70 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
 - `make lint`: runs `ruff check` and `ruff format --check` [`All checks passed!` then `N files already formatted`; any `Would reformat` line is a failure]
 - `make evals`: offline eval gate, `uv run python -m eval.offline`, thresholds in `evals/thresholds.yaml` [`precision 1.000`, `recall 0.936`, `PASS`]. It replays saved name-search hits and judge verdicts, so it only re-tests the exact-name rule live.
 - `make run`: the review app, `uv run streamlit run app/review.py` [Streamlit prints a local URL]
+- `make desk`: the workbook with an assistant, `uv run python -m app.desk.server` [prints `Analyst Desk is ready` and a local URL; first run on a machine adds about 100 seconds]
+- `make excel`: the Excel add-in's HTTPS server on port 3000; needs `npx office-addin-dev-certs install` first [prints `Analyst Desk is ready`]
+- `make mcp-web`: web connector with public sample only, no file or answer-changing tools [Uvicorn prints its URL]
 - `make mcp`: the tool server for AI agents, `uv run python -m erm.mcp_server` [no output; it serves over stdin and exits when stdin closes]
 - `uv run python -m eval.plan_drift plans/<plan>.md <step>`: run right after each build step's commit, then amend the commit with the log; lists files changed outside the step's plan and appends a row to `plans/<plan>-drift.md` [one row, `none` when the build matches the plan]
 - `make hooks`: run once after cloning: installs the git pre-commit key scan [`pre-commit key scan installed`]

@@ -36,6 +36,10 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 
 **Tool for AI agents:** `uv run python -m erm.mcp_server`
 
+**Inside a workbook:** `make desk`, then open http://127.0.0.1:8765. A workbook with an assistant beside it, on the same engine. Type `=RECONCILE(A2:A6)`, ask how to reconcile a list, or write a lookup that fails and it offers the fix. Names stay on your computer unless you tick "Let Claude answer".
+
+**In real Excel:** `app/desk/excel/` is an add-in with `=ERM.RECONCILE(A2:A6)`. `make excel` serves it. `make mcp-web` is a web connector for Claude in Excel. Neither has run inside real Excel yet. Steps: [`outputs/prototypes/analyst-desk/analyst-desk.md`](outputs/prototypes/analyst-desk/analyst-desk.md).
+
 **Tests:** `uv run pytest`
 
 **AI judge (optional):** put `ANTHROPIC_API_KEY` in `.env`, then use `--use-judge`, the app checkbox or `ERM_USE_JUDGE=1`. It sends the name, industry and owner of unclear companies to Anthropic, so check your fund agreements first. It cuts the names you must confirm from 45% to 11%.
@@ -52,6 +56,8 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 | `erm/signals.py` | Loan-by-loan facts, and flags on the average weighted by loan size |
 | `erm/store.py` | Saved answers. A person's answer overrides everything |
 | `erm/api.py` | `resolve_entity`, `gather_facts`, `enrich_table`, `review` |
+| `erm/assist.py` | The ways in: notices when lists don't line up, explains how, runs a list |
+| `app/desk/` | Analyst Desk: the workbook and assistant |
 | `eval/` | Answer key, method comparison, filing check |
 | `erm/match/linkage.py`, `features.py` | Scoring model, tested and dropped; kept for the comparison |
 

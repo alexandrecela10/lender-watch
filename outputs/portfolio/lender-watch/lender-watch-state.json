@@ -1,10 +1,12 @@
 {
  "output": "outputs/portfolio/lender-watch/index.html",
- "date": "2026-11-02",
- "status": "Ready to publish, waiting on the PM's push",
+ "date": "2026-11-08",
+ "status": "Updated with the workbook story, waiting on the PM to review and push",
  "decided": [
   "Lead with the outcome, and show demand as unproven in the stat strip",
-  "Show first-wrong numbers as the main learning"
+  "Show first-wrong numbers as the main learning",
+  "Add the three ways in, the three layers and the demo video inside section 03",
+  "Leave out the 7-to-60 of 60 result: it belongs to a different project on synthetic data"
  ],
  "defaults_taken": [
   "Name: Lender Watch",
@@ -14,10 +16,13 @@
  "open": [
   "Push repo and hub",
   "Deploy Streamlit app",
-  "Check live links"
+  "Check live links",
+  "Run the add-in in real Excel, then update the Excel limitation",
+  "Copy analyst-desk-demo.mp4 and analyst-desk-poster.jpg to the hub with the page",
+  "Person to confirm the Exabeam to LogRhythm link before publishing"
  ],
  "next": [
   "PM spot check"
  ],
- "note": "KnowBe4 June value read from the filing by Claude on 2026-11-02; a person hasn't looked"
+ "note": "KnowBe4 June value read from the filing by Claude on 2026-11-02; a person hasn't looked. Exabeam to LogRhythm is an AI check using outside knowledge; a person hasn't confirmed it"
 }
