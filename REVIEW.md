@@ -23,4 +23,14 @@ Formatting and lint (`make lint` covers them), files under `data/` and `outputs/
 
 ## Report format
 
-One table, most severe first: Pass | Important or nit | File:line | What is wrong | Why it matters. Then one line: the number of Important findings.
+Write for a reader who does not read code. Plain words, one idea per sentence, about 20 words at most. No tables, no em dashes.
+
+1. First line, in bold, says what to do: `**Fix 2 things before merging.**` or `**Nothing to fix before merging.**`
+2. Then a numbered list of Important findings, most severe first. Each has:
+   - One bold sentence: what is wrong, and what goes wrong for the product or its users because of it.
+   - `Fix:` one sentence.
+   - `Where:` file:line, the pass, and the spec line or plan step for compliance findings.
+3. Then the nits, one short line each, inside `<details><summary>Small points (N)</summary>`.
+4. Last line: anything you could not check, and why. Leave it out if there is nothing.
+
+Before reporting a missing file, check the pull request's base branch. In a stack, a file in an earlier open pull request is not missing.
