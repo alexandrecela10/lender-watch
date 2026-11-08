@@ -56,6 +56,15 @@ Exit criteria
 - The image holds no `/root/.cache`.
 - Commit: `fix(deploy): leave the installer cache out of the image`.
 
+### S2c. Temporary files in memory
+
+Files: `compose.yaml`.
+Added after the second rehearsal, which failed the same way: Docker's disk was still full. The disk holds other projects' images, which this work must not delete. Prod now keeps `/tmp` in memory.
+
+Exit criteria
+- `docker compose --profile prod config` shows the `/tmp` memory mount.
+- Commit: `fix(deploy): keep prod temporary files in memory`.
+
 ### S3. Rehearse
 
 Runs after S4 (departure): it needs two commits that hold the fixed Dockerfile.

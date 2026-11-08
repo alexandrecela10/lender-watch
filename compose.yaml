@@ -27,5 +27,8 @@ services:
     image: erm-review:${ERM_PROD_TAG:-tag-not-set}
     pull_policy: never
     restart: unless-stopped
+    # The app writes only temporary files (search index, run records). Kept in memory, so a full Docker disk can't stop it.
+    tmpfs:
+      - /tmp
     ports:
       - "${ERM_PROD_PORT:-8501}:8501"
