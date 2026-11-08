@@ -1,7 +1,7 @@
 {
  "output": "outputs/portfolio/lender-watch/index.html",
  "date": "2026-11-08",
- "status": "Live on the hub since 2026-11-08, without Demo links because the Streamlit app is offline.",
+ "status": "Live on the hub with the Streamlit demo and the layered video.",
  "decided": [
   "Lead with the outcome, and show demand as unproven in the stat strip",
   "Show first-wrong numbers as the main learning",
@@ -16,7 +16,6 @@
  ],
  "open": [
   "Run the full name audit with the PM list of names",
-  "Deploy Streamlit app, then restore the Demo buttons on the page and the hub card",
   "Run the add-in in real Excel, then update the Excel limitation",
   "Exabeam to LogRhythm is still shown as an unconfirmed AI check"
  ],
