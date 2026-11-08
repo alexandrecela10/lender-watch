@@ -45,9 +45,10 @@ FLAG_RULE = (
 log = logging.getLogger("erm.api")
 
 
-def call_judge(client, name, sector, sponsor, candidate, examples):
+def call_judge(client, name, sector, sponsor, candidate, examples, details=None):
     """One live judge call, logged with verdict, tokens, cost and time, never the names or the reason.
-    Raises anthropic.APIError after logging it, so the caller keeps its own fallback."""
+    Raises anthropic.APIError after logging it, so the caller keeps its own fallback.
+    If `details` is a dict, it receives the model that answered and the cost (None when unpriced)."""
     obs = telemetry.start_judge_trace(
         has_sector=bool(sector),
         has_owner=bool(sponsor),
@@ -69,6 +70,8 @@ def call_judge(client, name, sector, sponsor, candidate, examples):
         raise
     u = message.usage
     cost = judge_mod.cost_usd(message.model, u)
+    if details is not None:
+        details.update(model=message.model, cost_usd=cost)
     log.info(
         "judge_call",
         extra={
