@@ -1,4 +1,4 @@
-.PHONY: test lint evals run mcp hooks dev
+.PHONY: test lint evals run mcp hooks dev prod rollback rehearse-rollback
 
 test:
 	uv run pytest
@@ -23,3 +23,16 @@ hooks:
 # The review app in Docker, with live code reload. Needs no key.
 dev:
 	docker compose --profile dev up --build
+
+# Build the current commit's image and run it as prod. Needs a person's approval (make approve-prod).
+prod:
+	./scripts/prod-deploy.sh
+
+# Return prod to the previous good image. Needs a person's approval (make approve-prod).
+rollback:
+	./scripts/rollback.sh
+
+# Try a rollback in a separate Docker project. Real prod is not touched.
+# Usage: make rehearse-rollback GOOD=<commit> NEW=<commit>
+rehearse-rollback:
+	./scripts/rehearse-rollback.sh $(GOOD) $(NEW)
