@@ -376,3 +376,35 @@ def test_a_chained_git_command_cannot_hide_a_production_change(deploy):
 
 def test_one_git_commit_may_mention_make_prod_in_backticks(deploy):
     assert bash(deploy, "git commit -m 'run `make prod` later'").returncode == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cat <<EOF > ~/.erm/deploy/prod-approval\ncommit=x\nEOF",
+        "git show HEAD:README.md > ~/.erm/deploy/good-images",
+        "echo x >> ~/.erm/deploy/image-ids",
+    ],
+)
+def test_agents_cannot_write_the_approval_or_rollback_records(deploy, command):
+    assert bash(deploy, command).returncode == 2, command
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "docker stop $(docker ps -q)",
+        "docker rm -f $(docker ps -aq)",
+        "docker ps -q | xargs docker stop",
+    ],
+)
+def test_docker_commands_with_no_named_container_need_approval(deploy, command):
+    assert bash(deploy, command).returncode == 2, command
+
+
+@pytest.mark.parametrize(
+    "command",
+    ["cat ~/.erm/deploy/audit.log", "docker stop erm-rehearsal-prod-1"],
+)
+def test_reading_records_and_stopping_a_named_container_still_pass(deploy, command):
+    assert bash(deploy, command).returncode == 0, command
