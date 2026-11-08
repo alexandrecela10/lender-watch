@@ -168,45 +168,61 @@ def parse_last(text: str) -> dict | None:
     return done[-1] if done else None
 
 
+def _pct(x: float) -> str:
+    return f"{x * 100:.1f}%"
+
+
+def _wrong(n: int) -> str:
+    return f"{n} wrong match" + ("" if n == 1 else "es")
+
+
+def _headline(res: Result) -> str:
+    fp = res.scores["fp"] if res.scores else 0
+    if res.status == "PASS" and fp:
+        return f"**Passed, with a warning: {_wrong(fp)}. Even one is worth checking.**"
+    return {
+        "PASS": "**Passed: the AI's company matching has not got worse.**",
+        "FAIL": "**Failed: the AI's company matching fell below the minimum we accept.**",
+        "INCOMPLETE": f"**Not finished: {res.stop}. This run gives no result.**",
+        "ERROR": f"**Could not be scored: {res.stop}.**",
+    }.get(res.status, f"**{res.status}**")
+
+
 def summary(
     res: Result, floors: dict, last: dict | None, n_ask: int, today: str
 ) -> str:
+    """The comment a person reads, then one hidden line the next run reads back."""
     s = res.scores
-    models = ", ".join(f"{m} ({n})" for m, n in res.models.most_common()) or "none"
-    lines = [f"live judge check, {today}, model {models}, {res.calls} of {n_ask} calls"]
+    models = ", ".join(m for m, _ in res.models.most_common()) or "no model"
+    lines = [_headline(res), ""]
     if s:
         lp = (
-            f", last run {last['precision']:.3f}"
+            f" Last run: {_pct(last['precision'])}."
             if last and "precision" in last
             else ""
         )
-        lr = f", last run {last['recall']:.3f}" if last and "recall" in last else ""
-        lines.append(
-            f"precision {s['pair_precision']:.3f} (floor {floors['pair_precision']:.2f}{lp})   "
-            f"recall {s['pair_recall']:.3f} (floor {floors['pair_recall']:.2f}{lr})"
-        )
-        prev = (
-            f"last run {last['fp']}"
+        lr = f" Last run: {_pct(last['recall'])}." if last and "recall" in last else ""
+        lf = (
+            f" Last run: {last['fp']}."
             if last and last.get("fp") is not None
-            else "no last run"
+            else " No last run to compare."
         )
-        changed = (
-            "no reference yet"
-            if res.changed is None
-            else f"{res.changed} of {len(res.verdicts)}"
-        )
-        lines.append(
-            f"false matches {s['fp']} ({prev})  verdicts changed since the reference: {changed}"
-        )
-    lines.append(
-        f"errors {res.errors}  cost ${res.cost_usd:.2f}  time {res.seconds // 60}m {res.seconds % 60}s"
-    )
-    lines.append("labels are Claude's, not checked by a person")
-    if s and s["fp"] > 0:
-        lines.append(
-            f"WARN {s['fp']} false matches (spec concern 2: any false match warns)"
-        )
-    lines.append(res.status + (f": {res.stop}" if res.stop else ""))
+        lines += [
+            f"- When it said two names are the same company, it was right {_pct(s['pair_precision'])} "
+            f"of the time. Minimum: {floors['pair_precision'] * 100:.0f}%.{lp}",
+            f"- It found {_pct(s['pair_recall'])} of the real matches. "
+            f"Minimum: {floors['pair_recall'] * 100:.0f}%.{lr}",
+            f"- Wrong matches: {s['fp']}.{lf}",
+        ]
+        if res.changed is not None:
+            lines.append(
+                f"- Answers changed since the reference run: {res.changed} of {len(res.verdicts)}."
+            )
+    lines += [
+        f"- Run on {today} with {models}: {res.calls} of {n_ask} questions asked, {res.errors} failed.",
+        f"- Cost ${res.cost_usd:.2f}, took {res.seconds // 60}m {res.seconds % 60}s.",
+        "- The answer key was written by Claude, not checked by a person.",
+    ]
     machine = {
         "date": today,
         "status": res.status,
@@ -220,9 +236,7 @@ def summary(
             "recall": s["pair_recall"],
             "fp": s["fp"],
         }
-    return (
-        "```\n" + "\n".join(lines) + "\n```\n" + MARKER + json.dumps(machine) + " -->\n"
-    )
+    return "\n".join(lines) + "\n\n" + MARKER + json.dumps(machine) + " -->\n"
 
 
 def main(argv: list[str] | None = None, judge: Judge | None = None) -> int:

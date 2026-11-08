@@ -104,7 +104,7 @@ def test_six_wrong_pairs_fail_one_warns(at_root, tmp_path):
     assert code == 1 and live.parse_last(text)["status"] == "FAIL"
     (tmp_path / "one").mkdir()
     code, text = run(tmp_path / "one", fake(flipped(1)))
-    assert code == 0 and "WARN 1 false matches" in text
+    assert code == 0 and "Passed, with a warning: 1 wrong match." in text
 
 
 def test_cost_cap_stops_the_run(at_root, tmp_path):
@@ -148,9 +148,9 @@ def test_history_comment_parses_back_and_compares(at_root, tmp_path):
     second = tmp_path / "second.md"
     live.main(["--summary", str(second), "--last", str(last)], judge=fake(flipped(1)))
     text = second.read_text()
-    assert "false matches 1 (last run 0)" in text
-    assert "precision 0.994 (floor 0.97, last run 1.000)" in text
-    assert "WARN 1 false matches" in text
+    assert "Wrong matches: 1. Last run: 0." in text
+    assert "right 99.4% of the time. Minimum: 97%. Last run: 100.0%." in text
+    assert "Passed, with a warning: 1 wrong match." in text
 
 
 def test_errors_mark_the_run_error_not_fail(at_root, tmp_path):
@@ -182,7 +182,7 @@ def test_reference_counts_changed_verdicts(at_root, tmp_path):
         _, text = run(tmp_path, fake(flipped(2)))
     finally:
         live.REFERENCE = old
-    assert "verdicts changed since the reference: 2 of 145" in text
+    assert "Answers changed since the reference run: 2 of 145." in text
     assert json.loads(text.split(live.MARKER)[1].split(" -->")[0])["fp"] == 2
 
 

@@ -60,13 +60,15 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 
 **What comes out.** One summary, printed and written to the GitHub job page:
 
-```
-live judge check, 2026-11-09, model claude-opus-5-5 (145 calls)
-precision 1.000 (floor 0.97)   recall 0.936 (floor 0.90)
-false matches 0 (last run 0)  verdicts changed since the reference: 3 of 145  errors 0
-cost $0.67  time 7m 50s        labels are Claude's, not checked by a person
-PASS
-```
+> **Passed: the AI's company matching has not got worse.**
+>
+> - When it said two names are the same company, it was right 100.0% of the time. Minimum: 97%. Last run: 100.0%.
+> - It found 93.6% of the real matches. Minimum: 90%. Last run: 93.6%.
+> - Wrong matches: 0. Last run: 0.
+> - Answers changed since the reference run: 3 of 145.
+> - Run on 2026-11-09 with claude-opus-5-5: 145 of 145 questions asked, 0 failed.
+> - Cost $0.67, took 7m 50s.
+> - The answer key was written by Claude, not checked by a person.
 
 The numbers above are an example, not a result.
 
