@@ -1,0 +1,102 @@
+# Live judge check (eval/live.py, specs/ai-drift-tracking.md): ask the AI judge again about the answer-key pairs
+# and catch a drop in matching quality before users see it.
+# Sends public filing data from the answer key to Anthropic: the one approved exception to data-handling check 3.
+# On main (weekly or by hand) each run adds one comment to the issue "Live judge check history".
+# On a pull request it comments on that pull request only, so an unmerged judge never becomes "the last run".
+# Plain pull_request, never pull_request_target, so fork pull requests get no key and skip.
+name: Live judge check
+on:
+  pull_request:
+    paths:
+      - "erm/match/**"
+      - "erm/api.py"
+      - "erm/telemetry.py"
+      - "erm/textparse.py"
+      - "eval/live.py"
+      - "eval/compare.py"
+      - "eval/offline.py"
+      - "evals/**"
+      - "data/eval/answer_key.csv"
+      - "data/eval/scored_pairs.csv"
+      - "data/eval/judge_results.csv"
+      - "data/public/holdings.parquet"
+      - "uv.lock"
+      - ".github/workflows/live-eval.yml"
+  schedule:
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      repeat:
+        description: "Number of runs (caps apply to each)"
+        default: "1"
+      write_reference:
+        description: "Save the first run's verdicts as the reference (artifact)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: live-eval-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    # 45, not the spec's 20: a run by hand with repeat 3 takes about 25 minutes (plan D3).
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HISTORY: "Live judge check history"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv python install 3.12
+      - run: uv sync
+      - name: Last completed run on main
+        run: |
+          n=$(gh issue list --state all --author "app/github-actions" --search "in:title \"$HISTORY\"" --json number,title \
+                --jq "[.[] | select(.title == \"$HISTORY\")][0].number // empty")
+          echo "ISSUE=$n" >> "$GITHUB_ENV"
+          if [ -n "$n" ]; then
+            gh issue view "$n" --json comments \
+              --jq '[.comments[] | select(.author.login == "github-actions") | select(.body | contains("\"status\": \"PASS\"") or contains("\"status\": \"FAIL\""))] | last | .body // ""' > last.md
+          fi
+      - name: Live check
+        id: run
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REPEAT: ${{ inputs.repeat || '1' }}
+          WRITE_REFERENCE: ${{ inputs.write_reference }}
+        run: |
+          ref=""
+          if [ "$WRITE_REFERENCE" = "true" ]; then ref="--write-reference live_reference.csv"; fi
+          set +e
+          uv run python -m eval.live --live --last last.md --summary summary.md --repeat "$REPEAT" $ref
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          if [ -f summary.md ]; then cat summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Record the result
+        if: always() && hashFiles('summary.md') != ''
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file summary.md
+          elif [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "Run on ${{ github.ref }}, not main: result kept in the job summary only."
+          else
+            if [ -z "$ISSUE" ]; then
+              ISSUE=$(gh issue create --title "$HISTORY" \
+                --body "One comment per live judge check on main (eval/live.py). Labels are Claude's, not checked by a person." | grep -o '[0-9]*$')
+            fi
+            gh issue comment "$ISSUE" --body-file summary.md
+          fi
+      - name: Keep the reference verdicts
+        if: always() && hashFiles('live_reference.csv') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-reference
+          path: live_reference.csv
+      - name: Result
+        run: exit ${{ steps.run.outputs.code }}

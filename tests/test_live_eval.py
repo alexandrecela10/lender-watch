@@ -104,19 +104,19 @@ def test_six_wrong_pairs_fail_one_warns(at_root, tmp_path):
     assert code == 1 and live.parse_last(text)["status"] == "FAIL"
     (tmp_path / "one").mkdir()
     code, text = run(tmp_path / "one", fake(flipped(1)))
-    assert code == 0 and "WARN false matches rose to 1" in text
+    assert code == 0 and "WARN 1 false matches" in text
 
 
 def test_cost_cap_stops_the_run(at_root, tmp_path):
     code, text = run(tmp_path, fake(cost=0.05))
-    m = live.parse_last(text)
+    m = live.parse_all(text)[-1]
     assert code == 1 and m["status"] == "INCOMPLETE" and "cost cap reached" in text
     assert m["calls"] == 60 and m["calls"] < 250
 
 
 def test_unknown_cost_counts_toward_the_cap(at_root, tmp_path):
     code, text = run(tmp_path, fake(cost=None, model="some-fallback-model"))
-    assert code == 1 and live.parse_last(text)["calls"] == 60
+    assert code == 1 and live.parse_all(text)[-1]["calls"] == 60
 
 
 def test_no_live_flag_makes_no_call(at_root, tmp_path, capsys):
@@ -150,7 +150,7 @@ def test_history_comment_parses_back_and_compares(at_root, tmp_path):
     text = second.read_text()
     assert "false matches 1 (last run 0)" in text
     assert "precision 0.994 (floor 0.97, last run 1.000)" in text
-    assert "WARN false matches rose to 1" in text
+    assert "WARN 1 false matches" in text
 
 
 def test_errors_mark_the_run_error_not_fail(at_root, tmp_path):
@@ -158,7 +158,7 @@ def test_errors_mark_the_run_error_not_fail(at_root, tmp_path):
     ask, _ = live.pairs_to_ask(d)
     failing = set(d.pair_id[ask].astype(int)[:20])
     code, text = run(tmp_path, fake(fail=failing))
-    m = live.parse_last(text)
+    m = live.parse_all(text)[-1]
     assert code == 1 and m["status"] == "ERROR" and m["errors"] > 2
 
 
@@ -184,3 +184,14 @@ def test_reference_counts_changed_verdicts(at_root, tmp_path):
         live.REFERENCE = old
     assert "verdicts changed since the reference: 2 of 145" in text
     assert json.loads(text.split(live.MARKER)[1].split(" -->")[0])["fp"] == 2
+
+
+def test_parse_last_takes_the_last_result():
+    a = live.MARKER + '{"status": "PASS", "fp": 0} -->'
+    b = live.MARKER + '{"status": "FAIL", "fp": 7} -->'
+    c = live.MARKER + '{"status": "INCOMPLETE", "calls": 60} -->'
+    assert live.parse_last(f"run 1\n{a}\nrun 2\n{b}\n")["fp"] == 7
+    assert live.parse_last(f"{a}\n{c}\n")["fp"] == 0
+    assert live.parse_last("no marker") is None
+    bad = live.MARKER + '{"status": "PASS", "fp": "999"} -->'
+    assert live.parse_last(f"{a}\n{bad}\n")["fp"] == 0
