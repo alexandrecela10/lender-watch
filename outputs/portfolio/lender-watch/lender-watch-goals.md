@@ -9,4 +9,6 @@
 | 3 | The page says labels are Claude's and no LP has been interviewed. |
 | 4 | No em dashes, banned words or sales phrases. |
 | 5 | LinkedIn description is 2,000 characters or fewer. |
-| 6 | Alexandre approves the name audit, a person confirms the KnowBe4 values, and every link is checked. |
+| 6 | The page says the video shows a stand-in workbook, and that the add-in and web connector haven't run in real Excel or Claude in Excel. |
+| 7 | No organisation Alexandre is applying to appears in the page, its files or the video. |
+| 8 | Alexandre approves the name audit, a person confirms the KnowBe4 values, and every link is checked. |

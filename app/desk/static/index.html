@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analyst Desk</title>
+  <link rel="stylesheet" href="desk.css">
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="doc"><span class="doc-mark" aria-hidden="true"></span><strong id="book-name">Portfolio review</strong><span class="saved" id="data-note"></span></div>
+      <div class="top-actions">
+        <button id="open-btn" class="ghost">Open file</button>
+        <input id="file-input" type="file" accept=".xlsx,.xls,.csv" hidden>
+        <button id="reset-btn" class="ghost">Start over</button>
+        <button id="export-btn" class="primary" disabled>Download .xlsx</button>
+      </div>
+    </header>
+    <div class="formula-row">
+      <span id="cell-name" class="cell-name">A1</span>
+      <span class="fx" aria-hidden="true">fx</span>
+      <input id="formula" spellcheck="false" autocomplete="off" aria-label="Cell contents">
+    </div>
+    <main class="work">
+      <section class="book">
+        <div class="grid-wrap" id="grid-wrap"><table id="grid"></table></div>
+        <nav class="tabs" id="tabs"></nav>
+      </section>
+      <aside class="panel" aria-label="Assistant">
+        <div class="panel-head">
+          <strong>Assistant</strong>
+          <label class="mode" id="mode-label" hidden><input type="checkbox" id="use-claude"> Let Claude answer</label>
+        </div>
+        <p class="mode-note" id="mode-note">Local answers. No company name leaves this computer.</p>
+        <div id="chat" class="chat" aria-live="polite"></div>
+        <section id="source" class="source" hidden></section>
+        <form id="ask" class="ask">
+          <input id="ask-input" placeholder="Ask about this workbook" autocomplete="off" aria-label="Ask the assistant">
+          <button type="submit" class="primary">Ask</button>
+        </form>
+      </aside>
+    </main>
+  </div>
+  <script src="desk.js"></script>
+</body>
+</html>

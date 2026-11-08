@@ -1,10 +1,12 @@
 {
  "output": "outputs/portfolio/lender-watch/index.html",
  "date": "2026-11-08",
- "status": "Draft updated with how each change is checked. Not ready to publish.",
+ "status": "Live on the hub since 2026-11-08, without Demo links because the Streamlit app is offline.",
  "decided": [
   "Lead with the outcome, and show demand as unproven in the stat strip",
   "Show first-wrong numbers as the main learning",
+  "Add the three ways in, the three layers and the demo video inside section 03",
+  "Leave out the 7-to-60 of 60 result: it belongs to a different project on synthetic data",
   "Publish the checks with what each cannot show, including the shared-copy fault"
  ],
  "defaults_taken": [
@@ -13,12 +15,13 @@
   "No demo or code button, since neither is public"
  ],
  "open": [
-  "Merge the Stage 5 and Stage 6 pull requests first: the rollback and review-load rows describe them",
   "Run the full name audit with the PM list of names",
-  "Push hub, deploy Streamlit app, check live links"
+  "Deploy Streamlit app, then restore the Demo buttons on the page and the hub card",
+  "Run the add-in in real Excel, then update the Excel limitation",
+  "Exabeam to LogRhythm is still shown as an unconfirmed AI check"
  ],
  "next": [
   "PM spot check"
  ],
- "note": "KnowBe4 June value read from the filing by Claude on 2026-11-02; a person hasn't looked"
+ "note": "KnowBe4 June value read from the filing by Claude on 2026-11-02; a person hasn't looked. Exabeam to LogRhythm is an AI check using outside knowledge; a person hasn't confirmed it"
 }

@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from erm.assist_profile import SourceProfile
 from erm.textparse import is_funded_debt, lien_of, maturity_of
 
 COLUMNS = {
@@ -73,6 +74,24 @@ def enrich(h: pd.DataFrame) -> pd.DataFrame:
     h["excluded_reason"] = reason
     h["holding_id"] = h.adsh + ":" + h.groupby("adsh").cumcount().astype(str)
     return h
+
+
+PROFILE = SourceProfile(
+    source_name="the names lenders use in SEC filings",
+    finds="What lenders say each company's loans are worth, with the filing behind each number.",
+    clear_example='Example: "KnowBe4" and "KnowBe4, Inc.".',
+    unclear_example='Example: is "Apex Bidco Limited" your "Apex Group"? The filing doesn\'t settle it.',
+    lookup_example=(
+        'A lookup needs identical text. Lenders write "KnowBe4, Inc. | Education", so a lookup on "KnowBe4" returns #N/A. '
+        'A looser match would be wrong the other way: "Foundation" would pick up Foundation Risk Partners, a different company.'
+    ),
+    comes_out="You get your sheet back with new columns, plus one row per loan with its filing link.",
+    cannot_do=(
+        "Banks don't publish their loans, so a company with only bank debt shows nothing.",
+        "A flag says what lenders report. It doesn't predict anything, and no investor has tested it yet.",
+        "Values are lenders' own estimates, not market prices. This isn't investment advice.",
+    ),
+)
 
 
 def load_holdings(path: str | Path = "data/holdings_clean.parquet") -> pd.DataFrame:

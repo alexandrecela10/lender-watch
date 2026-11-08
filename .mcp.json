@@ -13,6 +13,17 @@
         "/tmp/erm-verify"
       ],
       "env": {}
+    },
+    "entity-reconciliation": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "erm.mcp_server"
+      ],
+      "env": {}
     }
   }
 }

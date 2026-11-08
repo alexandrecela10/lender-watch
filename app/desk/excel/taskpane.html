@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lender Watch</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="taskpane.css">
+</head>
+<body>
+  <main>
+    <p class="status" id="status">Connecting to the workbook…</p>
+    <label class="mode" id="mode-label" hidden><input type="checkbox" id="use-claude"> Let Claude answer</label>
+    <div class="row">
+      <button id="check" class="primary">Check this workbook</button>
+    </div>
+    <div id="chat" aria-live="polite"></div>
+    <form id="ask">
+      <input id="ask-input" placeholder="Ask about this workbook" autocomplete="off" aria-label="Ask about this workbook">
+      <button type="submit">Ask</button>
+    </form>
+  </main>
+  <script src="core.js"></script>
+  <script src="functions.js"></script>
+  <script src="taskpane.js"></script>
+</body>
+</html>

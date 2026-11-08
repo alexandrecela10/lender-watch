@@ -4,8 +4,28 @@
     {
       "name": "review-app",
       "runtimeExecutable": "uv",
-      "runtimeArgs": ["run", "streamlit", "run", "app/review.py", "--server.port", "8501", "--server.headless", "true"],
+      "runtimeArgs": [
+        "run",
+        "streamlit",
+        "run",
+        "app/review.py",
+        "--server.port",
+        "8501",
+        "--server.headless",
+        "true"
+      ],
       "port": 8501
+    },
+    {
+      "name": "analyst-desk",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "python",
+        "-m",
+        "app.desk.server"
+      ],
+      "port": 8765
     }
   ]
 }

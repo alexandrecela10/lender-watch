@@ -1,0 +1,21 @@
+:root { --ink: #1f2328; --quiet: #6a6f76; --line: #d6d0c3; --accent: #17594a; --soft: #e4f0ec; --amber: #fbf1da; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: #fff; font: 13px/1.45 "Segoe UI", -apple-system, Helvetica, Arial, sans-serif; }
+main { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 100vh; }
+.status { margin: 0; font-size: 12px; color: var(--quiet); }
+.mode { font-size: 12px; display: flex; gap: 5px; align-items: center; }
+.row { display: flex; gap: 7px; flex-wrap: wrap; }
+button { font: inherit; padding: 5px 11px; border-radius: 6px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+#chat { flex: 1; display: flex; flex-direction: column; gap: 9px; }
+#chat p { margin: 0 0 6px; }
+#chat ul, #chat ol { margin: 0 0 6px; padding-left: 18px; }
+.me { align-self: flex-end; background: #ece8df; padding: 6px 9px; border-radius: 9px; max-width: 90%; }
+.note { color: var(--quiet); font-size: 12px; }
+.card { background: var(--soft); border-radius: 8px; padding: 9px 10px; }
+.card.confirm { background: var(--amber); }
+.lead { font-weight: 600; }
+.quote { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px; overflow-wrap: anywhere; }
+#ask { display: flex; gap: 6px; position: sticky; bottom: 0; background: #fff; padding: 6px 0; }
+#ask-input { flex: 1; min-width: 0; font: inherit; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; }

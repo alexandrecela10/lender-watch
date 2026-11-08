@@ -1,4 +1,4 @@
-.PHONY: test lint evals run mcp hooks dev prod prod-down rollback approve-prod rehearse-rollback
+.PHONY: test lint evals run desk excel mcp mcp-web hooks dev prod prod-down rollback approve-prod rehearse-rollback
 
 test:
 	uv run pytest
@@ -15,6 +15,15 @@ bands:
 
 run:
 	uv run streamlit run app/review.py
+
+desk:
+	uv run python -m app.desk.server
+
+excel:
+	ERM_DESK_PORT=3000 ERM_DESK_TLS=$$HOME/.office-addin-dev-certs uv run python -m app.desk.server
+
+mcp-web:
+	uv run python -m erm.mcp_remote
 
 mcp:
 	uv run python -m erm.mcp_server

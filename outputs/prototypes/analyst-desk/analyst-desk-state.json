@@ -1,0 +1,18 @@
+{
+  "name": "analyst-desk",
+  "date": "2026-11-08",
+  "decided": [
+    "The engine is one connector behind Claude and Excel, not a separate app.",
+    "Three ways in share one set of tools: invoke, ask, or be offered it at a failed lookup.",
+    "The offer is triggered by code, so no company name leaves the computer to make it.",
+    "Claude mode is off by default and needs a person to turn it on.",
+    "Application targets are not named in the video or the repo; the video says 'analyst'."
+  ],
+  "open": [
+    "Run the add-in inside real Excel: Excel isn't installed on the build machine.",
+    "Where to host the web connector for Claude in Excel: public address or MCP tunnel.",
+    "Whether analysts accept the offer: needs a pilot; baseline unobserved.",
+    "Which model runs Claude mode for confidential lists."
+  ],
+  "why": "The adoption pattern puts Claude where people work, tested tools in the middle and organised data underneath. The engine already had the tools and data; it lacked the ways in."
+}

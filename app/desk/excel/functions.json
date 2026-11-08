@@ -1,0 +1,21 @@
+{
+  "functions": [
+    {
+      "id": "RECONCILE",
+      "name": "RECONCILE",
+      "description": "Links company names to the names lenders use in SEC filings. Returns flag, lender's name for the company, value as % of amount owed, change in a quarter, and the filing link.",
+      "parameters": [
+        {
+          "name": "companies",
+          "description": "The cells holding company names, for example A2:A6.",
+          "type": "any",
+          "dimensionality": "matrix"
+        }
+      ],
+      "result": {
+        "type": "any",
+        "dimensionality": "matrix"
+      }
+    }
+  ]
+}
