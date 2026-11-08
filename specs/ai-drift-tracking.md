@@ -11,7 +11,7 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 - One run makes about 145 judge calls, takes about 8 minutes, and should cost under $1. It stops at $3.
 - Each run's result is added to one GitHub issue, which keeps the history and emails Alexandre.
 - It sends public filing data to Anthropic: company names, sectors, owners, borrower text and filing rows. It skips cleanly when the API key is absent.
-- This is the one outside call that runs without a person starting it: CI only, answer-key data only. The product's judge stays off by default.
+- This is the one outside call that runs without a person starting it: CI only, answer-key data only. The product's judge stays off by default. The exception is written into `.claude/skills/data-handling/SKILL.md` check 3 (PR #5), for Alexandre's approval.
 - Not in this build: alerts on real-use run records (Stage 6). Too few real runs exist yet.
 
 ## Concerns and resolutions
@@ -21,13 +21,13 @@ Evidence: the repo's code, one batch run of the judge on the answer key (2 Novem
 | 1 | The labels are Claude's. The check measures agreement with a Claude labeller, so a blind spot both share stays invisible. | Say so on every result. The first live run becomes the reference. Later runs count how many verdicts changed against it. | A count of changed verdicts flags a shift even when the labels can't. |
 | 2 | The floors are loose. Precision 0.97 allows about 3 wrong loans in 100 before failing; today there are 0. | Keep the floors as the failure line. Also report false matches as a count, and treat any rise above 0 as a warning shown on the pull request. | Failing on one false match would block on noise we haven't measured yet (concern 4). |
 | 3 | The exact-name rule exists three times: in the product (`erm/api.py`), the scorer (`eval/compare.py`) and the gate (`eval/offline.py`). A change to the product copy isn't tested. | Move the rule into one shared function that all three import. | One rule, one test. Otherwise the check tests code the product doesn't run. |
-| 4 | Run-to-run variation is unobserved, so "worse than last time" has no tolerance yet. | The first build runs the check 3 times and records the spread. Until then only the floors fail; other changes are reported. | No invented tolerance. |
+| 4 | Run-to-run variation was unobserved, so "worse than last time" had no tolerance. | Measured on 2026-11-07, 3 live runs: precision 1.000 and recall 0.936 every time, 0 false matches, 1 of 145 verdicts changed once. So any fall in the scores, or any false match, is a real signal. The floors still decide FAIL; one changed verdict per run is normal. | Measured, not invented. |
 | 5 | Batch costs half, but can take up to 24 hours, longer than a CI job runs. | Live calls, one at a time. | About 8 minutes fits a CI job. The saving is under $0.50 a run. |
 | 6 | A refusal fallback can answer with another model, whose cost is unknown to us. | Record which models answered. A call with no known price counts $0.05 toward the cap, 10 times today's live price. The cap on calls (250) is a second stop. | A null cost must not slip past the cost cap. |
 | 7 | GitHub turns off scheduled workflows after 60 days with no repo activity. A turned-off job writes nothing. | The CI job on every pull request reads the history issue and warns when the last live run is more than 8 days old. Noted in the README. | A silent stop looks like "no drift", so something outside the weekly job must notice. |
 | 8 | Pull requests from forks don't get the secret. | They skip with a message. Only Alexandre's own pull requests and the schedule spend money. | No stranger can run up the bill. |
 | 9 | The 2 November answers came from the Batch API, without the refusal fallback. The live check goes through the product's call, which adds it. | Don't compare live verdicts with the batch answers. Report the batch scores once, labelled "batch, 2 November", next to the first live run. | Otherwise a change of call path would read as drift. |
-| 10 | The intent asks for each run to be recorded, but a CI job keeps nothing, and `data/metrics.sqlite` only exists on the machine that ran it. | Each run adds one comment to a GitHub issue, "Live judge check history": date, model, scores, false matches, verdicts changed, cost, PASS or FAIL. The next run reads the last comment to compare. | The history survives log expiry, needs no commit to `main`, and the issue's emails reach Alexandre. |
+| 10 | The intent asks for each run to be recorded, but a CI job keeps nothing, and `data/metrics.sqlite` only exists on the machine that ran it. | Each run on `main` (weekly or by hand) adds one comment to a GitHub issue, "Live judge check history": date, model, scores, false matches, verdicts changed, cost, PASS or FAIL. A pull-request run comments on its own pull request only. The next run reads the last completed comment posted by `github-actions`. | The history survives log expiry, needs no commit to `main`, and the issue's emails reach Alexandre. |
 | 11 | A change to the pairs, the reference, the gate or the SDK version also changes what is judged. | Those files trigger the check too (section 3). | The metric "judge changes merged with a passing live check" must cover them. |
 | 12 | The product calls the judge through `erm.api.call_judge`, which adds logging, cost and error handling, and builds the filing rows itself. Calling `judge` directly would test a different path. | The check calls `call_judge`, with filing rows cut to 170 characters as the product does. `erm/api.py` and `erm/telemetry.py` trigger it. No Langfuse keys are set in CI, so no traces are sent. | The check must test the call users get. |
 | 13 | An outage or rate limit mid-run would read as a drop in recall. | A call that errors is counted as an error and left out of the scores. Over 10% errors marks the run ERROR, not FAIL. A run stopped by a cap is INCOMPLETE. Neither is compared. | An outage is not drift. |
@@ -90,7 +90,7 @@ The numbers above are an example, not a result.
   - by hand
 - **Secret:** `ANTHROPIC_API_KEY`, added by Alexandre. Never printed.
 - **Timeout:** 20 minutes.
-- **Record:** after every run, one comment on the issue "Live judge check history". It needs `issues: write`.
+- **Record:** after a run on `main`, one comment on the issue "Live judge check history". A pull-request run comments on that pull request instead, so an unmerged judge never becomes the baseline. It needs `issues: write`.
 - **Failure:** the job fails, and its comment says FAIL. Alexandre gets the issue's email, and GitHub's failure email goes to whoever last pushed the schedule. Pushes go through Alexandre's account.
 
 ## Acceptance checks
