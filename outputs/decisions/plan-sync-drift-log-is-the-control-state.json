@@ -1,0 +1,6 @@
+{
+  "decided": "Drift log is the control. No blocking hook.",
+  "decided_by": "Claude as a default, pending Alexandre",
+  "open": ["Nothing runs the log tool automatically", "Tool cannot process a step with no file list"],
+  "why": "Alexandre asked to flag departures; rule and enforcement must agree"
+}

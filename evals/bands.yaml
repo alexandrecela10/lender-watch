@@ -1,0 +1,24 @@
+# Control band: the range we expect a number to stay inside. Read by eval/bands.py (`make bands`).
+# PROVISIONAL. The centre comes from one full run, not from history. Real limits need months of real runs.
+# Replace `baseline` and the formula with a rolling average once real runs exist.
+status: provisional
+metric: share_of_names_needing_review
+# Runs with the AI judge on only. With it off the share is far higher (132 of 291 names, 45%), so mixing them means nothing.
+judge_on: true
+
+baseline:
+  names_needing_review: 33
+  names: 291
+  observed_on: 2026-11-02
+  source: data/eval/full_results.csv, column status equal to needs_review (written by eval/run_full_list.py)
+  # Same rule as the run_metrics column names_needing_review / names_in.
+  # Not used: data/eval/compare_report.json, pairs_needing_person, 3 of 84 names (3.6%).
+  # That counts judge-unsure pairs among name hits in the answer key sample. The product's own status gives 11 of those 84.
+
+# Recent runs are pooled, because one small run swings widely.
+window_runs: 20
+# Below this many pooled names the script says it can't judge yet.
+min_names: 100
+# How far from the baseline counts as outside the range, in standard deviations of a yes/no share.
+# Stand-in for the playbook's rolling mean and deviation. It assumes each name is an independent yes or no.
+deviations: 3
