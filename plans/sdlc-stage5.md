@@ -47,13 +47,24 @@ Exit criteria
 - `make test` and `make lint` pass.
 - Commit: `feat(deploy): prod deploy and one-command rollback`.
 
-### S3. Rehearse
+### S2b. Smaller image
 
-Files: `outputs/test-evidence/stage5/rehearsal.log`, `outputs/test-evidence/stage5/image-check.log`.
-Deploy the S1 commit, deploy the S2 commit, roll back, then check the app answers.
+Files: `Dockerfile`.
+Added after the first rehearsal. The rollback worked, but the app check failed: Docker's 59 GB disk had 495 MB free and the image held a 626 MB installer cache.
 
 Exit criteria
-- The log shows the running image change from the S2 commit to the S1 commit, and the demo list returning KnowBe4 as flagged.
+- The image holds no `/root/.cache`.
+- Commit: `fix(deploy): leave the installer cache out of the image`.
+
+### S3. Rehearse
+
+Runs after S4 (departure): it needs two commits that hold the fixed Dockerfile.
+
+Files: `outputs/test-evidence/stage5/rehearsal.log`, `outputs/test-evidence/stage5/image-check.log`.
+Deploy the S2b commit, deploy the S4 commit, roll back, then check the app answers.
+
+Exit criteria
+- The log shows the running image change from the S4 commit to the S2b commit, and a typed list returning KnowBe4 as flagged.
 - The image check log shows a planted `.env` staying out of the image, and an image with a key failing the check.
 - Commit: `test(deploy): rollback rehearsal evidence`.
 

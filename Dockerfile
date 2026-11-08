@@ -17,7 +17,7 @@ WORKDIR /app
 
 # Dependencies first, so a code change reuses this layer.
 COPY pyproject.toml uv.lock .python-version ./
-RUN uv sync --frozen --no-dev --no-install-project
+RUN uv sync --frozen --no-dev --no-install-project --no-cache
 
 COPY .streamlit/ .streamlit/
 COPY app/ app/
