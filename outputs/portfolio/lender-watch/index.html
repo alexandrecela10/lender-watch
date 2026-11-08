@@ -264,6 +264,7 @@
     <li><strong>Coverage:</strong> banks don't publish loans, so "not flagged" only covers lenders that do. Only 8 of 59 companies from one firm show up.</li>
     <li><strong>Timing:</strong> the regulator's data updates monthly. We couldn't confirm the exact date.</li>
     <li><strong>Reuse:</strong> any list of names works. No second data source has been added.</li>
+    <li><strong>Shared copies:</strong> two people on one local copy can overwrite each other's AI setting. The hosted demo keeps the AI off.</li>
     <li><strong>Legal:</strong> no lawyer has reviewed it. This isn't investment advice.</li>
   </ul>
 </section>
@@ -989,6 +990,20 @@
 <li><strong>Review load target:</strong> ≤ 15% of names, from the opportunity analysis estimate.</li>
 <li><strong>Not filled:</strong> <code>context-library/business-info-template.md</code> and <code>context-library/strategy/</code> are empty.</li>
 </ul></div></details>
+
+  <details><summary>How each change gets checked <small>what runs, what it found, what it can't show</small></summary><div class="read">
+    <p>An AI wrote most of this code, so nothing here relies on the AI's word about its own work.</p>
+    <div class="scroll"><table>
+    <tr><th>Check</th><th>What it does</th><th>Result so far</th><th>What it can't show</th></tr>
+    <tr><td>Automatic gate</td><td>Runs the tests, the style check and a saved accuracy test. A change can't reach the main code unless they pass.</td><td>On, for everyone, admins included.</td><td>The saved test replays old AI answers, so it can't see the AI itself change.</td></tr>
+    <tr><td>AI reviewer</td><td>A separate AI reads each change against its written plan and comments. A person decides each merge.</td><td>Found real faults, such as a way to fake a passing result.</td><td>It reports only. It doesn't block a merge.</td></tr>
+    <tr><td>Live accuracy check</td><td>Asks the AI 145 known test pairs every Monday, at about $0.66 a run.</td><td>100% right when it said "same company". It found 93.6% of the real matches.</td><td>Claude wrote the answer key, and no person has checked it. It runs alongside a merge, so it doesn't stop one.</td></tr>
+    <tr><td>Screen check</td><td>An AI opens the app in a browser and compares it with 11 plain statements of what you should see.</td><td>All 11 met on 8 November 2026.</td><td>One full pass so far. It hasn't run automatically.</td></tr>
+    <tr><td>Rollback</td><td>One command puts back the previous version of the app.</td><td>Rehearsed in a separate test copy: 8 seconds, and the app worked afterwards.</td><td>Never used on a real live service.</td></tr>
+    <tr><td>Review-load alarm</td><td>Warns when the share of names needing a person leaves its expected range, and drafts the problem to fix.</td><td>Starts at 11.3% of names, with the AI on. Tested on one made-up breach.</td><td>The range comes from one run, not from history.</td></tr>
+    </table></div>
+    <p><strong>A fault these checks surfaced:</strong> if two people share one copy of the app on a computer, one person's AI setting can apply to the other's run. A company name could then go to the AI for someone who left it off. The hosted demo always keeps the AI off, so it isn't affected. The problem is written up. The fix is not yet designed.</p>
+  </div></details>
 
   <details><summary>How it was built with PM OS <small>the product process, step by step</small></summary>
     <div class="scroll"><table>

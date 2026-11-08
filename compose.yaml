@@ -1,0 +1,34 @@
+# Review app. Neither profile passes .env or any key into the container.
+# dev:  `make dev`
+# prod: `make prod`, which needs a person's approval. See README.md.
+name: erm
+
+services:
+  dev:
+    profiles: [dev]
+    build: .
+    image: erm-review:dev
+    ports:
+      - "${ERM_DEV_PORT:-8501}:8501"
+    volumes:
+      - ./app:/app/app:ro
+      - ./erm:/app/erm:ro
+    command:
+      - /app/.venv/bin/streamlit
+      - run
+      - app/review.py
+      - --server.port=8501
+      - --server.address=0.0.0.0
+      - --server.runOnSave=true
+
+  prod:
+    profiles: [prod]
+    # The tag is a git commit. scripts/prod-deploy.sh and scripts/rollback.sh set it.
+    image: ${ERM_IMAGE:-erm-review}:${ERM_PROD_TAG:-tag-not-set}
+    pull_policy: never
+    restart: unless-stopped
+    # The app writes only temporary files (search index, run records). Kept in memory, so a full Docker disk can't stop it.
+    tmpfs:
+      - /tmp
+    ports:
+      - "${ERM_PROD_PORT:-8501}:8501"

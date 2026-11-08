@@ -1,0 +1,9 @@
+SIMULATED. These are made-up run records in a temporary database. No real run or company is involved.
+
+Action needed: too many names need a person's review. Read the draft intent and decide whether to fix, schedule or dismiss.
+- Measured: 27% of names needed a person's review (80 of 300 names, about 1 name in 4), across the latest 20 runs with the AI judge on.
+- Expected range: 6% to 17% for this many names. A share outside it is unlikely to be chance alone.
+- Expected level: 11%.
+- Limit of this check: the expected level comes from one full run on 2026-11-02 (33 of 291 names), not from history. Treat the range as provisional.
+- What it means: Analysts have more names to check by hand than expected.
+- Draft intent, for a person to review: outputs/test-evidence/stage6/SIMULATED-names-needing-review-high.md

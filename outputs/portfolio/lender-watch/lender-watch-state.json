@@ -1,12 +1,13 @@
 {
  "output": "outputs/portfolio/lender-watch/index.html",
  "date": "2026-11-08",
- "status": "Updated with the workbook story, waiting on the PM to review and push",
+ "status": "Updated with the workbook story and the checks. Waiting on the PM's checks before the hub push.",
  "decided": [
   "Lead with the outcome, and show demand as unproven in the stat strip",
   "Show first-wrong numbers as the main learning",
   "Add the three ways in, the three layers and the demo video inside section 03",
-  "Leave out the 7-to-60 of 60 result: it belongs to a different project on synthetic data"
+  "Leave out the 7-to-60 of 60 result: it belongs to a different project on synthetic data",
+  "Publish the checks with what each cannot show, including the shared-copy fault"
  ],
  "defaults_taken": [
   "Name: Lender Watch",
@@ -14,12 +15,10 @@
   "No demo or code button, since neither is public"
  ],
  "open": [
-  "Push repo and hub",
-  "Deploy Streamlit app",
-  "Check live links",
+  "Run the full name audit with the PM list of names",
+  "Deploy Streamlit app, push hub, check live links",
   "Run the add-in in real Excel, then update the Excel limitation",
-  "Copy analyst-desk-demo.mp4 and analyst-desk-poster.jpg to the hub with the page",
-  "Person to confirm the Exabeam to LogRhythm link before publishing"
+  "Person to confirm the KnowBe4 values and the Exabeam to LogRhythm link before publishing"
  ],
  "next": [
   "PM spot check"
