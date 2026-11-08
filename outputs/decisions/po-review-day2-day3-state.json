@@ -1,0 +1,57 @@
+{
+  "review": "outputs/decisions/po-review-day2-day3.md",
+  "reviewed_commit": "f16b109",
+  "date": "2026-11-08",
+  "author": "fresh AI agent, not a person; not Alexandre's approval",
+  "decision": "accept with conditions",
+  "decided": [
+    {
+      "what": "Shared-engine leak is confirmed for private mode and refuted for public mode",
+      "why": "One cached engine and a per-click client. Fake-judge test: 13 calls for a name whose box was off. Public mode copies the engine and forces the judge off."
+    },
+    {
+      "what": "D4 is not met as written",
+      "why": "It ran locally, not on main. History issue 9 has one comment, not three."
+    },
+    {
+      "what": "The plan-departure rule is not enforced",
+      "why": "The playbook says update the plan in the same commit. CLAUDE.md says write a log. No hook or CI job runs the tool, and it always exits 0."
+    },
+    {
+      "what": "The verifier's browser step ran only on 2026-11-07, four times, before its commit",
+      "why": "Session logs hold no Playwright call after that. The I5 verifier and the 2026-11-08 retest had no browser tools."
+    },
+    {
+      "what": "The live check does not gate merges",
+      "why": "Branch protection requires only the checks job. PRs 7 and 8 merged before their live runs ended."
+    }
+  ],
+  "open": [
+    {
+      "what": "Which route closes D4: rerun on main with repeat 3 (about $2) or amend plan and spec",
+      "owner": "Alexandre"
+    },
+    {
+      "what": "Which single plan-departure rule to adopt, and whether CI enforces it",
+      "owner": "Alexandre"
+    },
+    {
+      "what": "Why the Playwright tools do not reach the verifier",
+      "owner": "unassigned; cause unobserved"
+    },
+    {
+      "what": "Whether the first weekly run on 2026-11-09 posts to issue 9",
+      "owner": "check on 2026-11-10"
+    },
+    {
+      "what": "Whether the local D4 runs had approval, since the data exception names CI only",
+      "owner": "Alexandre"
+    }
+  ],
+  "not_checked": [
+    "Every instrumentation acceptance check against code; relied on CI and the I5 proof file",
+    "Trace read-back",
+    "Any live call; the experiment used a fake judge in a temp folder"
+  ],
+  "context": "No LP analyst has been interviewed, so the pain is inferred. All labels are Claude's."
+}
