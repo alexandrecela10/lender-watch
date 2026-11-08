@@ -22,7 +22,7 @@ Run from the repo root. Healthy output in brackets.
 - `make evals`: offline eval gate, `uv run python -m eval.offline`, thresholds in `evals/thresholds.yaml` [`precision 1.000`, `recall 0.936`, `PASS`]. It replays saved name-search hits and judge verdicts, so it only re-tests the exact-name rule live.
 - `make run`: the review app, `uv run streamlit run app/review.py` [Streamlit prints a local URL]
 - `make mcp`: the tool server for AI agents, `uv run python -m erm.mcp_server` [no output; it serves over stdin and exits when stdin closes]
-- `uv run python -m eval.plan_drift plans/<plan>.md <step>`: run right after each build step's commit, then amend the commit with the log; lists files changed outside the step's plan and appends a row to `plans/<plan>-drift.md` [one row, `none` when the build matches the plan]
+- `uv run python -m eval.plan_drift plans/<plan>.md <step>`: run right after each build step's commit, then amend the commit with the log; lists files changed outside the step's plan and appends a row to `plans/<plan>-drift.md` [one row, `none` when the build matches the plan]. The log is the control for plan drift: it flags a departure for the reviewer and blocks nothing. Updating the plan in the same commit is optional
 - `make hooks`: run once after cloning: installs the git pre-commit key scan [`pre-commit key scan installed`]
 
 ## Verifying your work
