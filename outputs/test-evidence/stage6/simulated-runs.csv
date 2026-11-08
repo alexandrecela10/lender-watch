@@ -1,0 +1,22 @@
+# SIMULATED. Made-up run records. No real run or company is involved.
+request_id,session_id,source,started_at,judge_on,status,names_in,names_matched,names_needing_review,flagged,worth_a_look,duration_ms,judge_calls,judge_cost_usd
+simulated-00,simulated,simulated,2000-01-01T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-01,simulated,simulated,2000-01-02T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-02,simulated,simulated,2000-01-03T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-03,simulated,simulated,2000-01-04T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-04,simulated,simulated,2000-01-05T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-05,simulated,simulated,2000-01-06T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-06,simulated,simulated,2000-01-07T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-07,simulated,simulated,2000-01-08T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-08,simulated,simulated,2000-01-09T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-09,simulated,simulated,2000-01-10T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-10,simulated,simulated,2000-01-11T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-11,simulated,simulated,2000-01-12T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-12,simulated,simulated,2000-01-13T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-13,simulated,simulated,2000-01-14T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-14,simulated,simulated,2000-01-15T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-15,simulated,simulated,2000-01-16T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-16,simulated,simulated,2000-01-17T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-17,simulated,simulated,2000-01-18T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-18,simulated,simulated,2000-01-19T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
+simulated-19,simulated,simulated,2000-01-20T00:00:00Z,1,ok,15,8,4,0,0,1000,0,0.0
