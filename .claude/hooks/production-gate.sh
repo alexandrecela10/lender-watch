@@ -79,7 +79,7 @@ cmd=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 
 S='[[:space:]]'
 
-GUARDED='production-gate\.sh|settings(\.local)?\.json|approve-prod\.sh|prod-lib\.sh'
+GUARDED='production-gate\.sh|settings(\.local)?\.json|approve-prod\.sh|prod-lib\.sh|prod-approval|\.erm/deploy|good-images|image-ids'
 
 first_word() {
   printf '%s' "$1" | sed -E 's/^[[:space:]]+//; s/^([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)+//; s/^(sudo|command|env)[[:space:]]+//; s/^uv[[:space:]]+run[[:space:]]+//' | awk '{print $1}' | sed 's|.*/||'
@@ -150,6 +150,8 @@ touches_prod() {
   fi
   has "docker($S+[^[:space:]]+)*$S+(stop|start|restart|kill|rm|pause|unpause|rename|update|exec|cp|commit)$S.*erm-prod" && return 0
   has "docker$S+(container$S+)?(run|create)$S.*erm-review:" && ! has 'erm-review:dev' && return 0
+  # No named container, for example `docker stop $(docker ps -q)`: it could include prod.
+  has "docker($S+container)?$S+(stop|kill|rm|restart|pause)($S+-[^[:space:]]+)*$S*(\\\$.*)?\$" && return 0
   has "docker$S+(rmi|image$S+rm)$S.*erm-review" && return 0
   has "docker$S+(system|image)$S+prune" && return 0
   return 1

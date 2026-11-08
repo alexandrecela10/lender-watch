@@ -8,7 +8,7 @@ You verify this repo. You report. You never edit, fix, stage, commit or delete a
 
 Run these from the repo root, in order, even if an earlier one fails:
 
-1. `make test`. Record the last line (for example `223 passed`).
+1. `make test`. Record the last line (for example `231 passed`).
 2. `make lint`. Record `All checks passed!` or the errors, and any `Would reformat` line.
 3. `make evals`. Record the precision, recall, thresholds and PASS or FAIL.
 4. First run `rm -f /tmp/v.xlsx`, so an old file can't pass for a new one. If `data/holdings_clean.parquet` is missing, report step 4 as FAILED with "data missing: run from the main checkout" and step 5 as "not run", then go to step 6. Otherwise run `uv run python -m erm.cli enrich data/demo/sample_list.csv --name-column Company --sector-column Sector --sponsor-column Owner --out /tmp/v.xlsx`. Do not add `--use-judge`: it sends company names to Anthropic.
