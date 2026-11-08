@@ -20,6 +20,11 @@ case "$*" in
   *" up -d "*) echo "$ERM_PROD_TAG" > "$FAKE/running" ;;
   *" ps -q prod") [ -f "$FAKE/running" ] && echo container-id ;;
   "inspect -f {{.Config.Image}} container-id") echo "erm-review:$(cat "$FAKE/running")" ;;
+  "image inspect -f "*)
+    c="${5#erm-review:}"
+    grep -qx "$c" "$FAKE/images" || exit 1
+    if grep -qx "$c" "$FAKE/retagged"; then echo sha256:forged; else echo "sha256:$c"; fi
+    ;;
   "image inspect "*) grep -qx "${3#erm-review:}" "$FAKE/images"; exit $? ;;
   build*) cat > /dev/null; for a in "$@"; do case "$a" in GIT_COMMIT=*) echo "${a#GIT_COMMIT=}" >> "$FAKE/images";; esac; done ;;
   run*) [ -f "$FAKE/key_in_image" ] && echo /app/.env ;;
@@ -43,7 +48,7 @@ def env(tmp_path):
         path.chmod(path.stat().st_mode | stat.S_IEXEC)
     fake = tmp_path / "fake"
     fake.mkdir()
-    for name in ("images", "unhealthy", "calls"):
+    for name in ("images", "unhealthy", "calls", "retagged"):
         (fake / name).write_text("")
     return {
         **os.environ,
@@ -76,6 +81,7 @@ def seed(env, *commits):
     deploy = Path(env["ERM_DEPLOY_DIR"])
     deploy.mkdir(parents=True, exist_ok=True)
     (deploy / "good-images").write_text("".join(f"{c}\n" for c in commits))
+    (deploy / "image-ids").write_text("".join(f"{c} sha256:{c}\n" for c in commits))
     fake(env, "images").write_text("".join(f"{c}\n" for c in commits))
     fake(env, "running").write_text(f"{commits[-1]}\n")
 
@@ -238,3 +244,20 @@ def test_prod_refuses_a_compose_file_that_differs_from_the_commit(
     )
     assert r.returncode == 1 and "compose.yaml differs" in r.stderr
     assert " up -d " not in Path(env["FAKE"], "calls").read_text()
+
+
+def test_deploy_builds_from_the_commit_even_if_the_tag_exists(env):
+    seed(env, "aaa", HEAD[:12])
+    assert run(env, "prod-deploy.sh", "HEAD").returncode == 0
+    assert any(
+        c.startswith("build") for c in fake(env, "calls").read_text().splitlines()
+    )
+
+
+def test_rollback_refuses_an_image_retagged_after_deploy(env):
+    seed(env, "aaa", "bbb")
+    fake(env, "retagged").write_text("aaa\n")
+    result = run(env, "rollback.sh")
+    assert result.returncode == 1
+    assert "not the image that was deployed" in result.stderr
+    assert fake(env, "running").read_text().strip() == "bbb"

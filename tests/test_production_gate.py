@@ -317,3 +317,39 @@ def test_a_script_joined_to_a_direct_change_uses_the_approval(deploy):
     approve(deploy)
     assert bash(deploy, "make prod; docker rm -f erm-prod-1").returncode == 0
     assert not approval_left(deploy)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "rm .claude/hooks/production-gate.sh",
+        "cd .claude/hooks && rm production-gate.sh",
+        "sed -i '' s/a/b/ .claude/settings.json",
+        "git checkout main -- .claude/settings.json",
+        "git -C . restore .claude/hooks/production-gate.sh",
+        "echo {} > .claude/settings.json",
+        "echo {} | tee .claude/settings.local.json",
+        "mv scripts/prod-lib.sh /tmp/x",
+        "python3 -c \"open('.claude/settings.json','w')\"",
+        "uv run python -c \"open('scripts/approve-prod.sh','w')\"",
+    ],
+)
+def test_shell_commands_cannot_change_the_gate_even_with_approval(deploy, command):
+    approve(deploy)
+    assert bash(deploy, command).returncode == 2, command
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cat .claude/settings.json",
+        "grep -n prod .claude/hooks/production-gate.sh",
+        "sed -n 1,5p scripts/prod-lib.sh",
+        "git diff -- .claude/settings.json",
+        "git log -- scripts/prod-lib.sh",
+        'git commit -m "tidy production-gate.sh"',
+        'gh pr create --body "changes settings.json wording"',
+    ],
+)
+def test_reading_or_mentioning_the_gate_files_is_allowed(deploy, command):
+    assert bash(deploy, command).returncode == 0, command

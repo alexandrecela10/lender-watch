@@ -16,7 +16,7 @@ CI, AI review and branch protection exist. This adds the three missing parts.
 - **Image source:** prod images build from `git archive <commit>`, so uncommitted files such as `.env` can't enter. `.dockerignore` is an allowlist for the dev build.
 - **Image contents:** public sample data only. The app runs in public mode, which has no AI judge and needs no key.
 - **Good image list:** a stack in `~/.erm/deploy/`, outside the repo so every worktree sees the same prod. A deploy pushes after its health check passes. A rollback pops.
-- **Approval:** `make approve-prod`, a person at a terminal typing a random code. It is valid for 15 minutes, for one commit, for one prod change. The gate uses the approval up for anything except the deploy and rollback scripts, which use it up themselves on success. Deploy and rollback refuse if `compose.yaml` differs from the commit (AI review of #15).
+- **Approval:** `make approve-prod`, a person at a terminal typing a random code. It is valid for 15 minutes, for one commit, for one prod change. The gate uses the approval up for anything except the deploy and rollback scripts, which use it up themselves on success. Deploy and rollback refuse if `compose.yaml` differs from the commit (AI review of #15). Deploy always builds from the commit, rollback runs only the recorded image, and shell commands can't write the gate's own files.
 - **Agents never approve:** the gate blocks the approval command, the approval file and edits to the gate, with no approval route.
 - **Rehearsal:** an agent may not change real prod, so the rehearsal runs the same scripts in a separate project (`erm-rehearsal`, port 18501, temporary state).
 

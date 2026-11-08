@@ -13,6 +13,7 @@ previous=$(stack_previous)
 [ -n "$current" ] || die "Nothing to roll back: no deploy is on record."
 [ -n "$previous" ] || die "Nothing to roll back to: commit $current is the only good image on record."
 image_exists "$previous" || die "Cannot roll back: image erm-review:$previous is not on this machine."
+image_is_recorded "$previous" || die "Refused: image erm-review:$previous is not the image that was deployed."
 
 if switch_to "$previous"; then
   stack_pop

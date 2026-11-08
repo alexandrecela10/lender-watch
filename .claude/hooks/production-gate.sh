@@ -79,6 +79,39 @@ cmd=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 
 S='[[:space:]]'
 
+GUARDED='production-gate\.sh|settings(\.local)?\.json|approve-prod\.sh|prod-lib\.sh'
+
+first_word() {
+  printf '%s' "$1" | sed -E 's/^[[:space:]]+//; s/^([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)+//; s/^(sudo|command|env)[[:space:]]+//; s/^uv[[:space:]]+run[[:space:]]+//' | awk '{print $1}' | sed 's|.*/||'
+}
+
+# True when a shell command writes, moves or deletes the gate's own files. Reading them stays allowed.
+writes_guarded() {
+  printf '%s' "$cmd" | grep -qE "$GUARDED" || return 1
+  local line word sub
+  while IFS= read -r line; do
+    word=$(first_word "$line")
+    case "$word" in
+      bash | sh | zsh | eval | xargs | python | python3 | perl | ruby | node) return 0 ;;
+    esac
+    printf '%s' "$line" | grep -qE "$GUARDED" || continue
+    printf '%s' "$line" | grep -qE ">[>|]?$S*[\"']?[^[:space:]]*($GUARDED)" && return 0
+    case "$word" in
+      rm | mv | cp | tee | truncate | ln | chmod | chown | touch | dd | install | patch | rsync | tar | unzip | awk | ed | ex | vi | vim | nano) return 0 ;;
+      sed | gsed) printf '%s' "$line" | grep -qE "$S-[a-zA-Z]*i|$S--in-place" && return 0 ;;
+      git)
+        sub=$(printf '%s' "$line" | sed -E 's/^[[:space:]]*git([[:space:]]+-[Cc][[:space:]]+[^[:space:]]+)*[[:space:]]+//' | awk '{print $1}')
+        case "$sub" in
+          checkout | restore | rm | mv | reset | apply | stash | clean | switch) return 0 ;;
+        esac
+        ;;
+    esac
+  done < <(printf '%s\n' "$cmd" | tr ';|&' '\n\n\n')
+  return 1
+}
+
+writes_guarded && never
+
 # Quoted text is usually a message or a search term, so it is blanked before matching.
 stripped=$(printf '%s' "$cmd" | jq -Rrs 'gsub("\\\\."; "") | gsub("\"[^\"]*\"|'"'"'[^'"'"']*'"'"'"; "_")')
 

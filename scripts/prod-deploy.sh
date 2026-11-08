@@ -14,14 +14,13 @@ commit=$(git -C "$ROOT" rev-parse --short=12 "${1:-HEAD}")
 image="erm-review:$commit"
 current=$(stack_top)
 
-# Built from the commit, not the folder, so uncommitted files such as .env can't enter.
-if ! image_exists "$commit"; then
-  git -C "$ROOT" archive "$commit" | docker build -q -t "$image" --build-arg "GIT_COMMIT=$commit" - >/dev/null
-fi
+# Always built from the commit, never reused by tag, so uncommitted files can't enter. Docker's cache keeps this quick.
+git -C "$ROOT" archive "$commit" | docker build -q -t "$image" --build-arg "GIT_COMMIT=$commit" - >/dev/null
 "$ROOT/scripts/check-image.sh" "$image"
 
 if switch_to "$commit"; then
   stack_push "$commit"
+  record_image "$commit"
   consume_approval
   audit "deployed commit=$commit project=$ERM_PROD_PROJECT"
 else

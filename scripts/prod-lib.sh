@@ -106,6 +106,17 @@ stack_pop() {
 
 image_exists() { docker image inspect "erm-review:$1" >/dev/null 2>&1; }
 
+# A tag can be moved, so each deploy records the exact image it ran. A rollback runs only that image.
+image_id() { docker image inspect -f '{{.Id}}' "erm-review:$1" 2>/dev/null; }
+
+record_image() { echo "$1 $(image_id "$1")" >>"$ERM_DEPLOY_DIR/image-ids"; }
+
+image_is_recorded() {
+  local want
+  want=$(sed -n "s/^$1 //p" "$ERM_DEPLOY_DIR/image-ids" 2>/dev/null | tail -n 1)
+  [ -n "$want" ] && [ "$want" = "$(image_id "$1")" ]
+}
+
 running_image() {
   local id
   id=$(compose ps -q prod)
