@@ -21,6 +21,7 @@ import pandas as pd
 
 from erm.match.features import compute
 from erm.match.linkage import LinkageModel
+from erm.match.rules import is_clear_exact
 from erm.retrieve import compact_hit, name_variants
 from erm.textparse import core, find_mention, name_pattern, norm
 
@@ -144,17 +145,7 @@ def main() -> None:
 
     verdict_match = (d.verdict == "match").values
     verdict_unsure = (d.verdict == "unsure").values
-    no_left = np.array([f.left_words for f in feats]) == 0
-    exact = (
-        np.array(
-            [
-                f.exact_core and f.distinctiveness >= 0.75 and not f.short_name
-                for f in feats
-            ]
-        )
-        & hit
-        & no_left
-    )
+    exact = np.array([is_clear_exact(f) for f in feats]) & hit
 
     approaches = {
         "a_name_hit_baseline": hit,

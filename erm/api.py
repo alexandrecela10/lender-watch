@@ -22,6 +22,7 @@ import pandas as pd
 from erm import telemetry
 from erm.match import judge as judge_mod
 from erm.match.features import compute
+from erm.match.rules import is_clear_exact
 from erm.retrieve import Index
 from erm.signals import facts_for, flags_for, usable
 from erm.store import JUDGE, PERSON, Store, pair_id
@@ -120,16 +121,6 @@ class Resolution:
     status: str  # matched, needs_review or not_found
     confidence: str  # high, medium or none
     candidates: list[Candidate] = field(default_factory=list)
-
-
-def is_clear_exact(f) -> bool:
-    """Skip the judge when the cleaned names are identical and rare. 39 such pairs on the answer key, none wrong."""
-    return (
-        f.exact_core
-        and f.distinctiveness >= 0.75
-        and not f.short_name
-        and f.left_words == 0
-    )
 
 
 class Engine:
