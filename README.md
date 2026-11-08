@@ -55,6 +55,19 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 | `eval/` | Answer key, method comparison, filing check |
 | `erm/match/linkage.py`, `features.py` | Scoring model, tested and dropped; kept for the comparison |
 
+## Run it in Docker
+
+The image holds the public sample data only. It runs in public mode, so it has no AI judge and needs no key.
+
+- **Try it:** `make dev` builds the image and serves the app at `http://localhost:8501`. Code changes reload.
+- **Approve a prod change:** run `make approve-prod` in your own terminal and type the code it shows. One approval covers one change, for 15 minutes, at the current commit. Prod refuses to start or roll back if `compose.yaml` differs from the commit. Each deploy builds from the commit, and a rollback runs only the exact image that was deployed.
+- **Deploy:** `make prod` builds the current commit, refuses an image with a key or a `.env`, runs it, and records it as good once it answers its health check.
+- **Roll back:** `make rollback` returns prod to the previous good image. If that image fails its health check, the current one is put back.
+- **Rehearse:** `make rehearse-rollback GOOD=<commit> NEW=<commit>` tries a rollback in a separate Docker project on port 18501. Real prod is not touched. Last run: [`outputs/test-evidence/stage5/rehearsal.log`](outputs/test-evidence/stage5/rehearsal.log).
+- **Stop prod:** `make prod-down` stops the app and keeps the images.
+- **Agents:** `.claude/hooks/production-gate.sh` blocks an agent from starting or changing prod until a person has approved. No agent can approve. Each decision is logged in `~/.erm/deploy/gate.log`.
+- **Limit:** the gate reads command text, so it stops an agent's mistakes, not a determined bypass. Unusual shell forms or a script file can hide a command, and the hook lives in the repo. The deploy and rollback scripts check the approval again; direct `docker` commands have no second check. A real barrier would be prod deploying only from GitHub, or agents having no Docker access.
+
 ## Checks on GitHub
 
 - **CI** (`.github/workflows/ci.yml`): tests, style check and the offline eval gate on every pull request, every push to `main` and nightly.

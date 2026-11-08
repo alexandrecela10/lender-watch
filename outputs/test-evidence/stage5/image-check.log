@@ -1,0 +1,9 @@
+== Test 1: image built from a folder holding a planted .env, erm/.env.local and data/raw/planted.tsv. Expect PASS, exit 0.
+PASS: no .env, data/raw or key in erm-review:plant-test
+exit code: 0
+== Test 2: image with a fake key written to /app/.env. Expect FAIL, exit 1.
+FAIL: erm-review:key-test holds a .env file, data/raw or a key at:
+/app/.env
+/app/.env
+FAIL: erm-review:key-test has 1 line(s) in its history or settings that look like a key.
+exit code: 1
