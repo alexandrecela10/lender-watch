@@ -146,7 +146,8 @@
   <h1>See when lenders start doubting the companies you've invested in, with the public filing as proof.</h1>
   <p class="lede">Your funds own companies you rarely hear about between reports. Some of their lenders must publish what each loan is worth. Lender Watch finds those loans for your list and shows which values dropped.</p>
   <div class="cta">
-    <a class="btn" href="#watch">Watch 59 seconds</a>
+    <a class="btn" href="https://lender-watch.streamlit.app">Try the demo</a>
+    <a class="btn off" href="#watch">Watch 59 seconds</a>
     <a class="btn off" href="https://github.com/alexandrecela10/lender-watch">Code</a>
     <span class="dim" style="font-size:14px">Real data from public US regulator filings.</span>
   </div>
@@ -263,7 +264,7 @@
     <li><strong>Coverage:</strong> banks don't publish loans, so "not flagged" only covers lenders that do. Only 8 of 59 companies from one firm show up.</li>
     <li><strong>Timing:</strong> the regulator's data updates monthly. We couldn't confirm the exact date.</li>
     <li><strong>Reuse:</strong> any list of names works. No second data source has been added.</li>
-    <li><strong>Shared copies:</strong> two people on one local copy can overwrite each other's AI setting.</li>
+    <li><strong>Shared copies:</strong> two people on one local copy can overwrite each other's AI setting. The hosted demo keeps the AI off.</li>
     <li><strong>Legal:</strong> no lawyer has reviewed it. This isn't investment advice.</li>
   </ul>
 </section>
@@ -289,6 +290,14 @@
 <div class="resources">
   <div class="num">RESOURCES</div>
   <h2>Go deeper.</h2>
+
+  <details><summary>Try the demo, step by step <small>three steps, in order</small></summary>
+    <div class="read"><ol class="steps">
+      <li><strong>Pick a private equity firm, then press Check lender filings.</strong> It takes about a minute.</li>
+      <li><strong>Read the result.</strong> Flagged companies come first. Pick one to see each lender's value and open its filing.</li>
+      <li><strong>Confirm unclear matches in the next tab.</strong> Answer "Same company" or "Different", and the result updates. Your answers stay with you.</li>
+    </ol></div>
+  </details>
 
   <details><summary>Main learnings <small>every headline number started out wrong</small></summary><div class="read">
     <div class="scroll"><table>
@@ -344,6 +353,8 @@
     <p>The web connector is limited to the public sample, 50 names and 4 tools, none of which reads files or changes saved answers.</p>
     <h4>How it was tested</h4>
     <p>84 companies and 1,028 name pairs, labelled by two separate AI runs that agreed on 98.5%. 20 unsure pairs are left out of the scores. Total AI cost for the project: about $6.20.</p>
+    <h4>On this public demo</h4>
+    <p>It uses saved AI answers and takes no uploads. For a private list, run the code on your own computer.</p>
   </div></details>
 
   <details><summary>How success is tracked <small>the numbers and their targets</small></summary>
@@ -991,7 +1002,7 @@
     <tr><td>Rollback</td><td>One command puts back the previous version of the app.</td><td>Rehearsed in a separate test copy: 8 seconds, and the app worked afterwards.</td><td>Never used on a real live service.</td></tr>
     <tr><td>Review-load alarm</td><td>Warns when the share of names needing a person leaves its expected range, and drafts the problem to fix.</td><td>Starts at 11.3% of names, with the AI on. Tested on one made-up breach.</td><td>The range comes from one run, not from history.</td></tr>
     </table></div>
-    <p><strong>A fault these checks surfaced:</strong> if two people share one copy of the app on a computer, one person's AI setting can apply to the other's run. A company name could then go to the AI for someone who left it off. The problem is written up. The fix is not yet designed.</p>
+    <p><strong>A fault these checks surfaced:</strong> if two people share one copy of the app on a computer, one person's AI setting can apply to the other's run. A company name could then go to the AI for someone who left it off. The hosted demo always keeps the AI off, so it isn't affected. The problem is written up. The fix is not yet designed.</p>
   </div></details>
 
   <details><summary>How it was built with PM OS <small>the product process, step by step</small></summary>
