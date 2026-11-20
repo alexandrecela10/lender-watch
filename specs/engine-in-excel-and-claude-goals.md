@@ -1,6 +1,6 @@
 # Goals: specs/engine-in-excel-and-claude.md
 
-Passing bar: all 8 criteria true.
+Passing bar: all 9 criteria true.
 
 1. Every target in the intent's "What should change" maps to a row in "Problems this solves" or to an item under "Not tackled".
 2. Each problem row has one success metric with a target.
@@ -10,3 +10,4 @@ Passing bar: all 8 criteria true.
 6. Every value returned to a user carries a filing link and row, a quarter, a data version and a rule version.
 7. No step lets an agent deploy to the host.
 8. The document contains 0 em dashes.
+9. The tool-choice eval has must-call and must-not-call cases, a pass target for each, and a stated limit as an API stand-in.

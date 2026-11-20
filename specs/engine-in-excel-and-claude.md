@@ -1,6 +1,6 @@
 # Spec: Lender Watch inside real Excel and real Claude
 
-Source: `intent/engine-in-excel-and-claude.md` (commit `ce9220e`, approved 2026-11-20). Status: draft, 2026-11-20. Fresh pass done and its 12 concerns resolved below, pending Alexandre's review.
+Source: `intent/engine-in-excel-and-claude.md` (commit `ce9220e`, approved 2026-11-20). Status: draft, 2026-11-20. Fresh pass done and its 12 concerns resolved below. Tool-choice eval added at Alexandre's request. Pending Alexandre's review.
 Evidence: the repo's code, its measured results on public filings, and Claude's connector docs read on 2026-11-20. Nothing has run inside real Excel or real Claude. No LP or GP analyst has been interviewed. The pain is inferred.
 
 ## Bottom line
@@ -24,6 +24,7 @@ Evidence: the repo's code, its measured results on public filings, and Claude's 
 | Saved answers vanish | 0 survive a restart of the hosted connector | If answers sit on a persistent disk, then they survive, because nothing writes them to a temp folder any more | Confirmed answers present after a restart: all | Analysts never answer the same question twice |
 | The quarter is fixed in code | 1 quarter, hard-coded | If the quarter is a request input with a default, then the analyst can choose, because nothing else depends on the constant | Quarters an analyst can ask for: 2 | "As of" works |
 | Results can't be reproduced | Unobserved | If every row carries the quarter, data version and rule version, and nothing else varies, then a repeat call matches, because the inputs are pinned | Same request twice: identical rows | A number shown last week can be shown again |
+| No check that Claude picks the tool when it should, and only then | 15 of 15 on 5 prompts, 3 runs each, once, by hand. Not saved as code. No case where the tool must stay silent | If a saved prompt set with must-call and must-not-call cases runs on every change to a tool description or the skill, then a description change that breaks tool choice is caught before merge, because the check uses the same descriptions Claude sees | Must-call prompts where the right tool is called with the right names: 20 of 20, every run. Must-not-call prompts where no tool is called: 10 of 10, every run. Both provisional until 3 runs measure variation | Tool descriptions become a tested part of the product |
 | Too many names and tools | 5 product names; 7 local and 4 hosted tools; 2 tools in the skill that don't exist hosted | If both servers share one name and the same 2 tools, and the skill names only those, then Claude can't be sent to a missing tool | Old names left in the manifest, panel, skill and tool descriptions: 0. Tools: 2 hosted, 3 local. Tools named in the skill but missing: 0 | Easier to find and to trust |
 
 **Must not get worse:** precision 1.000 and recall 0.936 on the answer key, as measured 2026-11-02, with the 30 June index giving the same word counts as the eval's table. 0 values shown without a filing link and row. AI judge off by default, and no AI call at all from the hosted version. No number shown from a match nobody confirmed. A person's answer beats every automated answer. 0 company names, emails, sign-in codes or tokens in logs. `make test`, `make lint` and `make evals` green. The committed seed file `data/public/decisions.sqlite` unchanged by any run.
@@ -33,7 +34,7 @@ Evidence: the repo's code, its measured results on public filings, and Claude's 
 - Confidential lists. Missing: the private route, a copy running inside a client's own systems.
 - Answers shared across a team. Missing: a decision on who may overrule whom.
 - Quarters beyond the two held today. Missing: a scheduled SEC download. The September 2026 data is probably out; adding it is a data task, not part of this build.
-- Claude's tool choice on a larger prompt set, including requests where the tool must stay silent. Missing: the prompt set. Planned as a separate eval.
+- Tool choice measured inside the real Claude apps. Missing: a way to run Claude's apps automatically. The eval in section 7 measures our descriptions through the API, which is a stand-in for the apps.
 - Matching two of the analyst's own lists. Out of scope by decision.
 - The panel's chat with Claude in the hosted add-in. Removed there; analysts who want chat use Claude in Excel.
 
@@ -64,6 +65,9 @@ One row per concern. "Spec" means raised while writing this spec. "Fresh pass" m
 | 19 | Naming the core function after lenders puts lender terms into the source-agnostic layer. | Fresh pass | The core function is `check_list(engine, items, as_of, owner, profile)`. The name `check_lenders` lives only in the server layer. The flag rule's version comes from the source profile. | `api-and-logging` rule 5. |
 | 20 | `LATEST` is used by the desk, the review app and two lines of `gather_facts` that the spec didn't name. | Fresh pass | Section 2 lists each caller and its replacement. | A missed caller would silently keep the old quarter. |
 | 21 | Acceptance checks missed some metrics and compared Claude's wording instead of its data. | Fresh pass | Checks rewritten below: old-names search, local tool list, deploy gate, every route checked for sign-in, a confirmation before the restart check, and data compared rather than wording. | Every metric now has a binary check. |
+| 22 | The design rests on Claude picking one tool from its description, yet nothing tests that. The 15 of 15 result was a one-off, never saved. | Alexandre, 2026-11-20 | Add a saved tool-choice eval, section 7. | Tool descriptions are product code. They need a test like any other. |
+| 23 | The tool-choice eval sends prompts to Anthropic without a person starting it. That is a second exception to `data-handling` check 3. | Spec | Prompts are written by us and name only public companies from the demo list. No analyst list is ever used. It runs in CI and by hand only. The exception is added to `data-handling` check 3 for Alexandre's approval, beside the live judge check. | Same reasoning as the live judge check: public data, CI only, capped cost. |
+| 24 | The API is not the Claude app. The apps add their own instructions and may load the skill differently. | Spec | The eval sends the skill text and the tool definitions as the server publishes them. Results say "API stand-in". Checks 24 and 25 remain the proof inside the apps. | A passing eval shows our descriptions work. Only the app runs show the apps agree. |
 
 ## 1. One function behind every front end
 
@@ -191,6 +195,33 @@ A new entry point, `erm/service.py`, serves on one port:
 - The same image runs on a private machine with different settings. This build doesn't test that.
 - Hosting: a container host with a persistent disk and HTTPS. The plan picks one and cites its price. Alexandre creates the account and runs each deploy.
 
+## 7. Tool-choice eval
+
+**What it checks.** Given an analyst's words, does Claude call `check_lenders` with the right names, and stay silent when the tool doesn't apply?
+
+**Goes in.** `evals/tool_choice.yaml`, 30 prompts in plain words, each with an expected outcome:
+
+| Kind | Count | Examples of the kind | Pass when |
+|---|---|---|---|
+| Names the tool or the job | 8 | "Check what lenders say about these companies", "Run Lender Watch on A2:A6" | `check_lenders` called with exactly the expected names |
+| Describes the need without naming it | 6 | "Are any of our portfolio companies in trouble with their lenders?" | Same |
+| A failed lookup on company names | 6 | A sheet excerpt where XLOOKUP returns #N/A on company names | Same |
+| Must not call | 10 | Summing a column, a lookup on invoice numbers, "what is a BDC?", a share price, a list of people's names | No tool called |
+
+Every company named in a prompt comes from the public demo list. A must-call case with `as_of` in the words, such as "as of March", also checks the date passed.
+
+**How it runs.** `eval/tool_choice.py`:
+- Builds the system prompt from the skill file and the tool list from the running server's own definitions, so a changed description is what gets tested.
+- Calls the Anthropic API once per prompt, 3 runs, with the model named in the file. It never runs the tool; it only reads which tool Claude asked for and with what.
+- Writes one line per prompt and run: kind, expected, got, pass or fail. No prompt text in logs.
+- Exits 1 below the targets in "Problems this solves".
+
+**When.** On every pull request that changes `erm/service.py`, `erm/mcp_server.py`, the skill or the eval files, and by hand. A new GitHub workflow, modelled on the live judge check: skips cleanly with no key, no run on fork pull requests, stops at $2 a run.
+
+**Cost and time.** 90 calls a run. Cost and time unobserved until the first run; both are written into the plan's results.
+
+**Variation.** After 3 runs on `main`, the targets are kept or reset from what was measured, and the change is recorded in this spec.
+
 ## Acceptance checks
 
 **Automated, in `make test`:**
@@ -212,14 +243,19 @@ A new entry point, `erm/service.py`, serves on one port:
 16. The production gate blocks an agent running the host's deploy command.
 17. The add-in sends 120 names as 3 batches and spills 120 rows in order (`tests/excel_addin_check.cjs`).
 18. The hosted panel has no Claude switch and never calls `/api/ask`.
+19. `eval/tool_choice.py`, with a stand-in client, scores a planted wrong call and a planted unwanted call as failures, and exits 1.
+20. `evals/tool_choice.yaml` names only companies from the public demo list, and has at least 10 must-not-call prompts.
+
+**Live, in CI and by hand:**
+21. The tool-choice eval passes on the branch: 20 of 20 must-call and 10 of 10 must-not-call, in each of 3 runs. Result posted on the pull request, marked "API stand-in".
 
 **Done by Alexandre, recorded under `outputs/test-evidence/excel-claude/`:**
-19. Add the manifest in Excel on the web, sign in, type `=LW.CHECK(A2:A6)`. Screenshot of the spilled rows.
-20. Break an XLOOKUP on company names, and screenshot the panel's offer.
-21. Add the connector in Claude, sign in, ask about the same 5 names. Save the tool's returned data from the conversation.
-22. The same in Claude in Excel.
-23. Confirm one match in Excel. Restart the hosted service. Repeat check 21: the match is still confirmed.
-24. Compare the data from checks 19 and 21: same values for 5 of 5 names.
+22. Add the manifest in Excel on the web, sign in, type `=LW.CHECK(A2:A6)`. Screenshot of the spilled rows.
+23. Break an XLOOKUP on company names, and screenshot the panel's offer.
+24. Add the connector in Claude, sign in, ask about the same 5 names. Save the tool's returned data from the conversation.
+25. The same in Claude in Excel.
+26. Confirm one match in Excel. Restart the hosted service. Repeat check 24: the match is still confirmed.
+27. Compare the data from checks 22 and 24: same values for 5 of 5 names.
 
 **Measured, written into the plan's results:**
 - Seconds for 50 names, hosted, first call and repeat call.

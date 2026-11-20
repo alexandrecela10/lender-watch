@@ -20,12 +20,14 @@
     "Hosted routes listed in full; no /api/ask or Claude switch hosted",
     "Excel token in memory only, silent refresh, full recalculation after sign-in",
     "Access log off; own log with route and status only",
-    "Core function check_list is source-agnostic; check_lenders is the server name"
+    "Core function check_list is source-agnostic; check_lenders is the server name",
+    "Tool-choice eval: 30 saved prompts (20 must-call, 10 must-not-call), 3 runs, CI on description changes, API stand-in for the apps; needs a second data-handling check 3 exception, for Alexandre's approval"
   ],
   "open": [
     "Which sign-in provider, and its price",
     "Which container host, and its price",
-    "First pilot analyst, named by the end of the build"
+    "First pilot analyst, named by the end of the build",
+    "Approve the tool-choice eval as a second exception to data-handling check 3"
   ],
   "sources_checked": [
     "https://claude.com/docs/connectors/building/authentication.md",
