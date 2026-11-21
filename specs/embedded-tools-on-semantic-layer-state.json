@@ -1,0 +1,20 @@
+{
+  "spec": "specs/embedded-tools-on-semantic-layer.md",
+  "intent": "intent/embedded-tools-on-semantic-layer.md",
+  "intent_commit": "f0583fd",
+  "status": "draft, fresh review done (12 concerns resolved as rows 8 to 20), pending Alexandre's approval",
+  "updated": "2026-11-21",
+  "decided": [
+    "Local only, pinned to the public sample; nothing on the hosted service",
+    "Investor's own records may sit beside a real name, each value with its own source and labelled synthetic",
+    "Synthetic lender rows kept apart from real holdings, passed straight to Lender Watch's flag code",
+    "Measure 2 is Lender Watch's weighted_change; measures 1, 2 and 5 have no explainer",
+    "Letters built by code from events, no model writes them",
+    "Event types: write_down (changes measure 6) and covenant_breach (changes nothing)",
+    "Explainer: model writes words around placeholders; code fills every number and direction"
+  ],
+  "open": [
+    "Approve the rule change in data-handling check 1 and api-and-logging rule 4 for synthetic sources in prototype paths",
+    "Approve the letter reader and explainer calls to Anthropic, off by default, synthetic text only"
+  ]
+}
