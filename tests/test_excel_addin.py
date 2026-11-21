@@ -5,6 +5,7 @@ import re
 import shutil
 import ssl
 import subprocess
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -43,11 +44,34 @@ def test_manifest_uses_one_shared_runtime_for_functions_and_panel():
     assert '<FunctionFile resid="Taskpane.Url" />' in text
 
 
-def test_the_formula_is_registered_under_the_same_name_it_is_described():
+def test_the_formula_is_lw_check_with_an_optional_quarter():
     described = json.loads((ADDIN / "functions.json").read_text())["functions"]
-    assert [f["id"] for f in described] == ["RECONCILE"]
-    assert 'associate("RECONCILE"' in (ADDIN / "functions.js").read_text()
-    assert 'DefaultValue="ERM"' in (ADDIN / "manifest.xml").read_text()
+    assert [f["id"] for f in described] == ["CHECK"]
+    assert [p["name"] for p in described[0]["parameters"]] == ["names", "as_of"]
+    assert described[0]["parameters"][1]["optional"] is True
+    assert 'associate("CHECK"' in (ADDIN / "functions.js").read_text()
+    assert 'DefaultValue="LW"' in (ADDIN / "manifest.xml").read_text()
+
+
+def test_the_local_manifest_is_the_template_filled_in():
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import make_manifest
+
+    assert (ADDIN / "manifest.xml").read_text() == make_manifest.render(
+        "https://localhost:3000"
+    )
+    hosted = make_manifest.render("https://lw.example", "https://auth.example/oauth2")
+    ET.fromstring(hosted.encode())
+    assert "localhost" not in hosted
+    assert "<AppDomain>https://auth.example</AppDomain>" in hosted
+    with pytest.raises(SystemExit):
+        make_manifest.render("http://lw.example")
+
+
+def test_the_panel_has_no_claude_switch_and_never_calls_ask():
+    text = (ADDIN / "taskpane.js").read_text() + (ADDIN / "taskpane.html").read_text()
+    assert "/api/ask" not in text and "use-claude" not in text
+    assert "/api/check" in (ADDIN / "api.js").read_text()
 
 
 def test_tls_context_explains_a_missing_certificate(tmp_path):

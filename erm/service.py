@@ -156,6 +156,14 @@ def create_app(
         companies = body.get("companies") or [
             {"name": str(n)} for n in body.get("names", [])
         ]
+        sheet = body.get("sheet")
+        if sheet and sheet in (body.get("sheets") or {}):
+            # Owner and sector columns on the analyst's sheet help settle unclear names.
+            known = {
+                r["name"].casefold(): r
+                for r in assist.list_from_sheet(body["sheets"][sheet])
+            }
+            companies = [known.get(str(c["name"]).casefold(), c) for c in companies]
         try:
             out = assist.check_list(
                 engine,

@@ -144,5 +144,34 @@ function fakeWorkbook(tabs) {
     assert.ok(!auth.allowedStart("javascript:alert(1)", "https://auth.example/oauth2/authorize"));
   })();
 
+  // The formula and the panel send at most 50 names per call, and keep the order.
+  await (async () => {
+    const calls = [];
+    const items = Array.from({ length: 120 }, (_, i) => ({ name: `Company ${i}` }));
+    const rows = await core.checkInBatches(async (batch) => { calls.push(batch.length); return { rows: batch.map((b) => ({ name: b.name })) }; }, items);
+    assert.deepStrictEqual(calls, [50, 50, 20]);
+    assert.deepStrictEqual(rows.map((r) => r.name), items.map((i) => i.name));
+  })();
+
+  // Hosted and signed out: the formula says to sign in, and sends nothing.
+  await (async () => {
+    globalThis.ErmExcel = core;
+    let sent = 0;
+    globalThis.fetch = async () => { sent += 1; return { ok: true, status: 200, json: async () => ({ rows: [] }) }; };
+    globalThis.LwAuth = { required: () => true, accessToken: async () => null };
+    const api = require("../app/desk/excel/api.js");
+    await assert.rejects(api.check(["KnowBe4"]), /Sign in from the Lender Watch panel/);
+    assert.strictEqual(sent, 0);
+    globalThis.LwAuth = { required: () => true, accessToken: async () => "tok" };
+    let seen = null;
+    globalThis.fetch = async (path, init) => { seen = { path, init }; return { ok: true, status: 200, json: async () => ({ rows: [{ name: "KnowBe4" }] }) }; };
+    await api.check(["KnowBe4"], "2026-03-31");
+    assert.strictEqual(seen.path, "/api/check");
+    assert.strictEqual(seen.init.headers.Authorization, "Bearer tok");
+    assert.strictEqual(JSON.parse(seen.init.body).as_of, "2026-03-31");
+    globalThis.fetch = async () => ({ ok: false, status: 401, json: async () => ({}) });
+    await assert.rejects(api.check(["KnowBe4"]), /Sign in from the Lender Watch panel/);
+  })();
+
   console.log("excel add-in checks passed");
 })().catch((error) => { console.error(error); process.exit(1); });

@@ -4,11 +4,11 @@
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
   <Id>9b5e2d7d-03db-4607-826b-dff507b09116</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.1.0.0</Version>
   <ProviderName>Lender Watch</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Lender Watch" />
-  <Description DefaultValue="Links company names to the names lenders use in SEC filings, with the filing behind each number." />
+  <Description DefaultValue="Lender Watch: what lenders report about your companies, with the filing behind each number." />
   <IconUrl DefaultValue="https://localhost:3000/excel/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/excel/icon-64.png"/>
   <SupportUrl DefaultValue="https://alexandrecela10.github.io/projects/lender-watch/"/>
@@ -98,14 +98,14 @@
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/excel/taskpane.html" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="Functions.Namespace" DefaultValue="ERM" />
+        <bt:String id="Functions.Namespace" DefaultValue="LW" />
         <bt:String id="GetStarted.Title" DefaultValue="Lender Watch is ready" />
         <bt:String id="Group.Label" DefaultValue="Lender Watch" />
         <bt:String id="Button.Label" DefaultValue="Lender Watch" />
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Type =ERM.RECONCILE(A2:A6) in a cell, or open Lender Watch on the Home tab." />
-        <bt:String id="Button.Tooltip" DefaultValue="Link company names to lender filings" />
+        <bt:String id="GetStarted.Description" DefaultValue="Type =LW.CHECK(A2:A6) in a cell, or open Lender Watch on the Home tab." />
+        <bt:String id="Button.Tooltip" DefaultValue="Check what lenders report about your companies" />
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

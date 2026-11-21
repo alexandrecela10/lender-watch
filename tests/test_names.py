@@ -10,8 +10,21 @@ SKILL = ROOT / ".claude/skills/lender-watch/SKILL.md"
 OLD_NAMES = re.compile(
     r"Entity Reconciliation|Analyst Desk|ERM\.|RECONCILE|reconcile-companies|reconcile_list|entity-reconciliation"
 )
-# Everything an analyst or Claude reads about the product. The Excel add-in joins in build step S5.
-ANALYST_FACING = [SKILL]
+ADDIN = ROOT / "app/desk/excel"
+# Everything an analyst or Claude reads about the product.
+ANALYST_FACING = [
+    SKILL,
+    ADDIN / "manifest.xml",
+    ADDIN / "manifest.template.xml",
+    ADDIN / "functions.json",
+    ADDIN / "functions.js",
+    ADDIN / "taskpane.html",
+    ADDIN / "taskpane.js",
+    ADDIN / "api.js",
+    ADDIN / "auth.js",
+    ADDIN / "signin.html",
+    ADDIN / "signin-callback.html",
+]
 
 
 def tool_names() -> set[str]:

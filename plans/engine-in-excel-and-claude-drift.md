@@ -9,3 +9,4 @@ One row per build step. A departure is a file the step changed that its plan ste
 | 2026-11-21 | S2 | `tests/conftest.py` | `erm/cli.py`, `tests/test_api.py` |
 | 2026-11-21 | S3 | `.claude/skills/reconcile-companies/SKILL.md`, `erm/lender_tools.py`, `erm/mcp_remote.py`, `tests/test_excel_addin.py` | `.claude/skills/reconcile-companies/`, `README.md`, `erm/connectors/bdc.py` |
 | 2026-11-21 | S4 | `erm/telemetry.py` | `app/desk/server.py` |
+| 2026-11-21 | S5 | `app/desk/excel/api.js`, `erm/service.py`, `tests/test_names.py` | none |
