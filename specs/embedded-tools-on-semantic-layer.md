@@ -1,6 +1,6 @@
 # Spec: embedded tools on agreed definitions (prototype)
 
-Source: `intent/embedded-tools-on-semantic-layer.md` (commit `f0583fd`, approved 2026-11-21). Status: draft, 2026-11-21. Fresh review done; its 12 concerns are resolved below. Pending Alexandre's approval, including two rule changes (concerns 8 and 13).
+Source: `intent/embedded-tools-on-semantic-layer.md` (commit `f0583fd`, approved 2026-11-21). Status: approved by Alexandre 2026-11-21, including the rule changes in concerns 8 and 13 and the two off-by-default AI calls. Fresh review done; its 12 concerns are resolved below.
 Evidence: public lender filings, and synthetic data this build generates. No LP or GP analyst has been interviewed. The pain is inferred.
 Kind: prototype. Runs on this computer only, on the public sample. Never on the hosted Lender Watch address.
 
