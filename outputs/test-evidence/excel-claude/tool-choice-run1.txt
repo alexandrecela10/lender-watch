@@ -1,0 +1,40 @@
+run 1 names_job       job-1      PASS 
+run 1 names_job       job-2      PASS 
+run 1 names_job       job-3      PASS 
+run 1 names_job       job-4      PASS 
+run 1 names_job       job-5      PASS 
+run 1 names_job       job-6      PASS 
+run 1 names_job       job-7      PASS 
+run 1 names_job       job-8      PASS 
+run 1 describes_need  need-1     PASS 
+run 1 describes_need  need-2     PASS 
+run 1 describes_need  need-3     PASS 
+run 1 describes_need  need-4     PASS 
+run 1 describes_need  need-5     PASS 
+run 1 describes_need  need-6     PASS 
+run 1 failed_lookup   lookup-1   PASS offered before running
+run 1 failed_lookup   lookup-2   PASS offered before running
+run 1 failed_lookup   lookup-3   PASS offered before running
+run 1 failed_lookup   lookup-4   PASS offered before running
+run 1 failed_lookup   lookup-5   PASS offered before running
+run 1 failed_lookup   lookup-6   PASS offered before running
+run 1 must_not        not-1      PASS 
+run 1 must_not        not-2      PASS 
+run 1 must_not        not-3      PASS 
+run 1 must_not        not-4      PASS 
+run 1 must_not        not-5      PASS 
+run 1 must_not        not-6      PASS 
+run 1 must_not        not-7      PASS 
+run 1 must_not        not-8      PASS 
+run 1 must_not        not-9      PASS 
+run 1 must_not        not-10     PASS 
+## Tool-choice eval (API stand-in for the Claude apps)
+
+Model `claude-opus-5-5`, 1 run(s), 44 s. Prompts written by Claude, not checked by a person.
+
+| Run | Must call | Must not call | Cost (USD) | Result |
+|---|---|---|---|---|
+| 1 | 20 of 20 | 10 of 10 | 0.30 | PASS |
+
+Models that answered: claude-opus-5-5 (30)
+

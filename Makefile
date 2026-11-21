@@ -9,6 +9,11 @@ lint:
 evals:
 	uv run python -m eval.offline
 
+# Does Claude pick the Lender Watch tool when it should, and only then? Sends public prompts to Anthropic.
+.PHONY: tool-choice
+tool-choice:
+	uv run python -m eval.tool_choice --live --summary tool-choice-summary.md
+
 .PHONY: bands
 bands:
 	uv run python -m eval.bands

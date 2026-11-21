@@ -1,0 +1,154 @@
+# Tool-choice eval (specs/engine-in-excel-and-claude.md, section 7). Run: make tool-choice
+# Does Claude call check_lenders with the right names when it should, and stay silent when it shouldn't?
+# Companies come only from data/demo/sample_list.csv (public SEC filings). Prompts written by Claude, not checked by a person.
+# kind: names_job | describes_need | failed_lookup | must_not
+# expect: the names check_lenders must be called with (order ignored, case ignored), or [] for no tool call.
+# as_of: when set, the call must pass this quarter.
+
+model: claude-opus-5-5
+runs: 3
+cost_cap_usd_per_run: 2.0
+targets:
+  must_call: 20 # of 20, in every run
+  must_not_call: 10 # of 10, in every run
+
+prompts:
+  # --- Names the tool or the job (8) ---
+  - id: job-1
+    kind: names_job
+    text: "Run Lender Watch on KnowBe4, Exabeam and Anaplan."
+    expect: [KnowBe4, Exabeam, Anaplan]
+  - id: job-2
+    kind: names_job
+    text: "What do lenders say about KnowBe4?"
+    expect: [KnowBe4]
+  - id: job-3
+    kind: names_job
+    text: "Check lender filings for Apex Group and Foundation."
+    expect: [Apex Group, Foundation]
+  - id: job-4
+    kind: names_job
+    text: "Match these portfolio companies to lender filings: Exabeam, Anaplan."
+    expect: [Exabeam, Anaplan]
+  - id: job-5
+    kind: names_job
+    text: "Reconcile KnowBe4 and Apex Group against the BDC loan marks."
+    expect: [KnowBe4, Apex Group]
+  - id: job-6
+    kind: names_job
+    text: "How were Anaplan's loans marked by lenders as of 31 March 2026?"
+    expect: [Anaplan]
+    as_of: "2026-03-31"
+  - id: job-7
+    kind: names_job
+    text: "Use Lender Watch: Foundation, Exabeam, KnowBe4, Anaplan, Apex Group."
+    expect: [Foundation, Exabeam, KnowBe4, Anaplan, Apex Group]
+  - id: job-8
+    kind: names_job
+    text: "Pull the lender marks for Exabeam for the March 2026 quarter."
+    expect: [Exabeam]
+    as_of: "2026-03-31"
+
+  # --- Describes the need without naming the tool (6) ---
+  - id: need-1
+    kind: describes_need
+    text: "Are any of these portfolio companies showing stress in their debt? KnowBe4, Anaplan."
+    expect: [KnowBe4, Anaplan]
+  - id: need-2
+    kind: describes_need
+    text: "Before our quarterly review, I want to know if lenders have written down the loans of Exabeam or Foundation."
+    expect: [Exabeam, Foundation]
+  - id: need-3
+    kind: describes_need
+    text: "Our GP report on KnowBe4 won't arrive for weeks. Is there anything public on how its debt is valued right now?"
+    expect: [KnowBe4]
+  - id: need-4
+    kind: describes_need
+    text: "Which of Apex Group, Anaplan and Exabeam have loans valued below what's owed?"
+    expect: [Apex Group, Anaplan, Exabeam]
+  - id: need-5
+    kind: describes_need
+    text: "Is the private credit market worried about Foundation? Look at what its lenders report."
+    expect: [Foundation]
+  - id: need-6
+    kind: describes_need
+    text: "I hold Anaplan through a buyout fund. What are its lenders saying about it?"
+    expect: [Anaplan]
+
+  # --- A failed lookup on company names (6) ---
+  - id: lookup-1
+    kind: failed_lookup
+    text: |
+      My XLOOKUP from the Portfolio tab to the Lender tab returns #N/A for every row. Please fix it.
+      Portfolio tab, column A: KnowBe4, Exabeam, Anaplan
+      Lender tab, column B: "KnowBe4, Inc. | Education", "LogRhythm, Inc. | First lien", "Anaplan, Inc. | Software"
+    expect: [KnowBe4, Exabeam, Anaplan]
+  - id: lookup-2
+    kind: failed_lookup
+    text: |
+      =VLOOKUP(A2,Lenders!B:D,3,FALSE) gives #N/A for Foundation and Apex Group, even though I can see them in the lender sheet.
+      The lender sheet says "Foundation Software, LLC" and "Apex Bidco Limited".
+    expect: [Foundation, Apex Group]
+  - id: lookup-3
+    kind: failed_lookup
+    text: |
+      I merged my company list with a BDC schedule of investments in pandas and only 1 of 3 rows matched.
+      My list: KnowBe4, Exabeam, Anaplan. Their names look like "KnowBe4, Inc. | Education". How do I get the rest?
+    expect: [KnowBe4, Exabeam, Anaplan]
+  - id: lookup-4
+    kind: failed_lookup
+    text: |
+      INDEX MATCH on company name between my holdings tab and the lender marks tab misses Exabeam. Lender tab has no row starting with Exabeam.
+    expect: [Exabeam]
+  - id: lookup-5
+    kind: failed_lookup
+    text: |
+      Why does my lookup on "Apex Group" return #N/A in the BDC loan tape? I need its loan values.
+    expect: [Apex Group]
+  - id: lookup-6
+    kind: failed_lookup
+    text: |
+      Combining our portfolio list (KnowBe4, Anaplan) with the lenders' schedules by company name finds nothing, all #N/A. What's wrong?
+    expect: [KnowBe4, Anaplan]
+
+  # --- Must not call (10) ---
+  - id: not-1
+    kind: must_not
+    text: "Sum column C of the Portfolio tab and tell me the total."
+    expect: []
+  - id: not-2
+    kind: must_not
+    text: "My XLOOKUP on invoice numbers returns #N/A. Invoice INV-1043 is in both sheets. Why?"
+    expect: []
+  - id: not-3
+    kind: must_not
+    text: "What is a BDC, in two sentences?"
+    expect: []
+  - id: not-4
+    kind: must_not
+    text: "What's Microsoft's share price today?"
+    expect: []
+  - id: not-5
+    kind: must_not
+    text: "I have a list of employees, Jane Smith and Ahmed Khan, in two HR sheets that don't match. Merge them."
+    expect: []
+  - id: not-6
+    kind: must_not
+    text: "Write a formula that counts how many rows in column A say 'Flagged'."
+    expect: []
+  - id: not-7
+    kind: must_not
+    text: "Explain what fair value as a percentage of par means."
+    expect: []
+  - id: not-8
+    kind: must_not
+    text: "Draft a short email to my team about Friday's portfolio review meeting."
+    expect: []
+  - id: not-9
+    kind: must_not
+    text: "Convert the dates in column B from text to Excel dates."
+    expect: []
+  - id: not-10
+    kind: must_not
+    text: "What's the difference between a first lien and a second lien loan?"
+    expect: []

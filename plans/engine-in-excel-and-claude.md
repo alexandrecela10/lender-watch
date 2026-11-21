@@ -149,6 +149,8 @@ Files: `evals/tool_choice.yaml` (new), `eval/tool_choice.py` (new), `.github/wor
 Exit criteria
 - Tests for spec checks 19 and 20.
 - One local run with Alexandre's key, result saved to `outputs/test-evidence/excel-claude/tool-choice-run1.txt`, with cost and time.
+- Departure, 2026-11-21: a failed-lookup prompt also passes when Claude names Lender Watch and offers it without calling, because the skill tells Claude to ask first at a failed lookup. The spec counted only a call.
+- Result, 2026-11-21: 3 live runs, each 20 of 20 must-call and 10 of 10 must-not-call. Cost $0.30, $0.24, $0.24. Time 44 s for one run, 88 s for two. 16 of 18 failed-lookup answers offered before running. Evidence in `outputs/test-evidence/excel-claude/tool-choice-*`.
 - `make test` and `make lint` green.
 - Commit: `feat(eval): tool-choice eval with must-not-call cases`.
 
