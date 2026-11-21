@@ -129,3 +129,16 @@ def test_changed_data_builds_a_new_index(tmp_path):
     assert first.data_version != second.data_version
     assert len(second.index_for(second.latest()).holdings) <= 3
     assert len(list(tmp_path.glob("idx-*.pkl"))) >= 2
+
+
+def test_stray_dates_are_not_quarters(tmp_path):
+    """The full SEC file has 10 rows dated 31 December 2026 and funds reporting at odd month-ends."""
+    h = pd.read_parquet(PUBLIC)
+    small = h[h.raw_text.str.contains("KnowBe4", regex=False)]
+    stray = small.head(1).assign(period="2026-12-31")
+    odd_month = small.head(1).assign(period="2026-05-31")
+    data = tmp_path / "h.parquet"
+    pd.concat([small, stray, odd_month]).to_parquet(data, index=False)
+    e = Engine(str(data), str(tmp_path / "d.sqlite"), str(tmp_path / "idx.pkl"))
+    assert e.periods() == ["2026-03-31", "2026-06-30"]
+    assert e.gather_facts("KnowBe4")["as_of"] == "2026-06-30"

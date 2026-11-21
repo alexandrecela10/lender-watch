@@ -178,6 +178,10 @@ Exit criteria
 
 ### S9. Verify and open the pull request
 
+Files: `erm/api.py`, `tests/test_api.py`, `CLAUDE.md`, `outputs/test-evidence/excel-claude/checklist.md`, `outputs/test-evidence/excel-claude/lender-watch-test.xlsx`.
+
+Found in verification, 2026-11-21: on the full SEC file (not in the worktree, so not in `make test`), the demo enrich found 0 of 6 companies instead of 65 loans. The file holds 10 rows dated 31 December 2026 and funds reporting at odd month-ends, and S1 took the newest date as the latest quarter. Fixed in `erm/api.py`: a date counts as a quarter only when it ends a calendar quarter and holds at least a tenth of the fullest quarter's rows. Test added. Enrich rerun on the full file: 6 names, 65 loans, 0 without a filing link.
+
 - The verifier agent runs every check in a fresh context and reports pass or fail. It fixes nothing.
 - `uv run python -m eval.plan_drift plans/engine-in-excel-and-claude.md S<n>` after each step's commit, with the log amended in. Rows go to `plans/engine-in-excel-and-claude-drift.md`.
 - Pull request against `main`, with the AI review. Alexandre merges.

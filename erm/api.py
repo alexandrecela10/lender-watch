@@ -156,8 +156,15 @@ class Engine:
         )  # build the newest quarter's index before the first request
 
     def periods(self) -> list[str]:
-        """Quarter-ends held, oldest first."""
-        return sorted(str(p) for p in self.holdings.period.unique())
+        """Quarters held, oldest first. A date counts when it ends a calendar quarter and holds at least a tenth of
+        the rows of the fullest quarter. The full SEC file has stray dates: 10 rows dated 31 December 2026, and funds
+        reporting at other month-ends. Without this rule the latest "quarter" would be those 10 rows."""
+        if not hasattr(self, "_periods"):
+            counts = self.holdings.period.astype(str).value_counts()
+            quarter_ends = counts[counts.index.str[5:7].isin(["03", "06", "09", "12"])]
+            floor = quarter_ends.max() / 10 if len(quarter_ends) else 0
+            self._periods = sorted(p for p, n in quarter_ends.items() if n >= floor)
+        return self._periods
 
     def latest(self) -> str:
         return self.periods()[-1]
