@@ -5,7 +5,11 @@ Never registered on the hosted service. The prototype loads on the first call, n
 
 from __future__ import annotations
 
-from erm import semantic
+import re
+
+from erm import letters, semantic
+
+LETTERS = semantic.SYN / "letters"
 
 
 def measure_description() -> str:
@@ -29,3 +33,47 @@ def register(mcp) -> None:
         measure: str, companies: list[str], as_of: str | None = None
     ) -> dict:
         return semantic.prototype().get_measure(measure, companies, as_of=as_of)
+
+    @mcp.tool(
+        name="read_letter",
+        description=(
+            "Propose events from a fund manager's letter: write-downs and covenant breaches, each with the exact "
+            "sentence it comes from. Nothing changes a number until the person confirms it with confirm_event: show "
+            "each proposal and ask. Pass the letter's text, or a synthetic letter's number such as 07. Off unless "
+            "LW_PROTOTYPE_AI=1, because it sends the letter's text to Anthropic."
+        ),
+    )
+    def read_letter(letter: str) -> dict:
+        if not letters.ai_enabled():
+            return {"error": letters.OFF}
+        from erm.api import default_client
+
+        name = letter.strip()
+        text = (
+            (LETTERS / f"{int(name):02d}.md").read_text()
+            if re.fullmatch(r"\d{1,2}", name)
+            else letter
+        )
+        out = letters.read_letter(text, default_client())
+        p = semantic.prototype()
+        for e in out["kept"]:
+            found = p.portfolio.find(e["company"])
+            e["company_id"] = found.company_id if found is not None else None
+        proposed = p.store.propose(
+            name if re.fullmatch(r"\d{1,2}", name) else "pasted", out["kept"]
+        )
+        return {
+            "received": out["received"],
+            "proposed": proposed,
+            "dropped_quote_not_found": out["dropped"],
+        }
+
+    @mcp.tool(
+        name="confirm_event",
+        description=(
+            "Record the person's answer on an event read_letter proposed: yes counts it, no rejects it. Call only "
+            "after the person answers. A confirmed write-down changes manager_lender_gap from the date received."
+        ),
+    )
+    def confirm_event(event_id: str, yes: bool) -> dict:
+        return semantic.prototype().store.decide(event_id, yes)

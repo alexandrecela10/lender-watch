@@ -189,12 +189,14 @@ def _tool(name):
 def test_local_server_is_lender_watch_with_three_tools():
     names = sorted(t.name for t in mcp_server.mcp._tool_manager.list_tools())
     assert mcp_server.mcp.name == "lender-watch"
-    # Lender Watch's three tools, plus the prototype's get_measure, which exists on this computer only.
+    # Lender Watch's three tools, plus the prototype's tools, which exist on this computer only.
     assert names == [
         "check_lenders",
         "check_lenders_in_file",
+        "confirm_event",
         "confirm_match",
         "get_measure",
+        "read_letter",
     ]
 
 

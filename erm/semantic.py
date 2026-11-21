@@ -375,8 +375,16 @@ _prototype: Prototype | None = None
 
 
 def prototype() -> Prototype:
-    """Built once per process, on first use. The hosted service never calls this."""
+    """Built once per process, on first use. The hosted service never calls this.
+    Confirmed write-downs come from the events store in the local data folder."""
     global _prototype
     if _prototype is None:
-        _prototype = Prototype()
+        import os
+
+        from erm.prototype_store import EventStore
+
+        folder = Path(os.environ.get("LW_DATA_DIR", str(Path.home() / ".erm/service")))
+        store = EventStore(folder / "prototype.sqlite")
+        _prototype = Prototype(writedowns=store.confirmed_writedowns)
+        _prototype.store = store
     return _prototype
