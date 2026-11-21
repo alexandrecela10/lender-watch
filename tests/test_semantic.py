@@ -152,3 +152,62 @@ def test_every_row_using_a_synthetic_source_says_so(proto):
     # Real lender figures come from filings only.
     real = proto.get_measure("lender_value", ["KnowBe4"])["rows"][0]
     assert real["synthetic"] is False and real["sources"]
+
+
+# --- Claude and Excel, on this computer only (checks 10 and 19) ---
+
+
+def test_excel_route_and_claude_tool_give_identical_rows():
+    import tempfile as tf
+
+    from starlette.testclient import TestClient
+
+    from erm import mcp_server, service
+
+    tool = mcp_server.mcp._tool_manager.get_tool("get_measure").fn
+    ids = ["KnowBe4", "Synthetic Company 01", "Synthetic Company 04", "Not A Company"]
+    app = service.create_app(None, "http://localhost:8770", Path(tf.mkdtemp()))
+    with TestClient(app) as c:
+        for measure in semantic.load_measures():
+            via_excel = c.post(
+                "/api/measure", json={"measure": measure, "companies": ids}
+            ).json()
+            assert via_excel == tool(measure, ids), measure
+        bad = c.post("/api/measure", json={"measure": "nope", "companies": ids})
+        assert bad.status_code == 400
+
+
+def test_the_tool_description_lists_every_measure():
+    from erm import prototype_tools
+
+    text = prototype_tools.measure_description()
+    assert all(m in text for m in semantic.load_measures())
+
+
+def test_hosted_service_never_loads_the_prototype():
+    import subprocess
+    import sys
+
+    code = (
+        "import sys, tempfile, pathlib\n"
+        "from starlette.testclient import TestClient\n"
+        "from erm import service\n"
+        "from tests import fake_provider as fp\n"
+        "app = service.create_app(fp.config(), fp.BASE, pathlib.Path(tempfile.mkdtemp()))\n"
+        "with TestClient(app, base_url='https://testserver') as c:\n"
+        "    r = c.post('/api/measure', json={'measure': 'lender_value', 'companies': ['KnowBe4']}, headers=fp.bearer())\n"
+        "    assert r.status_code == 404 and 'this computer only' in r.json()['error'], r.text\n"
+        "assert 'erm.semantic' not in sys.modules, 'hosted service loaded the prototype'\n"
+        "print('ok')\n"
+    )
+    done = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=600,
+        check=False,
+    )
+    assert done.returncode == 0 and done.stdout.strip().endswith("ok"), done.stderr[
+        -2000:
+    ]

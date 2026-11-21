@@ -173,5 +173,14 @@ function fakeWorkbook(tabs) {
     await assert.rejects(api.check(["KnowBe4"]), /Sign in from the Lender Watch panel/);
   })();
 
+  // =LW.MEASURE keeps one row per cell and says where each value came from.
+  const mrows = [
+    { value: 5427274.3, unit: "usd", synthetic: true, sources: [{ kind: "synthetic" }], not_available: null },
+    { value: null, unit: "ratio", synthetic: false, sources: [], not_available: "Not available for real companies." },
+  ];
+  const mspill = core.spillMeasure(["KnowBe4", "", "Anaplan"], ["KnowBe4", "Anaplan"], mrows);
+  assert.deepStrictEqual(mspill, [[5427274.3, "usd", "synthetic"], ["", "", ""], ["Not available for real companies.", "ratio", ""]]);
+  assert.strictEqual(core.measureRow({ value: 78, unit: "percent", synthetic: false, sources: [{ kind: "filing" }], not_available: null })[2], "filing");
+
   console.log("excel add-in checks passed");
 })().catch((error) => { console.error(error); process.exit(1); });

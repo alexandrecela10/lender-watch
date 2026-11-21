@@ -189,7 +189,13 @@ def _tool(name):
 def test_local_server_is_lender_watch_with_three_tools():
     names = sorted(t.name for t in mcp_server.mcp._tool_manager.list_tools())
     assert mcp_server.mcp.name == "lender-watch"
-    assert names == ["check_lenders", "check_lenders_in_file", "confirm_match"]
+    # Lender Watch's three tools, plus the prototype's get_measure, which exists on this computer only.
+    assert names == [
+        "check_lenders",
+        "check_lenders_in_file",
+        "confirm_match",
+        "get_measure",
+    ]
 
 
 def test_check_lenders_stamps_every_row(engine, monkeypatch):

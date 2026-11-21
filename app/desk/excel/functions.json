@@ -22,6 +22,34 @@
         "type": "any",
         "dimensionality": "matrix"
       }
+    },
+    {
+      "id": "MEASURE",
+      "name": "MEASURE",
+      "description": "Lender Watch prototype: an agreed measure for these companies, on this computer only. Returns value, unit and source (filing or synthetic).",
+      "parameters": [
+        {
+          "name": "measure",
+          "description": "The measure's id, such as cost_in_flagged.",
+          "type": "string"
+        },
+        {
+          "name": "names",
+          "description": "The cells holding company names, for example A2:A10.",
+          "type": "any",
+          "dimensionality": "matrix"
+        },
+        {
+          "name": "as_of",
+          "description": "Optional quarter-end date, such as 2026-03-31.",
+          "type": "string",
+          "optional": true
+        }
+      ],
+      "result": {
+        "type": "any",
+        "dimensionality": "matrix"
+      }
     }
   ]
 }

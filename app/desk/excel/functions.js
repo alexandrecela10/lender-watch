@@ -17,3 +17,21 @@ async function check(names, asOf) {
 }
 
 CustomFunctions.associate("CHECK", check);
+
+// =LW.MEASURE(measure, names, [as_of]): the prototype's agreed measures, on this computer only.
+async function measure(name, names, asOf) {
+  const cells = ErmExcel.namesFromRange(names);
+  const wanted = [...new Set(cells.filter(Boolean))];
+  if (!wanted.length) {
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.invalidValue, "Select cells with company names.");
+  }
+  let out;
+  try {
+    out = await LwApi.post("/api/measure", { measure: name, companies: wanted, as_of: asOf || null });
+  } catch (error) {
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, error.message);
+  }
+  return ErmExcel.spillMeasure(cells, wanted, out.rows);
+}
+
+CustomFunctions.associate("MEASURE", measure);

@@ -46,7 +46,7 @@ PUBLIC_HOLDINGS = ROOT / "data/public/holdings.parquet"
 FULL_HOLDINGS = ROOT / "data/holdings_clean.parquet"
 SEED = ROOT / "data/public/decisions.sqlite"
 MAX_NAMES = 50
-PROTECTED = ("/mcp", "/api/check", "/api/confirm", "/api/inspect")
+PROTECTED = ("/mcp", "/api/check", "/api/confirm", "/api/inspect", "/api/measure")
 LOCAL_HOSTS = ("127.0.0.1", "localhost")
 
 log = logging.getLogger("erm.service")
@@ -201,6 +201,26 @@ def create_app(
         )
         return JSONResponse(out["rows"][0])
 
+    async def measure(request: Request) -> Response:
+        """The prototype's measures. On this computer only: the hosted service never loads synthetic data."""
+        if hosted:
+            return JSONResponse(
+                {"error": "Measures run on this computer only."}, status_code=404
+            )
+        from erm import semantic
+
+        body = await request.json()
+        try:
+            out = semantic.prototype().get_measure(
+                str(body["measure"]),
+                [str(c) for c in body.get("companies", [])],
+                as_of=body.get("as_of"),
+                owner=current_owner(),
+            )
+        except ValueError as e:
+            return JSONResponse({"error": str(e)}, status_code=400)
+        return JSONResponse(out)
+
     async def inspect(request: Request) -> Response:
         body = await request.json()
         return JSONResponse(
@@ -236,6 +256,7 @@ def create_app(
             Route("/api/check", check, methods=["POST"]),
             Route("/api/confirm", confirm, methods=["POST"]),
             Route("/api/inspect", inspect, methods=["POST"]),
+            Route("/api/measure", measure, methods=["POST"]),
             Route("/excel/token", token, methods=["POST"]),
             Mount("/excel", app=StaticFiles(directory=EXCEL, html=True)),
             Mount("/", app=mcp_app),

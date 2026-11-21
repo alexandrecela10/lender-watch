@@ -28,7 +28,9 @@ ANALYST_FACING = [
 
 
 def tool_names() -> set[str]:
-    return {t.name for t in mcp_server.mcp._tool_manager.list_tools()}
+    """Lender Watch's tools. The prototype's tools are described by their own file, not the skill."""
+    names = {t.name for t in mcp_server.mcp._tool_manager.list_tools()}
+    return names - {"get_measure", "read_letter", "confirm_event", "explain_change"}
 
 
 def test_skill_names_only_tools_that_exist():
