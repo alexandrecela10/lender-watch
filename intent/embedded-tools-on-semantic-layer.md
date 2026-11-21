@@ -1,6 +1,6 @@
 # Intent: a prototype of AI tools inside Excel and Claude, fed by agreed definitions
 
-Author: Alexandre Cela, writing as the analyst who monitors a portfolio of PE funds. Status: draft, awaiting correction by the author.
+Author: Alexandre Cela, writing as the analyst who monitors a portfolio of PE funds. Status: approved 2026-11-21, with Claude's recommended decisions.
 Source: no opportunity analysis. This follows `intent/engine-in-excel-and-claude.md` and the design discussion of 11 November 2026.
 Evidence: public filings for lender data. Everything about what an investor owns is synthetic, because no real holdings may be used. No LP or GP analyst has been interviewed. The pain is inferred.
 Kind: prototype. It shows the idea works end to end. It is not for production use.
@@ -49,7 +49,7 @@ Systems: the Lender Watch tool and its saved answers, a new set of written measu
 
 ## Recommended decisions
 
-Recommended by Claude on 21 November 2026, after Lender Watch merged (pull request 19). Awaiting Alexandre's approval.
+Recommended by Claude and approved by Alexandre on 21 November 2026, after Lender Watch merged (pull request 19).
 
 | Question | Recommendation | Why |
 |---|---|---|
