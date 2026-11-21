@@ -1,4 +1,4 @@
-.PHONY: test lint evals run desk excel mcp mcp-web hooks dev prod prod-down rollback approve-prod rehearse-rollback
+.PHONY: test lint evals run desk excel mcp service hooks dev prod prod-down rollback approve-prod rehearse-rollback
 
 test:
 	uv run pytest
@@ -19,11 +19,13 @@ run:
 desk:
 	uv run python -m app.desk.server
 
+# Lender Watch for real Excel on this computer: the service over HTTPS on port 3000, no sign-in.
 excel:
-	ERM_DESK_PORT=3000 ERM_DESK_TLS=$$HOME/.office-addin-dev-certs uv run python -m app.desk.server
+	LW_PORT=3000 LW_TLS_DIR=$$HOME/.office-addin-dev-certs uv run python -m erm.service
 
-mcp-web:
-	uv run python -m erm.mcp_remote
+# The hosted service, run locally with no sign-in (127.0.0.1 only).
+service:
+	uv run python -m erm.service
 
 mcp:
 	uv run python -m erm.mcp_server

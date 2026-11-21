@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 
 from app.desk import server
-from erm import mcp_remote
 
 ROOT = Path(__file__).resolve().parents[1]
 ADDIN = ROOT / "app/desk/excel"
@@ -80,15 +79,3 @@ def test_tls_context_loads_a_certificate(tmp_path):
         capture_output=True,
     )
     assert isinstance(server.tls_context(tmp_path), ssl.SSLContext)
-
-
-def test_web_connector_has_no_tool_that_touches_files_or_saved_answers():
-    names = {t.name for t in mcp_remote.mcp._tool_manager.list_tools()}
-    assert names == {"check_lenders", "confirm_match"}
-
-
-def test_web_connector_refuses_an_oversized_list():
-    with pytest.raises(ValueError):
-        mcp_remote.mcp._tool_manager.get_tool("check_lenders").fn(
-            [{"name": "x"}] * (mcp_remote.MAX_NAMES + 1)
-        )
