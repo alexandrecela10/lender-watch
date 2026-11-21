@@ -16,6 +16,22 @@ Evidence: the repo's code, and Claude's connector docs read on 2026-11-20. Nothi
 - Step 9: the verifier checks everything, then a pull request.
 - Matching results must not change. `make evals` runs at every step.
 
+## Final review, 2026-11-21
+
+Done before building, at Alexandre's request. Each change is applied in the steps below.
+
+| # | Finding | Kind | Change |
+|---|---|---|---|
+| 1 | The panel must know whether sign-in is needed, and which provider and client to use, before anyone has signed in. The spec makes `/api/status` require sign-in. | Missing | `/api/status` is public. It returns only: sign-in on or off, the issuer, the add-in's public client id, the quarters held, and the data version. No user data. Departure from spec section 6, recorded here. |
+| 2 | Excel loads add-ins over HTTPS only, even locally. The plan moved the add-in to the service but gave the service no local HTTPS. | Missing | `make excel` runs the service in local mode on port 3000 with the Office development certificate, reusing the desk's certificate code. Local mode: no sign-in, panel skips it. |
+| 3 | Silent token refresh when the panel opens is in the spec but in no step. | Missing | Added to S5. |
+| 4 | Hosted calls weren't counted in the run records, so the pilot would leave no usage trace. | Missing | S4 wraps each `/mcp` and `/api/check` call in `telemetry.run`, with sources `service_mcp` and `service_api`. Counts only. |
+| 5 | `CLAUDE.md` and the README list commands this build changes. | Missing | S7 updates both: `make service`, `make excel`, `make tool-choice`, `make host-deploy`; `make mcp-web` removed. |
+| 6 | The add-in needs a public client id from WorkOS, set per environment. | Missing | Setting `LW_EXCEL_CLIENT_ID`, served by `/api/status`. |
+| 7 | S0 as a separate spike would build sign-in code twice, once in the old panel and again in S5. | Not needed as planned | S0 builds `auth.js` as the final module, used unchanged by S5. Its manual check waits for the WorkOS account, so S1 to S4 don't wait for it. |
+| 8 | Keeping `erm/mcp_remote.py` alongside the new service would leave two hosted connectors. | Not needed | Removed in S4, as planned. Its only other users are `make mcp-web` and `tests/test_excel_addin.py`, both changed in S4. |
+| 9 | The desk's `/api/ask` and Claude switch stay useful locally. | Keep | Local desk unchanged apart from the quarter and the new core function. |
+
 ## Providers
 
 Sign-in: WorkOS AuthKit, $0. Host: Fly.io, about $7 a month. Details and what's still unconfirmed in "Sign-in provider and host" at the end.
@@ -89,11 +105,14 @@ Exit criteria
 
 ### S4. The hosted service
 
-Files: `erm/service.py` (new), `erm/auth.py` (new), `erm/mcp_remote.py` (removed), `Makefile`, `tests/test_service.py` (new), `tests/fake_provider.py` (new).
+Files: `erm/service.py` (new), `erm/auth.py` (new), `erm/mcp_remote.py` (removed), `Makefile`, `tests/test_service.py` (new), `tests/fake_provider.py` (new), `tests/test_excel_addin.py`, `app/desk/server.py` (certificate code shared).
 - One Starlette app: `/mcp`, `/api/check`, `/api/confirm`, `/api/inspect`, `/api/status`, `/excel/*`, `/.well-known/oauth-protected-resource`, `/health`.
 - `erm/auth.py`: checks a JWT against the provider's public keys (PyJWT, already installed): signature, issuer, audience, expiry. Subject must be in `LW_INVITED`. `401` with `WWW-Authenticate: Bearer resource_metadata=...`, or `403`.
 - Engine built with `save_automated=False`, no judge, owner from the token.
 - Access log off. One JSON line per request: route, status, milliseconds.
+- `/mcp` and `/api/check` calls run inside `telemetry.run`, sources `service_mcp` and `service_api`.
+- `/api/status` is public: sign-in on or off, issuer, `LW_EXCEL_CLIENT_ID`, quarters held, data version.
+- `make excel` runs the service locally on port 3000 over HTTPS with the Office development certificate.
 - Local mode: no sign-in, and refuses to start on any address but `127.0.0.1`.
 - `make service` runs it locally. `make mcp-web` is removed.
 - Tests use a stand-in provider with its own keys, served in the test.
@@ -108,7 +127,8 @@ Exit criteria
 Files: `app/desk/excel/manifest.template.xml` (new), `app/desk/excel/manifest.xml` (generated, local), `scripts/make_manifest.py` (new), `app/desk/excel/functions.json`, `app/desk/excel/functions.js`, `app/desk/excel/core.js`, `app/desk/excel/taskpane.js`, `app/desk/excel/taskpane.html`, `tests/excel_addin_check.cjs`, `tests/test_excel_addin.py`.
 - Namespace `LW`, function `CHECK(names, [as_of])`. Calls `/api/check` with the in-memory token, in batches of 50.
 - No token: returns "Sign in from the Lender Watch panel". After sign-in: full recalculation.
-- The panel reads `/api/status`. Hosted: no Claude switch, no `/api/ask`.
+- The panel reads `/api/status`, which needs no sign-in. Hosted: no Claude switch, no `/api/ask`. Local: no sign-in.
+- When the panel opens, it refreshes the token silently. If that fails, it shows "Sign in".
 - `scripts/make_manifest.py --base-url <url>` writes the manifest from the template.
 
 Exit criteria
@@ -133,7 +153,7 @@ Exit criteria
 
 ### S7. Deploy files
 
-Files: `deploy/service.Dockerfile` (new), `deploy/fly.toml` (new), `scripts/host-deploy.sh` (new), `Makefile`, `outputs/patches/production-gate-host.patch` (new), `README.md`.
+Files: `deploy/service.Dockerfile` (new), `deploy/fly.toml` (new), `scripts/host-deploy.sh` (new), `Makefile`, `outputs/patches/production-gate-host.patch` (new), `README.md`, `CLAUDE.md`.
 - An image with the service, public data and the seed answers. No key, no `.env`, checked by `scripts/check-image.sh`.
 - `make host-deploy` checks the approval like `make prod`, builds from the commit, deploys, and waits for `/health`.
 - `scripts/host-deploy.sh` runs `fly deploy` from a clean `git archive` of the commit.
