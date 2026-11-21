@@ -1,0 +1,12 @@
+# Drift log: embedded-tools-on-semantic-layer.md
+
+One row per build step. A departure is a file the step changed that its plan step does not name, or a planned file it left unchanged.
+
+| Date | Step | Changed, not planned | Planned, not changed |
+|---|---|---|---|
+| 2026-11-21 | P1 | `data/synthetic/companies.csv`, `data/synthetic/events.csv`, `data/synthetic/financials.csv`, `data/synthetic/fund_stakes.csv`, `data/synthetic/funds.csv`, `data/synthetic/holdings.parquet`, `data/synthetic/investor.csv`, `data/synthetic/letters/01.md`, `data/synthetic/letters/02.md`, `data/synthetic/letters/03.md`, `data/synthetic/letters/04.md`, `data/synthetic/letters/05.md`, `data/synthetic/letters/06.md`, `data/synthetic/letters/07.md`, `data/synthetic/letters/08.md`, `data/synthetic/letters/09.md`, `data/synthetic/letters/10.md`, `data/synthetic/letters/11.md`, `data/synthetic/letters/12.md`, `data/synthetic/letters/13.md`, `data/synthetic/letters/14.md`, `data/synthetic/letters/15.md`, `data/synthetic/letters/16.md`, `data/synthetic/letters/17.md`, `data/synthetic/letters/18.md`, `data/synthetic/letters/19.md`, `data/synthetic/letters/20.md`, `data/synthetic/manager_values.csv`, `data/synthetic/positions.csv`, `data/synthetic/real_companies.json` | `20.md`, `companies.csv`, `data/synthetic/`, `events.csv`, `financials.csv`, `fund_stakes.csv`, `funds.csv`, `holdings.parquet`, `investor.csv`, `letters/01.md`, `manager_values.csv`, `positions.csv`, `real_companies.json` |
+| 2026-11-21 | P2 | `specs/embedded-tools-on-semantic-layer.md` | none |
+| 2026-11-21 | P3 | `tests/test_assist.py`, `tests/test_excel_addin.py`, `tests/test_names.py` | `tests/test_service.py` |
+| 2026-11-21 | P4 | `tests/test_assist.py` | none |
+| 2026-11-21 | P5 | `data/synthetic/manager_values.csv`, `scripts/make_synthetic.py`, `tests/test_assist.py` | none |
+| 2026-11-21 | P6 | `outputs/test-evidence/prototype/README.md`, `outputs/test-evidence/prototype/explanations-run1-before-fixes.md`, `outputs/test-evidence/prototype/explanations-run2.md`, `outputs/test-evidence/prototype/letters-run1.md` | `outputs/test-evidence/prototype/` |

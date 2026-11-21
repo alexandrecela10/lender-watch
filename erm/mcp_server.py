@@ -10,7 +10,7 @@ import os
 
 from mcp.server.mcpserver import MCPServer
 
-from erm import lender_tools, telemetry
+from erm import lender_tools, prototype_tools, telemetry
 from erm.api import Engine, default_client
 from erm.assist import MAX_NAMES
 from erm.store import LOCAL
@@ -36,6 +36,8 @@ lender_tools.register(
     max_names=MAX_NAMES,
     with_file_tool=True,
 )
+# The prototype's measures: on this computer only, never on the hosted service.
+prototype_tools.register(mcp)
 
 
 if __name__ == "__main__":

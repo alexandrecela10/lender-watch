@@ -25,6 +25,17 @@
     ];
   }
 
+  // One output row per input cell for =LW.MEASURE: value (or why there is none), unit, and where it came from.
+  function measureRow(row) {
+    const source = row.sources.length ? (row.synthetic ? "synthetic" : "filing") : "";
+    return [row.value === null ? row.not_available : row.value, row.unit, source];
+  }
+
+  function spillMeasure(cells, asked, rows) {
+    const byAsked = new Map(asked.map((name, i) => [name, rows[i]]));
+    return cells.map((n) => (byAsked.has(n) ? measureRow(byAsked.get(n)) : ["", "", ""]));
+  }
+
   // Sends `items` in batches of `size` through `post` (which returns {rows}) and joins the rows in order.
   async function checkInBatches(post, items, size = 50) {
     const rows = [];
@@ -156,7 +167,7 @@
     await context.sync();
   }
 
-  const api = { RESULT_HEADERS, LOAN_HEADERS, resultRow, namesFromRange, spillRows, checkInBatches, countFailedLookups, findNameColumn, firstFreeColumn, loanRows, readWorkbook, chooseList, writeResults, updateResult };
+  const api = { RESULT_HEADERS, LOAN_HEADERS, resultRow, namesFromRange, spillRows, checkInBatches, measureRow, spillMeasure, countFailedLookups, findNameColumn, firstFreeColumn, loanRows, readWorkbook, chooseList, writeResults, updateResult };
   if (typeof module !== "undefined") module.exports = api;
   root.ErmExcel = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

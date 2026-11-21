@@ -1,0 +1,73 @@
+# Agreed measures for the prototype (specs/embedded-tools-on-semantic-layer.md, section 2).
+# Each measure is written once: plain words, an owner and a version. Code in erm/semantic.py computes it.
+# A new measure is a new entry here and one function there. The tools read this file, so nothing else changes.
+
+- id: lender_value
+  name: Lender value
+  definition: What lenders say the company's debt is worth, as a share of what they're owed, averaged by loan size.
+  unit: percent
+  applies_to: both
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: lender_value
+  explain: none
+
+- id: lender_change
+  name: Change in lender value
+  definition: How far that average moved since the quarter before, on loans held in both quarters, in points.
+  unit: points
+  applies_to: both
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: lender_change
+  explain: none
+
+- id: cost_in_flagged
+  name: Our cost in flagged companies
+  definition: What we paid for the company, through every fund that holds it, if Lender Watch flags it this quarter. Zero if not flagged.
+  unit: usd
+  applies_to: both
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: cost_in_flagged
+  explain: company
+
+- id: share_cost_flagged
+  name: Share of our cost in flagged companies
+  definition: Our cost in flagged companies, as a share of what we paid for all 60 companies this quarter.
+  unit: share
+  applies_to: both
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: share_cost_flagged
+  explain: company
+
+- id: debt_to_ebitda
+  name: Debt against earnings
+  definition: Net debt divided by the quarter's EBITDA times four. Not meaningful when EBITDA is zero or below.
+  unit: ratio
+  applies_to: invented
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: debt_to_ebitda
+  explain: none
+
+- id: manager_lender_gap
+  name: Manager versus lenders
+  definition: The manager's value of the equity as a share of cost, after write-downs we have confirmed, minus the lenders' value of the debt as a share of what they're owed, in points.
+  unit: points
+  applies_to: invented
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: manager_lender_gap
+  explain: component
+
+- id: share_via_funds_of_funds
+  name: Share held through funds of funds
+  definition: Of what we paid for the company, the share that came through a fund of funds rather than directly.
+  unit: share
+  applies_to: both
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: share_via_funds_of_funds
+  explain: none

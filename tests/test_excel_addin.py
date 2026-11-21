@@ -46,10 +46,11 @@ def test_manifest_uses_one_shared_runtime_for_functions_and_panel():
 
 def test_the_formula_is_lw_check_with_an_optional_quarter():
     described = json.loads((ADDIN / "functions.json").read_text())["functions"]
-    assert [f["id"] for f in described] == ["CHECK"]
+    assert [f["id"] for f in described] == ["CHECK", "MEASURE"]
     assert [p["name"] for p in described[0]["parameters"]] == ["names", "as_of"]
     assert described[0]["parameters"][1]["optional"] is True
     assert 'associate("CHECK"' in (ADDIN / "functions.js").read_text()
+    assert 'associate("MEASURE"' in (ADDIN / "functions.js").read_text()
     assert 'DefaultValue="LW"' in (ADDIN / "manifest.xml").read_text()
 
 

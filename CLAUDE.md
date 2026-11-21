@@ -17,7 +17,7 @@
 ## Commands
 
 Run from the repo root. Healthy output in brackets.
-- `make test`: runs `uv run pytest` [`330 passed`, about 130 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
+- `make test`: runs `uv run pytest` [`375 passed`, about 4.5 minutes; the first run on a machine adds about 100 seconds to build the app's search index]
 - `make lint`: runs `ruff check` and `ruff format --check` [`All checks passed!` then `N files already formatted`; any `Would reformat` line is a failure]
 - `make evals`: offline eval gate, `uv run python -m eval.offline`, thresholds in `evals/thresholds.yaml` [`precision 1.000`, `recall 0.936`, `PASS`]. It replays saved name-search hits and judge verdicts, so it only re-tests the exact-name rule live.
 - `make bands`: compares the share of names needing a person's review with the provisional range in `evals/bands.yaml`, `uv run python -m eval.bands` [`No check made` until enough runs exist, or `No action needed`; it exits 1 and writes a draft intent when the share is outside the range]
@@ -27,6 +27,7 @@ Run from the repo root. Healthy output in brackets.
 - `make service`: the hosted service run locally, no sign-in, 127.0.0.1 only, `uv run python -m erm.service` [prints `Lender Watch is ready: http://localhost:8770`]
 - `make mcp`: the tool server for AI agents, `uv run python -m erm.mcp_server` [no output; it serves over stdin and exits when stdin closes]
 - `make tool-choice`: does Claude call Lender Watch when it should, and only then; sends 30 public prompts to Anthropic, about $0.25 a run [a table with `20 of 20`, `10 of 10`, `PASS`]
+- Prototype on synthetic data, this computer only: `uv run python scripts/make_synthetic.py --seed 2026` rebuilds `data/synthetic/` [`Wrote .../data/synthetic`, files identical to git]; `uv run python -m eval.letters --live` sends the 20 synthetic letters to Anthropic and scores the reader, about $0.13 [`Events found: 27 of 27`]. In the tools, the reader and the explainer's wording call Anthropic only with `LW_PROTOTYPE_AI=1`
 - `uv run python scripts/make_manifest.py --base-url <https url>`: writes the Excel add-in manifest for one address [`Wrote ... for <url>`]
 - `uv run python -m eval.plan_drift plans/<plan>.md <step>`: run right after each build step's commit, then amend the commit with the log; lists files changed outside the step's plan and appends a row to `plans/<plan>-drift.md` [one row, `none` when the build matches the plan]. The log is the control for plan drift: it flags a departure for the reviewer and blocks nothing. Updating the plan in the same commit is optional
 - `make hooks`: run once after cloning: installs the git pre-commit key scan [`pre-commit key scan installed`]
