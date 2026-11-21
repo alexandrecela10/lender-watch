@@ -1,6 +1,6 @@
 # Spec: Lender Watch inside real Excel and real Claude
 
-Source: `intent/engine-in-excel-and-claude.md` (commit `ce9220e`, approved 2026-11-20). Status: draft, 2026-11-20. Fresh pass done and its 12 concerns resolved below. Tool-choice eval added at Alexandre's request. Pending Alexandre's review.
+Source: `intent/engine-in-excel-and-claude.md` (commit `ce9220e`, approved 2026-11-20). Status: draft, 2026-11-20. Fresh pass done and its 12 concerns resolved below. Tool-choice eval added at Alexandre's request. Approved by Alexandre 2026-11-21, including the tool-choice eval's exception to `data-handling` check 3.
 Evidence: the repo's code, its measured results on public filings, and Claude's connector docs read on 2026-11-20. Nothing has run inside real Excel or real Claude. No LP or GP analyst has been interviewed. The pain is inferred.
 
 ## Bottom line
