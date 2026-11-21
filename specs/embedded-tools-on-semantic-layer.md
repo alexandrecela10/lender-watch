@@ -113,7 +113,7 @@ Example and counterfactual: we own 20% of Synthetic Fund 7, which owns 10% of Sy
 
 **Measures 3 and 4, in detail:**
 - One row per requested company, plus a `total` row that sums the company rows.
-- A company Lender Watch can't settle (needs a person's answer, or no usable loans) gets "not checked", stays out of the numerator, and is counted in the total row's `not_checked`.
+- A company with no confirmed loan in that quarter gets "not checked", stays out of the numerator, and is counted in the total row's `not_checked`. A company with confirmed loans and some names still to confirm is computed from the confirmed loans, as Lender Watch shows it, with a note. (Changed in build step P2: the first rule refused companies Lender Watch itself shows, so measures 1 and 2 couldn't equal Lender Watch's figures.)
 - A value of 0 has two sources: the flag's filing (real) or synthetic lender rows (invented), and the cost rows.
 - Measure 4's denominator is always the whole portfolio, so a company's share doesn't depend on which others were asked for.
 
