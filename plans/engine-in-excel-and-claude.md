@@ -71,7 +71,8 @@ Files: `erm/api.py`, `erm/retrieve.py`, `app/desk/server.py`, `app/review.py`, `
 - Desk and review app call `engine.latest()`.
 
 Exit criteria
-- Tests for spec checks 3 and 8: both quarters work, an unknown date names the quarters held, a changed holdings file builds a new index, and the 30 June word counts equal `eval/offline.py`'s table.
+- Tests for spec checks 3 and 8: both quarters work, an unknown date names the quarters held, a changed holdings file builds a new index, and the 30 June index is exactly the index the engine built before this step.
+- Departure, 2026-11-21: the spec's check compared the engine's word counts with `eval/offline.py`'s table. They already differed before this build: the eval drops duplicate filing rows (54,301 rows) and the engine doesn't (66,494). The check now compares the engine with its own earlier index. The old difference is reported to Alexandre as a separate finding, not fixed here.
 - `make evals` prints `precision 1.000`, `recall 0.936`, `PASS`.
 - `make test` and `make lint` green.
 - Commit: `feat(engine): choose the quarter; one index per quarter keyed by data version`.

@@ -30,16 +30,23 @@ for x in json.load(open("data/eval/alias_test.json"))["results"]:
 state = Path("data/eval/full_batch_id.txt")
 todo = {}
 for r in sp.itertuples():
-    for key, g in e.groups(r.company_name).items():
+    period = e.latest()
+    for key, g in e.groups(r.company_name, period).items():
         m = g["mention"]
         f = compute(
-            g["via"], m.text, e.doc_freq, e.total_docs, m.left, m.right, m.trade_name
+            g["via"],
+            m.text,
+            e.doc_freq(period),
+            len(e.index_for(period).holdings),
+            m.left,
+            m.right,
+            m.trade_name,
         )
         pid = pair_id(r.company_name, key)
         if (g["via"] == r.company_name and is_clear_exact(f)) or e.store.get(pid):
             continue
         ex = (
-            e.index.holdings.iloc[g["rows"]]
+            e.index_for(period).holdings.iloc[g["rows"]]
             .raw_text.drop_duplicates()
             .str.slice(0, 170)
             .head(2)

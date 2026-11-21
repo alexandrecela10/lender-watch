@@ -22,7 +22,6 @@ from erm import telemetry
 from erm.api import (
     FLAG_LABELS,
     FLAG_RULE,
-    LATEST,
     LOAN_COLUMNS,
     Engine,
     default_client,
@@ -361,7 +360,7 @@ st.write(
 )
 st.write(
     "You're checking on the companies you've invested in through these firms. Their lenders use different names, so the answer is hard to find by hand. "
-    f"This tool finds it, with the filing as proof. Data: public SEC filings for the quarter ending {pd.Timestamp(LATEST):%d %B %Y}."
+    f"This tool finds it, with the filing as proof. Data: public SEC filings for the quarter ending {pd.Timestamp(engine.latest()):%d %B %Y}."
 )
 st.caption(
     "Values are each lender's own estimate, not a market price. Not investment advice. Matching is scored against answers an AI wrote, "

@@ -27,7 +27,6 @@ sys.path.insert(0, str(ROOT))
 from app.desk import assistant
 from erm import assist, telemetry
 from erm.api import (
-    LATEST,
     LOAN_COLUMNS,
     Engine,
     default_client,
@@ -87,7 +86,9 @@ def demo_workbook(holdings: pd.DataFrame) -> dict[str, list[list]]:
     """Five public companies, and a tab of real filing rows that name them the way lenders do."""
     listed = pd.read_csv(DEMO_LIST).head(5)
     portfolio = [list(listed.columns), *listed.values.tolist()]
-    latest = holdings[(holdings.period == LATEST) & (holdings.excluded_reason == "")]
+    latest = holdings[
+        (holdings.period == holdings.period.max()) & (holdings.excluded_reason == "")
+    ]
     tape = [
         [
             "Lender",

@@ -5,3 +5,4 @@ One row per build step. A departure is a file the step changed that its plan ste
 | Date | Step | Changed, not planned | Planned, not changed |
 |---|---|---|---|
 | 2026-11-21 | S0 | none | none |
+| 2026-11-21 | S1 | `eval/run_full_list.py`, `specs/engine-in-excel-and-claude.md` | `erm/retrieve.py` |

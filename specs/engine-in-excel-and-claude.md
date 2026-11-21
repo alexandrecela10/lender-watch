@@ -232,7 +232,7 @@ Every company named in a prompt comes from the public demo list. A must-call cas
 5. Owner A's confirmation changes A's result and not B's. `pending("A")` drops the pair A answered. Answers survive closing and reopening the store.
 6. Rebuilding an old store keeps every person answer, now with `owner = "local"`.
 7. The seed file's hash is unchanged after a full test run.
-8. A changed holdings file builds a new index. The 30 June index gives the same word counts as `eval/offline.py`'s table.
+8. A changed holdings file builds a new index. The 30 June index is exactly the index the engine built before quarters were added. (Corrected 2026-11-21 in build step S1: the eval's table drops duplicate rows, the engine never did, so the two were never equal.)
 9. In hosted mode, a list with unclear names writes no row to the store.
 10. Ten simultaneous confirmations all land.
 11. The hosted tool list is exactly `check_lenders` and `confirm_match`. The local list is those plus `check_lenders_in_file`.

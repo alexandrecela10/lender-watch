@@ -28,7 +28,6 @@ from erm.signals import facts_for, flags_for, usable
 from erm.store import JUDGE, PERSON, Store, pair_id
 from erm.textparse import core, find_mention, name_pattern, norm
 
-LATEST, PRIOR = "2026-06-30", "2026-03-31"
 NOT_CHECKED = "Not checked automatically. Please confirm."
 FLAG_LABELS = {
     "flagged": "Flagged",
@@ -43,6 +42,15 @@ FLAG_RULE = (
 
 
 log = logging.getLogger("erm.api")
+
+
+def fingerprint(path) -> str:
+    """First 12 characters of the file's SHA-256: the data version shown beside every result."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()[:12]
 
 
 def call_judge(client, name, sector, sponsor, candidate, examples, details=None):
@@ -135,33 +143,76 @@ class Engine:
         client=None,
     ):
         self.holdings = pd.read_parquet(holdings_path)
+        self.data_version = fingerprint(holdings_path)
         self.store = Store(store_path)
         self.client = client  # None means unclear pairs go straight to a person
-        self.index = self._load_index(Path(index_cache))
-        self.doc_freq = {t: len(rows) for t, rows in self.index.tokens.items()}
-        self.total_docs = len(self.index.holdings)
+        self._cache = Path(index_cache)
+        self._indexes: dict[str, Index] = {}
+        self.index_for(self.latest())  # build the newest quarter's index before the first request
 
-    def _load_index(self, cache: Path) -> Index:
-        latest = self.holdings[self.holdings.period == LATEST]
-        if cache.exists():
-            with cache.open("rb") as f:
-                return pickle.load(f)
-        idx = Index.build(latest, semantic=False)
-        with cache.open("wb") as f:
-            pickle.dump(idx, f)
-        return idx
+    def periods(self) -> list[str]:
+        """Quarter-ends held, oldest first."""
+        return sorted(str(p) for p in self.holdings.period.unique())
 
-    def groups(self, name: str) -> dict[str, dict]:
+    def latest(self) -> str:
+        return self.periods()[-1]
+
+    def previous(self, as_of: str) -> str | None:
+        """The quarter before `as_of`, or None when none is held."""
+        held = self.periods()
+        i = held.index(as_of)
+        return held[i - 1] if i > 0 else None
+
+    def quarter(self, as_of: str | None = None) -> str:
+        """The quarter to use. An unknown date is refused, never swapped for another quarter."""
+        if as_of is None:
+            return self.latest()
+        as_of = str(as_of)
+        if as_of not in self.periods():
+            raise ValueError(
+                f"No data for {as_of}. Quarters held: {', '.join(self.periods())}."
+            )
+        return as_of
+
+    def index_for(self, period: str) -> Index:
+        """One search index per quarter, cached on disk under the data version, so changed data builds a new one."""
+        if period not in self._indexes:
+            cache = self._cache.with_name(
+                f"{self._cache.stem}-{self.data_version}-{period}{self._cache.suffix}"
+            )
+            if cache.exists():
+                with cache.open("rb") as f:
+                    idx = pickle.load(f)
+            else:
+                idx = Index.build(
+                    self.holdings[self.holdings.period == period], semantic=False
+                )
+                cache.parent.mkdir(parents=True, exist_ok=True)
+                with cache.open("wb") as f:
+                    pickle.dump(idx, f)
+            self._indexes[period] = idx
+        return self._indexes[period]
+
+    def doc_freq(self, period: str) -> dict[str, int]:
+        """How many holdings of that quarter contain each word. The exact-name rule depends on it."""
+        idx = self.index_for(period)
+        if not hasattr(idx, "_doc_freq"):
+            idx._doc_freq = {t: len(rows) for t, rows in idx.tokens.items()}
+        return idx._doc_freq
+
+    def groups(self, name: str, as_of: str | None = None) -> dict[str, dict]:
         """Candidate borrowers for a name, including under any saved alias. One group per distinct borrower form."""
+        index = self.index_for(self.quarter(as_of))
         groups: dict[str, dict] = {}
         for label in [name, *self.store.aliases(name)]:
-            for i, m in self.index.name_hits(label):
+            for i, m in index.name_hits(label):
                 g = groups.setdefault(m.key, {"mention": m, "rows": [], "via": label})
                 g["rows"].append(i)
         return groups
 
-    def _decide(self, name, sector, sponsor, key, g) -> Candidate:
-        rows = self.index.holdings.iloc[g["rows"]]
+    def _decide(self, name, sector, sponsor, key, g, period) -> Candidate:
+        index = self.index_for(period)
+        rows = index.holdings.iloc[g["rows"]]
         m = g["mention"]
         examples = rows.raw_text.drop_duplicates().str.slice(0, 170).head(2).tolist()
         pid = pair_id(name, key)
@@ -187,8 +238,8 @@ class Engine:
         f = compute(
             g["via"],
             m.text,
-            self.doc_freq,
-            self.total_docs,
+            self.doc_freq(period),
+            len(index.holdings),
             m.left,
             m.right,
             m.trade_name,
@@ -227,13 +278,18 @@ class Engine:
             **base, verdict=d.verdict, decided_by=d.decided_by, reason=d.reason
         )
 
-    def resolve_entity(self, name: str, context: dict | None = None) -> Resolution:
-        """Find the company in the source. `context` may carry sector and sponsor."""
+    def resolve_entity(
+        self, name: str, context: dict | None = None, as_of: str | None = None
+    ) -> Resolution:
+        """Find the company in the source, in the holdings of one quarter. `context` may carry sector and sponsor."""
         context = context or {}
+        period = self.quarter(as_of)
         c = core(name)
         cands = [
-            self._decide(name, context.get("sector"), context.get("sponsor"), k, g)
-            for k, g in self.groups(name).items()
+            self._decide(
+                name, context.get("sector"), context.get("sponsor"), k, g, period
+            )
+            for k, g in self.groups(name, period).items()
         ]
         cands.sort(
             key=lambda x: (
@@ -272,19 +328,28 @@ class Engine:
         return pd.concat(keep).loc[lambda d: ~d.index.duplicated()]
 
     def gather_facts(
-        self, name: str, context: dict | None = None, res: Resolution | None = None
+        self,
+        name: str,
+        context: dict | None = None,
+        res: Resolution | None = None,
+        as_of: str | None = None,
     ) -> dict:
-        """Loan facts for confirmed matches. Every fact carries its filing link and row text."""
-        res = res or self.resolve_entity(name, context)
+        """Loan facts for confirmed matches, for one quarter. Every fact carries its filing link and row text."""
+        period = self.quarter(as_of)
+        compared_with = self.previous(period)
+        res = res or self.resolve_entity(name, context, as_of=period)
         rows = self._matched_rows(res)
-        facts = facts_for(rows, LATEST, PRIOR)
+        facts = facts_for(rows, period, compared_with)
         flags = flags_for(facts)
-        excluded = rows[(rows.period == LATEST) & (rows.excluded_reason != "")]
+        excluded = rows[(rows.period == period) & (rows.excluded_reason != "")]
         return {
+            "as_of": period,
+            "compared_with": compared_with,
+            "data_version": self.data_version,
             "resolution": asdict(res),
             "flags": asdict(flags),
             "facts": [asdict(f) for f in facts],
-            "n_positions_used": int(len(usable(rows[rows.period == LATEST]))),
+            "n_positions_used": int(len(usable(rows[rows.period == period]))),
             "excluded": excluded.excluded_reason.value_counts().to_dict(),
             "excluded_filing": excluded.inlineurl.iloc[0] if len(excluded) else "",
         }
