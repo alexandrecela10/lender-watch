@@ -107,15 +107,15 @@ def test_how_to_reconcile_states_the_limits_and_the_counterfactual():
     assert "5 names" in out["answer"]
     assert "#N/A" in out["why_not_a_lookup"]
     assert any("Banks" in x for x in out["cannot_do"])
-    assert out["next_tool"] == "reconcile_list"
+    assert out["next_tool"] == "check_lenders"
 
 
 def test_how_to_reconcile_says_to_keep_the_ai_off_for_confidential_lists():
     assert "off" in assist.how_to_reconcile(PROFILE, confidential=True)["privacy"]
 
 
-def test_reconcile_list_returns_a_source_for_every_loan(engine):
-    out = assist.reconcile_list(engine, [{"name": "KnowBe4"}])
+def test_check_list_returns_a_source_for_every_loan(engine):
+    out = assist.check_list(engine, [{"name": "KnowBe4"}], PROFILE)
     row = out["rows"][0]
     assert row["flag"] == "Flagged"
     assert row["listed_as"] == "KnowBe4 Inc."
@@ -126,30 +126,30 @@ def test_reconcile_list_returns_a_source_for_every_loan(engine):
     )
 
 
-def test_reconcile_list_finds_a_company_that_borrows_under_another_name(engine):
-    row = assist.reconcile_list(engine, [{"name": "Exabeam"}])["rows"][0]
+def test_check_list_finds_a_company_that_borrows_under_another_name(engine):
+    row = assist.check_list(engine, [{"name": "Exabeam"}], PROFILE)["rows"][0]
     assert row["listed_as"] == "LogRhythm Inc."
 
 
 def test_unclear_matches_are_held_for_a_person(engine):
-    row = assist.reconcile_list(engine, [{"name": "Apex Group"}])["rows"][0]
+    row = assist.check_list(engine, [{"name": "Apex Group"}], PROFILE)["rows"][0]
     assert any(x["listed_as"] == "Apex Bidco Limited" for x in row["to_confirm"])
 
 
 def test_an_unknown_company_has_no_numbers(engine):
-    row = assist.reconcile_list(engine, [{"name": "Not A Real Company Xyzzy"}])["rows"][
-        0
-    ]
+    row = assist.check_list(engine, [{"name": "Not A Real Company Xyzzy"}], PROFILE)[
+        "rows"
+    ][0]
     assert row["result"] == "No public lender found"
     assert row["value_pct"] is None and row["loans"] == []
 
 
-def test_reconcile_list_refuses_an_oversized_list(engine):
+def test_check_list_refuses_an_oversized_list(engine):
     with pytest.raises(ValueError):
-        assist.reconcile_list(engine, [{"name": "x"}] * (assist.MAX_NAMES + 1))
+        assist.check_list(engine, [{"name": "x"}] * (assist.MAX_NAMES + 1), PROFILE)
 
 
-def test_reconcile_list_logs_counts_and_never_names(engine):
+def test_check_list_logs_counts_and_never_names(engine):
     stream = io.StringIO()
     handler = logging.StreamHandler(stream)
     handler.setFormatter(telemetry.JsonFormatter())
@@ -158,7 +158,7 @@ def test_reconcile_list_logs_counts_and_never_names(engine):
     root.addHandler(handler)
     root.setLevel(logging.INFO)
     try:
-        assist.reconcile_list(engine, [{"name": "KnowBe4"}], source="test")
+        assist.check_list(engine, [{"name": "KnowBe4"}], PROFILE, source="test")
     finally:
         root.removeHandler(handler)
         root.setLevel(previous)
@@ -171,41 +171,72 @@ def test_reconcile_list_logs_counts_and_never_names(engine):
 # --- Agent tools -------------------------------------------------------------------------------------
 
 
-def test_mcp_inspect_sheets_takes_rows_or_a_file(tmp_path):
+def test_inspect_sheets_takes_rows_or_a_file(tmp_path):
     path = tmp_path / "book.xlsx"
     with pd.ExcelWriter(path) as w:
         pd.DataFrame(PORTFOLIO).to_excel(w, sheet_name="P", index=False, header=False)
         pd.DataFrame(TAPE).to_excel(w, sheet_name="T", index=False, header=False)
-    assert mcp_server.inspect_sheets(path=str(path))["should_offer"] is True
-    assert mcp_server.inspect_sheets(sheets={"P": PORTFOLIO, "T": TAPE})["should_offer"]
-
-
-def test_mcp_inspect_sheets_needs_exactly_one_input():
-    with pytest.raises(ValueError):
-        mcp_server.inspect_sheets()
-
-
-def test_mcp_how_to_reconcile():
-    assert mcp_server.how_to_reconcile(n_names=3)["next_tool"] == "reconcile_list"
-
-
-def test_mcp_reconcile_list_and_enrich_spreadsheet(engine, tmp_path, monkeypatch):
-    monkeypatch.setattr(mcp_server, "_engine", engine)
     assert (
-        mcp_server.reconcile_list([{"name": "KnowBe4"}])["rows"][0]["flag"] == "Flagged"
+        assist.inspect_sheets(assist.read_workbook(str(path)))["should_offer"] is True
     )
+    assert assist.inspect_sheets({"P": PORTFOLIO, "T": TAPE})["should_offer"]
+
+
+def _tool(name):
+    return mcp_server.mcp._tool_manager.get_tool(name).fn
+
+
+def test_local_server_is_lender_watch_with_three_tools():
+    names = sorted(t.name for t in mcp_server.mcp._tool_manager.list_tools())
+    assert mcp_server.mcp.name == "lender-watch"
+    assert names == ["check_lenders", "check_lenders_in_file", "confirm_match"]
+
+
+def test_check_lenders_stamps_every_row(engine, monkeypatch):
+    monkeypatch.setattr(mcp_server, "_engine", engine)
+    out = _tool("check_lenders")([{"name": "KnowBe4"}])
+    row = out["rows"][0]
+    assert row["flag"] == "Flagged"
+    assert (row["as_of"], row["compared_with"]) == ("2026-06-30", "2026-03-31")
+    assert (
+        row["data_version"] == engine.data_version and row["rule_version"] == "flag-v1"
+    )
+    march = _tool("check_lenders")([{"name": "KnowBe4"}], as_of="2026-03-31")
+    assert march["rows"][0]["as_of"] == "2026-03-31"
+
+
+def test_check_lenders_twice_gives_identical_rows(engine, monkeypatch):
+    monkeypatch.setattr(mcp_server, "_engine", engine)
+    names = [{"name": n} for n in ["KnowBe4", "Exabeam", "Apex Group"]]
+    assert _tool("check_lenders")(names) == _tool("check_lenders")(names)
+
+
+def test_confirm_match_saves_a_local_answer(engine, monkeypatch):
+    monkeypatch.setattr(mcp_server, "_engine", engine)
+    row = _tool("check_lenders")([{"name": "Apex Group"}])["rows"][0]
+    item = row["to_confirm"][0]
+    saved = _tool("confirm_match")("Apex Group", item["mention_key"], False)
+    assert (saved["decided_by"], saved["owner"], saved["verdict"]) == (
+        "person",
+        "local",
+        "no_match",
+    )
+
+
+def test_check_lenders_in_file(engine, tmp_path, monkeypatch):
+    monkeypatch.setattr(mcp_server, "_engine", engine)
     source = tmp_path / "list.csv"
     source.write_text("Company,Owner\nKnowBe4,Vista\n")
-    out = mcp_server.enrich_spreadsheet(str(source), "Company", sponsor_column="Owner")
+    out = _tool("check_lenders_in_file")(str(source), "Company", sponsor_column="Owner")
     written = pd.read_excel(out["written_to"], sheet_name=None)
     assert out["rows"] == 1 and written["Your list"].loc[0, "Flag"] == "Flagged"
     assert written["All loans"].Filing.notna().all()
     assert source.read_text().startswith("Company,Owner")  # the original is untouched
 
 
-def test_mcp_enrich_spreadsheet_refuses_other_files(tmp_path):
+def test_check_lenders_in_file_refuses_other_files(tmp_path):
     with pytest.raises(ValueError):
-        mcp_server.enrich_spreadsheet(str(tmp_path / "x.txt"), "Company")
+        _tool("check_lenders_in_file")(str(tmp_path / "x.txt"), "Company")
 
 
 # --- Assistant ---------------------------------------------------------------------------------------

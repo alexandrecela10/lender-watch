@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from app.desk import assistant
 from erm import assist, telemetry
+from erm.connectors.bdc import PROFILE
 from erm.api import (
     LOAN_COLUMNS,
     Engine,
@@ -147,7 +148,7 @@ class Desk:
         return []
 
     def _reconcile(self, rows: list[dict]) -> dict:
-        return assist.reconcile_list(self.engine, rows, source="desk")
+        return assist.check_list(self.engine, rows, PROFILE, source="desk")
 
     def reconcile(self, payload: dict) -> dict:
         known = {

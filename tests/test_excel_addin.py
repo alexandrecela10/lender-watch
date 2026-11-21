@@ -84,14 +84,11 @@ def test_tls_context_loads_a_certificate(tmp_path):
 
 def test_web_connector_has_no_tool_that_touches_files_or_saved_answers():
     names = {t.name for t in mcp_remote.mcp._tool_manager.list_tools()}
-    assert names == {
-        "inspect_sheets",
-        "how_to_reconcile",
-        "reconcile_list",
-        "resolve_entity",
-    }
+    assert names == {"check_lenders", "confirm_match"}
 
 
 def test_web_connector_refuses_an_oversized_list():
     with pytest.raises(ValueError):
-        mcp_remote.reconcile_list([{"name": "x"}] * (mcp_remote.MAX_NAMES + 1))
+        mcp_remote.mcp._tool_manager.get_tool("check_lenders").fn(
+            [{"name": "x"}] * (mcp_remote.MAX_NAMES + 1)
+        )
