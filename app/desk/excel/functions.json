@@ -1,15 +1,21 @@
 {
   "functions": [
     {
-      "id": "RECONCILE",
-      "name": "RECONCILE",
-      "description": "Links company names to the names lenders use in SEC filings. Returns flag, lender's name for the company, value as % of amount owed, change in a quarter, and the filing link.",
+      "id": "CHECK",
+      "name": "CHECK",
+      "description": "Lender Watch: what lenders report about these companies. Returns flag, the name lenders use, value as % of the amount owed, change in a quarter, and the filing link.",
       "parameters": [
         {
-          "name": "companies",
+          "name": "names",
           "description": "The cells holding company names, for example A2:A6.",
           "type": "any",
           "dimensionality": "matrix"
+        },
+        {
+          "name": "as_of",
+          "description": "Optional quarter-end date, such as 2026-03-31. Leave out for the latest quarter.",
+          "type": "string",
+          "optional": true
         }
       ],
       "result": {

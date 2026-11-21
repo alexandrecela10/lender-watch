@@ -25,6 +25,16 @@
     ];
   }
 
+  // Sends `items` in batches of `size` through `post` (which returns {rows}) and joins the rows in order.
+  async function checkInBatches(post, items, size = 50) {
+    const rows = [];
+    for (let i = 0; i < items.length; i += size) {
+      const out = await post(items.slice(i, i + size));
+      rows.push(...out.rows);
+    }
+    return rows;
+  }
+
   function namesFromRange(values) {
     return values.flat().map((v) => String(v ?? "").trim());
   }
@@ -146,7 +156,7 @@
     await context.sync();
   }
 
-  const api = { RESULT_HEADERS, LOAN_HEADERS, resultRow, namesFromRange, spillRows, countFailedLookups, findNameColumn, firstFreeColumn, loanRows, readWorkbook, chooseList, writeResults, updateResult };
+  const api = { RESULT_HEADERS, LOAN_HEADERS, resultRow, namesFromRange, spillRows, checkInBatches, countFailedLookups, findNameColumn, firstFreeColumn, loanRows, readWorkbook, chooseList, writeResults, updateResult };
   if (typeof module !== "undefined") module.exports = api;
   root.ErmExcel = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

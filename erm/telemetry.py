@@ -47,6 +47,8 @@ ALLOWED = {
     *COUNTS,
     "duration_ms",
     "latency_ms",
+    "route",  # the hosted service's path, without its query string
+    "method",
     "verdict",
     "decided_by",
     "model",

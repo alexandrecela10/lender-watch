@@ -1,0 +1,55 @@
+# Tool-choice eval (eval/tool_choice.py, specs/engine-in-excel-and-claude.md section 7): does Claude call Lender Watch
+# when it should, and stay silent when it shouldn't? Runs when a tool description, the skill or the eval changes.
+# Sends prompts that name only public demo companies to Anthropic: the second approved exception to data-handling
+# check 3. Plain pull_request, never pull_request_target, so fork pull requests get no key and skip.
+name: Tool-choice eval
+on:
+  pull_request:
+    paths:
+      - "erm/lender_tools.py"
+      - "erm/service.py"
+      - "erm/mcp_server.py"
+      - ".claude/skills/lender-watch/**"
+      - "eval/tool_choice.py"
+      - "evals/tool_choice.yaml"
+      - ".github/workflows/tool-choice.yml"
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: "Number of runs (the cost cap applies to each)"
+        default: "3"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: tool-choice-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tool-choice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv python install 3.12
+      - run: uv sync
+      - name: Tool-choice eval
+        id: run
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RUNS: ${{ inputs.runs || '3' }}
+        run: |
+          set +e
+          uv run python -m eval.tool_choice --live --runs "$RUNS" --summary summary.md
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          if [ -f summary.md ]; then cat summary.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Comment on the pull request
+        if: always() && github.event_name == 'pull_request' && hashFiles('summary.md') != ''
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file summary.md
+      - name: Result
+        run: exit ${{ steps.run.outputs.code }}

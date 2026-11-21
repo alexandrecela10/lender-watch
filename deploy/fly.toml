@@ -1,0 +1,34 @@
+# Fly.io settings for the hosted Lender Watch service. Deployed only by a person: make host-deploy.
+# Before the first deploy, in your own terminal:
+#   fly apps create <app name>        then put that name in `app` and in LW_BASE_URL below
+#   fly volumes create lw_data --size 1 --region lhr
+#   fly secrets set LW_AUTH_ISSUER=... LW_AUTH_AUDIENCE=https://<app>.fly.dev/mcp LW_INVITED=... LW_EXCEL_CLIENT_ID=...
+# None of those is a password, but they stay out of git so the invite list isn't public.
+
+app = "lender-watch"
+primary_region = "lhr"
+
+[env]
+  LW_BASE_URL = "https://lender-watch.fly.dev"
+
+[[mounts]]
+  source = "lw_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "120s"
+    interval = "30s"
+    timeout = "5s"
+    method = "GET"
+    path = "/health"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

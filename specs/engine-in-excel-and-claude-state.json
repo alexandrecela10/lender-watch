@@ -1,0 +1,44 @@
+{
+  "spec": "specs/engine-in-excel-and-claude.md",
+  "intent": "intent/engine-in-excel-and-claude.md",
+  "intent_commit": "ce9220e",
+  "status": "approved 2026-11-21 by Alexandre",
+  "updated": "2026-11-21",
+  "decided": [
+    "Hosted sign-in provider with automatic client registration and PKCE; our server only checks tokens",
+    "Excel signs in through an Office dialog with the same provider",
+    "No IP allowlist; every call needs a valid invited token",
+    "Quarter is a request input; cache keyed by a data fingerprint",
+    "Saved person answers keyed by owner; automated answers shared locally, none stored hosted",
+    "One name (Lender Watch), server name lender-watch, tools check_lenders and confirm_match, plus check_lenders_in_file locally",
+    "Excel formula =LW.CHECK(range, [as_of])",
+    "One hosted service: /mcp, /api, /excel, /health",
+    "Agents never deploy to the host",
+    "One index per quarter, so 30 June matching stays as measured",
+    "Hosted mode stores no automated rows and keeps no list",
+    "Seed decisions file ships already rebuilt; upgrade runs on copies only",
+    "Hosted routes listed in full; no /api/ask or Claude switch hosted",
+    "Excel token in memory only, silent refresh, full recalculation after sign-in",
+    "Access log off; own log with route and status only",
+    "Core function check_list is source-agnostic; check_lenders is the server name",
+    "Tool-choice eval: 30 saved prompts (20 must-call, 10 must-not-call), 3 runs, CI on description changes, API stand-in for the apps; needs a second data-handling check 3 exception, for Alexandre's approval",
+    "Alexandre approved the tool-choice eval's exception to data-handling check 3 (2026-11-21)"
+  ],
+  "open": [
+    "Which sign-in provider, and its price",
+    "Which container host, and its price",
+    "First pilot analyst, named by the end of the build"
+  ],
+  "sources_checked": [
+    "https://claude.com/docs/connectors/building/authentication.md",
+    "https://claude.com/docs/connectors/custom/add-unlisted.md",
+    "https://claude.com/docs/office-agents/connectors-and-skills.md",
+    "https://claude.com/docs/plugins/admin.md",
+    "https://claude.com/docs/connectors/building/index.md"
+  ],
+  "fresh_pass": {
+    "date": "2026-11-20",
+    "concerns": 12,
+    "verdict": "ready for a plan once concerns 1, 2, 3 and 5 are fixed; all 12 resolved in the spec"
+  }
+}

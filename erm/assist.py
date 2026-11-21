@@ -1,7 +1,7 @@
 """The layer between where people work (Claude, Excel) and the engine.
 
 Three ways in, one engine underneath:
-1. The person knows the tool and calls it: reconcile_list.
+1. The person knows the tool and calls it: check_list (exposed to people and agents as check_lenders).
 2. The person knows the problem and asks: how_to_reconcile.
 3. The person knows neither: inspect_sheets notices that two lists name companies differently and offers the tool.
 
@@ -19,6 +19,7 @@ import pandas as pd
 from erm import telemetry
 from erm.api import FLAG_LABELS, FLAG_RULE, Engine, summary_row
 from erm.assist_profile import SourceProfile
+from erm.store import LOCAL
 from erm.textparse import core, name_pattern, norm
 
 MAX_NAMES = 200
@@ -260,7 +261,7 @@ def how_to_reconcile(
         "steps": steps,
         "privacy": privacy,
         "cannot_do": list(profile.cannot_do),
-        "next_tool": "reconcile_list",
+        "next_tool": "check_lenders",
     }
 
 
@@ -328,22 +329,42 @@ def company_row(name: str, out: dict) -> dict:
     }
 
 
-def reconcile_list(engine: Engine, rows: list[dict], source: str = "assist") -> dict:
-    """Link each {name, sector, sponsor} to the source and return one row per company.
+def check_list(
+    engine: Engine,
+    rows: list[dict],
+    profile: SourceProfile,
+    as_of: str | None = None,
+    owner: str = LOCAL,
+    source: str = "assist",
+    max_names: int = MAX_NAMES,
+) -> dict:
+    """Link each {name, sector, sponsor} to the source, for one quarter, and return one row per company.
 
+    The one function behind every front door, so Excel, Claude and the desk can't disagree. Every row says which
+    quarter, data version and rule version it comes from. `owner` is set by the server, never by the caller.
     Runs under one request id. No outside call happens unless the engine was built with a judge client.
     """
-    if len(rows) > MAX_NAMES:
-        raise ValueError(f"Send {MAX_NAMES} names or fewer at a time.")
+    if len(rows) > max_names:
+        raise ValueError(f"Send {max_names} names or fewer at a time.")
+    period = engine.quarter(as_of)
+    stamp = {
+        "as_of": period,
+        "compared_with": engine.previous(period),
+        "data_version": engine.data_version,
+        "rule_version": profile.rule_version,
+    }
     out = []
     with telemetry.run(source, judge_on=engine.client is not None):
         for row in rows:
             name = str(row["name"])
             result = engine.gather_facts(
-                name, {"sector": row.get("sector"), "sponsor": row.get("sponsor")}
+                name,
+                {"sector": row.get("sector"), "sponsor": row.get("sponsor")},
+                as_of=period,
+                owner=owner,
             )
             telemetry.count_result(result)
-            out.append(company_row(name, result))
+            out.append({**company_row(name, result), **stamp})
     return {
         "rows": out,
         "counts": {
@@ -353,4 +374,5 @@ def reconcile_list(engine: Engine, rows: list[dict], source: str = "assist") -> 
             "no_source_found": sum(not r["loans"] and not r["to_confirm"] for r in out),
         },
         "flag_rule": FLAG_RULE,
+        **stamp,
     }

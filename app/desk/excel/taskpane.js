@@ -1,7 +1,8 @@
-// The Lender Watch panel inside Excel. It reads the workbook, asks the local server, and writes results beside the list.
+// The Lender Watch panel inside Excel. It reads the workbook, asks the Lender Watch service, and writes results beside
+// the list. Chat lives in Claude in Excel, not here.
 "use strict";
 
-const pane = { claude: false, written: null, offerShown: false, history: [], timer: null };
+const pane = { written: null, offerShown: false, timer: null, asOf: null };
 const el = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[m]);
 
@@ -14,12 +15,7 @@ function say(html, cls = "") {
   return box;
 }
 
-async function post(path, body) {
-  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Something went wrong.");
-  return data;
-}
+const post = (path, body) => LwApi.post(path, body);
 
 const bullets = (items, tag = "ul") => (items && items.length ? `<${tag}>${items.map((x) => `<li>${esc(x)}</li>`).join("")}</${tag}>` : "");
 
@@ -70,11 +66,23 @@ async function run() {
   const list = ErmExcel.chooseList(book.sheets, await activeSheetName());
   if (!list) { say("<p>I can't find a column of company names. Name its header Company.</p>"); return; }
   const names = [...new Set(list.names.filter(Boolean))];
-  const wait = say('<p class="note">Linking…</p>');
-  const out = await post("/api/reconcile", { sheets: book.sheets, sheet: list.sheet, names });
+  const wait = say('<p class="note">Checking…</p>');
+  let rows;
+  try {
+    rows = await LwApi.check(names, pane.asOf, { sheets: { [list.sheet]: book.sheets[list.sheet] }, sheet: list.sheet });
+  } catch (error) {
+    wait.remove();
+    say(`<p>${esc(error.message)}</p>`);
+    return;
+  }
   wait.remove();
+  const out = { rows };
   await place(out, book, list);
-  const c = out.counts;
+  const c = {
+    names: rows.length,
+    flagged: rows.filter((r) => r.flag === "Flagged").length,
+    to_confirm: rows.reduce((n, r) => n + r.to_confirm.length, 0),
+  };
   say(`<p>${c.flagged} of ${c.names} companies are flagged. ${c.to_confirm ? `${c.to_confirm} ${c.to_confirm === 1 ? "match needs" : "matches need"} your answer.` : "Nothing needs your answer."}</p><p class="note">Results are beside your list, and each loan is on a new tab with its filing.</p>`);
 }
 
@@ -84,7 +92,7 @@ function showConfirmations(rows) {
       const box = say(`<p class="lead">Is "${esc(item.listed_as)}" your ${esc(row.name)}?</p><p class="quote">${esc(item.filing_row.slice(0, 120))}</p><div class="row"><button data-same="1">Same company</button><button data-same="0">Different</button></div>`, "card confirm");
       box.querySelectorAll("button").forEach((button) => {
         button.onclick = async () => {
-          const updated = await post("/api/answer", { name: row.name, mention_key: item.mention_key, same: button.dataset.same === "1" });
+          const updated = await post("/api/confirm", { name: row.name, mention_key: item.mention_key, same: button.dataset.same === "1", as_of: pane.asOf });
           await Excel.run((context) => ErmExcel.updateResult(context, pane.written, updated));
           box.innerHTML = `<p class="note">Saved. You won't be asked about ${esc(item.listed_as)} again.</p>`;
           box.className = "";
@@ -94,44 +102,41 @@ function showConfirmations(rows) {
   }
 }
 
-async function ask(message) {
-  say(esc(message), "me");
-  const wait = say('<p class="note">Working…</p>');
-  try {
-    const book = await Excel.run((context) => ErmExcel.readWorkbook(context));
-    const sheet = await activeSheetName();
-    const reply = await post("/api/ask", { message, sheets: book.sheets, sheet, failed_lookups: book.failedLookups, use_claude: pane.claude, history: pane.history });
-    wait.remove();
-    const body = reply.text.split(/\n+/).map((line) => `<p>${esc(line.replace(/\*\*/g, "").replace(/^\s*[-*]\s+/, ""))}</p>`).join("");
-    const box = say(body + bullets(reply.facts, "ol") + (reply.note ? `<p class="note">${esc(reply.note)}</p>` : "") + (reply.offer === "run" ? '<div class="row"><button class="primary">Run it on this list</button></div>' : ""));
-    const button = box.querySelector("button");
-    if (button) button.onclick = () => { button.parentElement.remove(); run(); };
-    pane.history.push({ role: "user", text: message }, { role: "assistant", text: reply.text });
-    if (reply.reconciled) {
-      const list = ErmExcel.chooseList(book.sheets, sheet);
-      if (list) await place(reply.reconciled, book, list);
-    }
-  } catch (error) {
-    wait.remove();
-    say(`<p>${esc(error.message)}</p>`);
+function showSignedIn() {
+  const who = LwAuth.describe();
+  el("signin").hidden = who.signed_in;
+  el("signed-in").hidden = !who.signed_in;
+  if (who.signed_in) {
+    const until = new Date(who.expires * 1000).toLocaleTimeString();
+    el("signed-in").textContent = `Signed in. Access is for ${who.audience || "an unnamed service"}, until ${until}.`;
   }
+}
+
+async function setUpSignIn(status) {
+  LwAuth.configure(status);
+  if (!LwAuth.required()) return;
+  el("signin-row").hidden = false;
+  el("signin").onclick = async () => {
+    try {
+      await LwAuth.signIn();
+      showSignedIn();
+      await Excel.run(async (context) => { context.application.calculate(Excel.CalculationType.full); await context.sync(); });
+    } catch (error) {
+      say(`<p>${esc(error.message)}</p>`);
+    }
+  };
+  await LwAuth.accessToken();
+  showSignedIn();
 }
 
 Office.onReady(async (info) => {
   if (info.host !== Office.HostType.Excel) { el("status").textContent = "Open this inside Excel."; return; }
   const status = await (await fetch("/api/status")).json();
-  el("mode-label").hidden = !status.claude_available;
-  el("status").textContent = "Local answers. No company name leaves this computer.";
+  await setUpSignIn(status);
+  el("status").textContent = status.mode === "hosted"
+    ? "Public lender filings. Use public or non-confidential lists only: names you check reach the Lender Watch service."
+    : "Runs on this computer. No company name leaves it.";
   el("check").onclick = () => inspect(true).catch((e) => say(`<p>${esc(e.message)}</p>`));
-  el("use-claude").onchange = (e) => {
-    pane.claude = e.target.checked;
-    el("status").textContent = pane.claude ? "Claude answers. This workbook's company names go to Anthropic." : "Local answers. No company name leaves this computer.";
-  };
-  el("ask").onsubmit = (e) => {
-    e.preventDefault();
-    const message = el("ask-input").value.trim();
-    if (message) { el("ask-input").value = ""; ask(message); }
-  };
   watchForFailedLookups();
   inspect(false).catch(() => {});
 });

@@ -1,27 +1,19 @@
-// The Excel formula =ERM.RECONCILE(A2:A6). It runs inside the add-in and only talks to the server on this computer.
+// The Excel formula =LW.CHECK(A2:A6, [as_of]). It asks the Lender Watch service, signed in through the panel.
 "use strict";
 
-async function reconcile(companies) {
-  const names = ErmExcel.namesFromRange(companies);
-  const wanted = [...new Set(names.filter(Boolean))];
+async function check(names, asOf) {
+  const cells = ErmExcel.namesFromRange(names);
+  const wanted = [...new Set(cells.filter(Boolean))];
   if (!wanted.length) {
     throw new CustomFunctions.Error(CustomFunctions.ErrorCode.invalidValue, "Select cells with company names.");
   }
-  let response;
+  let rows;
   try {
-    response = await fetch("/api/reconcile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sheets: {}, names: wanted }),
-    });
+    rows = await LwApi.check(wanted, asOf);
   } catch (error) {
-    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Lender Watch isn't running. Run make excel.");
+    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, error.message);
   }
-  if (!response.ok) {
-    throw new CustomFunctions.Error(CustomFunctions.ErrorCode.notAvailable, "Lender Watch couldn't read that list.");
-  }
-  const out = await response.json();
-  return ErmExcel.spillRows(names, out.rows);
+  return ErmExcel.spillRows(cells, rows);
 }
 
-CustomFunctions.associate("RECONCILE", reconcile);
+CustomFunctions.associate("CHECK", check);

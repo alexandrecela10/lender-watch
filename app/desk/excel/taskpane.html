@@ -10,17 +10,18 @@
 <body>
   <main>
     <p class="status" id="status">Connecting to the workbook…</p>
-    <label class="mode" id="mode-label" hidden><input type="checkbox" id="use-claude"> Let Claude answer</label>
+    <div class="row" id="signin-row" hidden>
+      <button id="signin" class="primary">Sign in</button>
+      <p class="note" id="signed-in" hidden></p>
+    </div>
     <div class="row">
       <button id="check" class="primary">Check this workbook</button>
     </div>
     <div id="chat" aria-live="polite"></div>
-    <form id="ask">
-      <input id="ask-input" placeholder="Ask about this workbook" autocomplete="off" aria-label="Ask about this workbook">
-      <button type="submit">Ask</button>
-    </form>
   </main>
+  <script src="auth.js"></script>
   <script src="core.js"></script>
+  <script src="api.js"></script>
   <script src="functions.js"></script>
   <script src="taskpane.js"></script>
 </body>

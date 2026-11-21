@@ -38,7 +38,12 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 
 **Inside a workbook:** `make desk`, then open http://127.0.0.1:8765. A workbook with an assistant beside it, on the same engine. Type `=RECONCILE(A2:A6)`, ask how to reconcile a list, or write a lookup that fails and it offers the fix. Names stay on your computer unless you tick "Let Claude answer".
 
-**In real Excel:** `app/desk/excel/` is an add-in with `=ERM.RECONCILE(A2:A6)`. `make excel` serves it. `make mcp-web` is a web connector for Claude in Excel. Neither has run inside real Excel yet. Steps: [`outputs/prototypes/analyst-desk/analyst-desk.md`](outputs/prototypes/analyst-desk/analyst-desk.md).
+**In real Excel and Claude:** one service, `erm/service.py`, serves both. Excel gets an add-in with `=LW.CHECK(A2:A6, [as_of])`. Claude gets a connector with two tools, `check_lenders` and `confirm_match`, plus the `lender-watch` skill. Both ask the same function, so they show the same numbers, and every row names its quarter and data version.
+- On your computer: `make excel` (no sign-in, this computer only), then add `app/desk/excel/manifest.xml` in Excel.
+- Hosted: the same service on Fly.io, with sign-in and an invite list. Public or non-confidential lists only, no AI calls, and nothing from a list is kept except a person's own confirmations. A person deploys it with `make host-deploy`.
+- Not yet run inside real Excel or real Claude. Plan and steps: [`plans/engine-in-excel-and-claude.md`](plans/engine-in-excel-and-claude.md).
+
+**Is Claude picking the tool right?** `make tool-choice` sends 30 public prompts with the real tool descriptions: 20 where Claude should use Lender Watch, 10 where it must not. First 3 runs: 20 of 20 and 10 of 10 each time.
 
 **Tests:** `uv run pytest`
 
@@ -56,8 +61,12 @@ uv run python -c "import glob; from erm.connectors.bdc import load_soi; load_soi
 | `erm/signals.py` | Loan-by-loan facts, and flags on the average weighted by loan size |
 | `erm/store.py` | Saved answers. A person's answer overrides everything |
 | `erm/api.py` | `resolve_entity`, `gather_facts`, `enrich_table`, `review` |
-| `erm/assist.py` | The ways in: notices when lists don't line up, explains how, runs a list |
-| `app/desk/` | Analyst Desk: the workbook and assistant |
+| `erm/assist.py` | The ways in: `check_list` runs a list for every front end; notices when lists don't line up |
+| `erm/lender_tools.py` | The two Lender Watch tools, written once for both servers |
+| `erm/service.py`, `erm/auth.py` | The hosted service and its sign-in check |
+| `app/desk/excel/` | The Excel add-in: formula, panel and sign-in |
+| `app/desk/` | A stand-in workbook with an assistant, for demos |
+| `deploy/` | The hosted service's image and Fly.io settings |
 | `eval/` | Answer key, method comparison, filing check |
 | `erm/match/linkage.py`, `features.py` | Scoring model, tested and dropped; kept for the comparison |
 

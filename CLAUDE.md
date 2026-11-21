@@ -17,20 +17,23 @@
 ## Commands
 
 Run from the repo root. Healthy output in brackets.
-- `make test`: runs `uv run pytest` [`272 passed`, about 80 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
+- `make test`: runs `uv run pytest` [`330 passed`, about 130 seconds; the first run on a machine adds about 100 seconds to build the app's search index]
 - `make lint`: runs `ruff check` and `ruff format --check` [`All checks passed!` then `N files already formatted`; any `Would reformat` line is a failure]
 - `make evals`: offline eval gate, `uv run python -m eval.offline`, thresholds in `evals/thresholds.yaml` [`precision 1.000`, `recall 0.936`, `PASS`]. It replays saved name-search hits and judge verdicts, so it only re-tests the exact-name rule live.
 - `make bands`: compares the share of names needing a person's review with the provisional range in `evals/bands.yaml`, `uv run python -m eval.bands` [`No check made` until enough runs exist, or `No action needed`; it exits 1 and writes a draft intent when the share is outside the range]
 - `make run`: the review app, `uv run streamlit run app/review.py` [Streamlit prints a local URL]
 - `make desk`: the workbook with an assistant, `uv run python -m app.desk.server` [prints `Analyst Desk is ready` and a local URL; first run on a machine adds about 100 seconds]
-- `make excel`: the Excel add-in's HTTPS server on port 3000; needs `npx office-addin-dev-certs install` first [prints `Analyst Desk is ready`]
-- `make mcp-web`: web connector with public sample only, no file or answer-changing tools [Uvicorn prints its URL]
+- `make excel`: the Lender Watch service over HTTPS on port 3000 for the Excel add-in, no sign-in; needs `npx office-addin-dev-certs install` first [prints `Lender Watch is ready: https://localhost:3000`]
+- `make service`: the hosted service run locally, no sign-in, 127.0.0.1 only, `uv run python -m erm.service` [prints `Lender Watch is ready: http://localhost:8770`]
 - `make mcp`: the tool server for AI agents, `uv run python -m erm.mcp_server` [no output; it serves over stdin and exits when stdin closes]
+- `make tool-choice`: does Claude call Lender Watch when it should, and only then; sends 30 public prompts to Anthropic, about $0.25 a run [a table with `20 of 20`, `10 of 10`, `PASS`]
+- `uv run python scripts/make_manifest.py --base-url <https url>`: writes the Excel add-in manifest for one address [`Wrote ... for <url>`]
 - `uv run python -m eval.plan_drift plans/<plan>.md <step>`: run right after each build step's commit, then amend the commit with the log; lists files changed outside the step's plan and appends a row to `plans/<plan>-drift.md` [one row, `none` when the build matches the plan]. The log is the control for plan drift: it flags a departure for the reviewer and blocks nothing. Updating the plan in the same commit is optional
 - `make hooks`: run once after cloning: installs the git pre-commit key scan [`pre-commit key scan installed`]
 - `make dev`: the review app in Docker, public data, no key [serves on port 8501]
 - `make rehearse-rollback GOOD=<commit> NEW=<commit>`: tries a rollback in a separate Docker project; real prod is not touched [ends with `== PASS`]
 - `make prod`, `make prod-down`, `make rollback`: real prod. Agents are blocked until a person runs `make approve-prod` in their own terminal. Never try to get around this gate.
+- `make host-deploy`: deploys the hosted Lender Watch service to Fly.io from a clean copy of the commit. Same rule: a person approves and runs it. Once `outputs/patches/production-gate-host.patch` is applied, the gate also blocks agents from `fly` commands that change the app.
 
 ## Verifying your work
 

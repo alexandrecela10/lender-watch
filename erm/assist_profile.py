@@ -14,3 +14,4 @@ class SourceProfile:
     lookup_example: str
     comes_out: str
     cannot_do: tuple[str, ...]
+    rule_version: str = "flag-v1"  # changes whenever the flag rule changes, so old results can be told apart

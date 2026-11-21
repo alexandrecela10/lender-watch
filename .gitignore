@@ -20,3 +20,4 @@ data/eval/*_batch_id.txt
 data/demo/*_enriched.xlsx
 .claude/worktrees/
 data/metrics.sqlite
+tool-choice-summary.md
