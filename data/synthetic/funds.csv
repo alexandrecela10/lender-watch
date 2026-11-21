@@ -1,0 +1,9 @@
+fund_id,name,fund_of_funds,synthetic
+F1,Synthetic Fund 1,False,true
+F2,Synthetic Fund 2,False,true
+F3,Synthetic Fund 3,False,true
+F4,Synthetic Fund 4,False,true
+F5,Synthetic Fund 5,False,true
+F6,Synthetic Fund 6,False,true
+F7,Synthetic Fund 7,True,true
+F8,Synthetic Fund 8,True,true

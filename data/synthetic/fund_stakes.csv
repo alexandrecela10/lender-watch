@@ -1,0 +1,15 @@
+owner,fund_id,share,synthetic
+P1,F1,0.0738,true
+P1,F2,0.1505,true
+P1,F3,0.1524,true
+P1,F4,0.222,true
+P1,F5,0.0705,true
+P1,F6,0.0947,true
+P1,F7,0.1702,true
+P1,F8,0.1613,true
+F7,F1,0.1675,true
+F7,F2,0.1322,true
+F7,F3,0.1596,true
+F8,F4,0.1652,true
+F8,F5,0.1627,true
+F8,F6,0.138,true

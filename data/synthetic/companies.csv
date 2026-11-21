@@ -1,0 +1,61 @@
+company_id,name,kind,synthetic
+R01,KnowBe4,real,true
+R02,Applitools,real,true
+R03,Arrowhead Engineered Products,real,true
+R04,Cloud Software Group,real,true
+R05,Conga,real,true
+R06,Anaplan,real,true
+R07,ABC Fitness Solutions,real,true
+R08,Accelya,real,true
+R09,Acquia,real,true
+R10,Acumatica,real,true
+R11,Advarra,real,true
+R12,AirX Climate Solutions,real,true
+R13,Alera Group,real,true
+R14,AlertMedia,real,true
+R15,Allvue Systems,real,true
+R16,AmeriLife,real,true
+R17,Amwins Group,real,true
+R18,Apex Service Partners,real,true
+R19,Applause,real,true
+R20,Apryse,real,true
+I01,Synthetic Company 01,invented,true
+I02,Synthetic Company 02,invented,true
+I03,Synthetic Company 03,invented,true
+I04,Synthetic Company 04,invented,true
+I05,Synthetic Company 05,invented,true
+I06,Synthetic Company 06,invented,true
+I07,Synthetic Company 07,invented,true
+I08,Synthetic Company 08,invented,true
+I09,Synthetic Company 09,invented,true
+I10,Synthetic Company 10,invented,true
+I11,Synthetic Company 11,invented,true
+I12,Synthetic Company 12,invented,true
+I13,Synthetic Company 13,invented,true
+I14,Synthetic Company 14,invented,true
+I15,Synthetic Company 15,invented,true
+I16,Synthetic Company 16,invented,true
+I17,Synthetic Company 17,invented,true
+I18,Synthetic Company 18,invented,true
+I19,Synthetic Company 19,invented,true
+I20,Synthetic Company 20,invented,true
+I21,Synthetic Company 21,invented,true
+I22,Synthetic Company 22,invented,true
+I23,Synthetic Company 23,invented,true
+I24,Synthetic Company 24,invented,true
+I25,Synthetic Company 25,invented,true
+I26,Synthetic Company 26,invented,true
+I27,Synthetic Company 27,invented,true
+I28,Synthetic Company 28,invented,true
+I29,Synthetic Company 29,invented,true
+I30,Synthetic Company 30,invented,true
+I31,Synthetic Company 31,invented,true
+I32,Synthetic Company 32,invented,true
+I33,Synthetic Company 33,invented,true
+I34,Synthetic Company 34,invented,true
+I35,Synthetic Company 35,invented,true
+I36,Synthetic Company 36,invented,true
+I37,Synthetic Company 37,invented,true
+I38,Synthetic Company 38,invented,true
+I39,Synthetic Company 39,invented,true
+I40,Synthetic Company 40,invented,true
