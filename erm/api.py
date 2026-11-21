@@ -25,7 +25,7 @@ from erm.match.features import compute
 from erm.match.rules import is_clear_exact
 from erm.retrieve import Index
 from erm.signals import facts_for, flags_for, usable
-from erm.store import JUDGE, PERSON, Store, pair_id
+from erm.store import JUDGE, LOCAL, PERSON, Decision, Store, pair_id
 from erm.textparse import core, find_mention, name_pattern, norm
 
 NOT_CHECKED = "Not checked automatically. Please confirm."
@@ -141,11 +141,14 @@ class Engine:
         store_path="data/decisions.sqlite",
         index_cache="data/index.pkl",
         client=None,
+        save_automated=True,
     ):
         self.holdings = pd.read_parquet(holdings_path)
         self.data_version = fingerprint(holdings_path)
         self.store = Store(store_path)
         self.client = client  # None means unclear pairs go straight to a person
+        # False on the hosted service: only a person's answer is stored, so no analyst's list is kept.
+        self.save_automated = save_automated
         self._cache = Path(index_cache)
         self._indexes: dict[str, Index] = {}
         self.index_for(
@@ -212,7 +215,13 @@ class Engine:
                 g["rows"].append(i)
         return groups
 
-    def _decide(self, name, sector, sponsor, key, g, period) -> Candidate:
+    def _automated(self, name, key, verdict, reason) -> Decision:
+        """An automated answer, saved and shared, or only returned when this engine keeps no automated rows."""
+        if self.save_automated:
+            return self.store.save(name, key, verdict, JUDGE, reason)
+        return Decision(pair_id(name, key), name, key, verdict, JUDGE, reason, "")
+
+    def _decide(self, name, sector, sponsor, key, g, period, owner) -> Candidate:
         index = self.index_for(period)
         rows = index.holdings.iloc[g["rows"]]
         m = g["mention"]
@@ -228,7 +237,7 @@ class Engine:
             filing_url=rows.inlineurl.iloc[0],
         )
 
-        saved = self.store.get(pid)
+        saved = self.store.get(pid, owner)
         if saved and saved.decided_by == PERSON:
             return Candidate(
                 **base,
@@ -262,7 +271,7 @@ class Engine:
                 reason=saved.reason,
             )
         if self.client is None:
-            d = self.store.save(name, key, "unsure", JUDGE, NOT_CHECKED)
+            d = self._automated(name, key, "unsure", NOT_CHECKED)
             return Candidate(
                 **base, verdict=d.verdict, decided_by=d.decided_by, reason=d.reason
             )
@@ -271,17 +280,21 @@ class Engine:
         except (
             anthropic.APIError
         ):  # one failed call shouldn't stop the list; ask again next run
-            d = self.store.save(name, key, "unsure", JUDGE, NOT_CHECKED)
+            d = self._automated(name, key, "unsure", NOT_CHECKED)
             return Candidate(
                 **base, verdict=d.verdict, decided_by=d.decided_by, reason=d.reason
             )
-        d = self.store.save(name, key, v.verdict, JUDGE, v.reason)
+        d = self._automated(name, key, v.verdict, v.reason)
         return Candidate(
             **base, verdict=d.verdict, decided_by=d.decided_by, reason=d.reason
         )
 
     def resolve_entity(
-        self, name: str, context: dict | None = None, as_of: str | None = None
+        self,
+        name: str,
+        context: dict | None = None,
+        as_of: str | None = None,
+        owner: str = LOCAL,
     ) -> Resolution:
         """Find the company in the source, in the holdings of one quarter. `context` may carry sector and sponsor."""
         context = context or {}
@@ -289,7 +302,7 @@ class Engine:
         c = core(name)
         cands = [
             self._decide(
-                name, context.get("sector"), context.get("sponsor"), k, g, period
+                name, context.get("sector"), context.get("sponsor"), k, g, period, owner
             )
             for k, g in self.groups(name, period).items()
         ]
@@ -335,11 +348,12 @@ class Engine:
         context: dict | None = None,
         res: Resolution | None = None,
         as_of: str | None = None,
+        owner: str = LOCAL,
     ) -> dict:
         """Loan facts for confirmed matches, for one quarter. Every fact carries its filing link and row text."""
         period = self.quarter(as_of)
         compared_with = self.previous(period)
-        res = res or self.resolve_entity(name, context, as_of=period)
+        res = res or self.resolve_entity(name, context, as_of=period, owner=owner)
         rows = self._matched_rows(res)
         facts = facts_for(rows, period, compared_with)
         flags = flags_for(facts)
@@ -388,16 +402,25 @@ class Engine:
         write_workbook(result, pd.DataFrame(loans, columns=LOAN_COLUMNS), out_path)
         return result
 
-    def answer(self, name: str, mention_key: str, same: bool, reason: str = "") -> dict:
+    def answer(
+        self,
+        name: str,
+        mention_key: str,
+        same: bool,
+        reason: str = "",
+        owner: str = LOCAL,
+    ) -> dict:
         """A person's answer on any candidate, including one the name rule accepted and so never saved."""
         d = self.store.save(
-            name, mention_key, "match" if same else "no_match", PERSON, reason
+            name, mention_key, "match" if same else "no_match", PERSON, reason, owner
         )
         log.info("person_answer", extra={"decided_by": PERSON, "verdict": d.verdict})
         return asdict(d)
 
-    def review(self, pair: str, accept: bool, reason: str = "") -> dict:
-        d = self.store.review(pair, accept, reason)
+    def review(
+        self, pair: str, accept: bool, reason: str = "", owner: str = LOCAL
+    ) -> dict:
+        d = self.store.review(pair, accept, reason, owner)
         log.info("person_answer", extra={"decided_by": PERSON, "verdict": d.verdict})
         return asdict(d)
 
