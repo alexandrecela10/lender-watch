@@ -46,7 +46,8 @@ for r in sp.itertuples():
         if (g["via"] == r.company_name and is_clear_exact(f)) or e.store.get(pid):
             continue
         ex = (
-            e.index_for(period).holdings.iloc[g["rows"]]
+            e.index_for(period)
+            .holdings.iloc[g["rows"]]
             .raw_text.drop_duplicates()
             .str.slice(0, 170)
             .head(2)

@@ -148,7 +148,9 @@ class Engine:
         self.client = client  # None means unclear pairs go straight to a person
         self._cache = Path(index_cache)
         self._indexes: dict[str, Index] = {}
-        self.index_for(self.latest())  # build the newest quarter's index before the first request
+        self.index_for(
+            self.latest()
+        )  # build the newest quarter's index before the first request
 
     def periods(self) -> list[str]:
         """Quarter-ends held, oldest first."""
