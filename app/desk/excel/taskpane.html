@@ -10,6 +10,10 @@
 <body>
   <main>
     <p class="status" id="status">Connecting to the workbook…</p>
+    <div class="row" id="signin-row" hidden>
+      <button id="signin" class="primary">Sign in</button>
+      <p class="note" id="signed-in" hidden></p>
+    </div>
     <label class="mode" id="mode-label" hidden><input type="checkbox" id="use-claude"> Let Claude answer</label>
     <div class="row">
       <button id="check" class="primary">Check this workbook</button>
@@ -20,6 +24,7 @@
       <button type="submit">Ask</button>
     </form>
   </main>
+  <script src="auth.js"></script>
   <script src="core.js"></script>
   <script src="functions.js"></script>
   <script src="taskpane.js"></script>

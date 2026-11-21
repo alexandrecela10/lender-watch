@@ -80,5 +80,69 @@ function fakeWorkbook(tabs) {
   assert.strictEqual(book.writes[0].r, 1);
   assert.strictEqual(book.writes[0].c, 2);
 
+  // Sign-in: PKCE with S256, the state is checked, and the token stays in memory only.
+  await (async () => {
+    const stored = [];
+    globalThis.localStorage = { setItem: (k) => stored.push(k), getItem: () => null };
+    globalThis.OfficeRuntime = { storage: { setItem: async (k) => stored.push(k) } };
+    globalThis.location = { origin: "https://lw.example", href: "https://lw.example/excel/taskpane.html" };
+    const jwt = (claims) => `h.${Buffer.from(JSON.stringify(claims)).toString("base64url")}.s`;
+    let opened = null;
+    let sent = null;
+    let reply = { state: null };
+    globalThis.Office = {
+      AsyncResultStatus: { Succeeded: "ok" },
+      EventType: { DialogMessageReceived: "msg", DialogEventReceived: "evt" },
+      context: { ui: { displayDialogAsync: (url, _opts, done) => {
+        opened = new URL(url);
+        const authorize = new URL(opened.searchParams.get("go"));
+        const handlers = {};
+        done({ status: "ok", value: { close() {}, addEventHandler: (k, f) => { handlers[k] = f; } } });
+        const msg = reply.state === null ? { code: "c1", state: authorize.searchParams.get("state") } : reply;
+        handlers.msg({ message: JSON.stringify(msg) });
+      } } },
+    };
+    globalThis.fetch = async (path, init) => {
+      sent = { path, body: new URLSearchParams(init.body) };
+      const exp = Math.floor(Date.now() / 1000) + 3600;
+      return { ok: true, json: async () => ({ access_token: jwt({ aud: "https://lw.example/mcp", exp }), refresh_token: "r1" }) };
+    };
+    const auth = require("../app/desk/excel/auth.js");
+    auth.configure({ auth_required: true, authorize_url: "https://auth.example/oauth2/authorize", client_id: "client_1", resource: "https://lw.example/mcp", token_path: "/excel/token", callback_path: "/excel/signin-callback.html" });
+    assert.strictEqual(await auth.accessToken(), null);
+
+    const who = await auth.signIn();
+    const authorize = new URL(opened.searchParams.get("go"));
+    assert.strictEqual(opened.pathname, "/excel/signin.html");
+    assert.strictEqual(authorize.searchParams.get("code_challenge_method"), "S256");
+    assert.strictEqual(authorize.searchParams.get("redirect_uri"), "https://lw.example/excel/signin-callback.html");
+    assert.strictEqual(authorize.searchParams.get("resource"), "https://lw.example/mcp");
+    const verifier = sent.body.get("code_verifier");
+    assert.strictEqual(authorize.searchParams.get("code_challenge"), await auth.challengeFor(verifier));
+    assert.strictEqual(sent.path, "/excel/token");
+    assert.strictEqual(sent.body.get("grant_type"), "authorization_code");
+    assert.deepStrictEqual([who.signed_in, who.audience], [true, "https://lw.example/mcp"]);
+    assert.ok(!("token" in who));
+    assert.ok((await auth.accessToken()).startsWith("h."));
+    assert.deepStrictEqual(stored, []);
+
+    // An expired token is renewed in memory with the refresh token.
+    auth._state.expires = 0;
+    await auth.accessToken();
+    assert.strictEqual(sent.body.get("grant_type"), "refresh_token");
+
+    // A reply with someone else's state is refused.
+    auth.signOut();
+    reply = { code: "c2", state: "not-ours" };
+    await assert.rejects(auth.signIn(), /didn't match/);
+    assert.strictEqual(auth.describe().signed_in, false);
+
+    // signin.html only forwards to the provider's own sign-in page.
+    assert.ok(auth.allowedStart("https://auth.example/oauth2/authorize?x=1", "https://auth.example/oauth2/authorize"));
+    assert.ok(!auth.allowedStart("https://evil.example/oauth2/authorize", "https://auth.example/oauth2/authorize"));
+    assert.ok(!auth.allowedStart("http://auth.example/oauth2/authorize", "https://auth.example/oauth2/authorize"));
+    assert.ok(!auth.allowedStart("javascript:alert(1)", "https://auth.example/oauth2/authorize"));
+  })();
+
   console.log("excel add-in checks passed");
 })().catch((error) => { console.error(error); process.exit(1); });

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Lender Watch sign-in</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="taskpane.css">
+</head>
+<body>
+  <main><p class="status" id="status">Finishing sign-in…</p></main>
+  <script>
+    // The provider sends the person back here. The one-time code goes to the panel, then leaves the address bar.
+    Office.onReady(() => {
+      const params = new URL(location.href).searchParams;
+      const result = params.get("error")
+        ? { error: params.get("error") }
+        : { code: params.get("code"), state: params.get("state") };
+      history.replaceState(null, "", location.pathname);
+      Office.context.ui.messageParent(JSON.stringify(result));
+      document.getElementById("status").textContent = "Signed in. You can close this window.";
+    });
+  </script>
+</body>
+</html>

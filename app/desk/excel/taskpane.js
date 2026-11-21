@@ -14,8 +14,14 @@ function say(html, cls = "") {
   return box;
 }
 
+async function authHeaders() {
+  const token = await LwAuth.accessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 async function post(path, body) {
-  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const headers = { "Content-Type": "application/json", ...(await authHeaders()) };
+  const response = await fetch(path, { method: "POST", headers, body: JSON.stringify(body) });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Something went wrong.");
   return data;
@@ -117,9 +123,37 @@ async function ask(message) {
   }
 }
 
+function showSignedIn() {
+  const who = LwAuth.describe();
+  el("signin").hidden = who.signed_in;
+  el("signed-in").hidden = !who.signed_in;
+  if (who.signed_in) {
+    const until = new Date(who.expires * 1000).toLocaleTimeString();
+    el("signed-in").textContent = `Signed in. Access is for ${who.audience || "an unnamed service"}, until ${until}.`;
+  }
+}
+
+async function setUpSignIn(status) {
+  LwAuth.configure(status);
+  if (!LwAuth.required()) return;
+  el("signin-row").hidden = false;
+  el("signin").onclick = async () => {
+    try {
+      await LwAuth.signIn();
+      showSignedIn();
+      await Excel.run(async (context) => { context.application.calculate(Excel.CalculationType.full); await context.sync(); });
+    } catch (error) {
+      say(`<p>${esc(error.message)}</p>`);
+    }
+  };
+  await LwAuth.accessToken();
+  showSignedIn();
+}
+
 Office.onReady(async (info) => {
   if (info.host !== Office.HostType.Excel) { el("status").textContent = "Open this inside Excel."; return; }
   const status = await (await fetch("/api/status")).json();
+  await setUpSignIn(status);
   el("mode-label").hidden = !status.claude_available;
   el("status").textContent = "Local answers. No company name leaves this computer.";
   el("check").onclick = () => inspect(true).catch((e) => say(`<p>${esc(e.message)}</p>`));

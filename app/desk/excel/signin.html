@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Lender Watch sign-in</title>
+  <link rel="stylesheet" href="taskpane.css">
+</head>
+<body>
+  <main><p class="status" id="status">Opening sign-in…</p></main>
+  <script src="auth.js"></script>
+  <script>
+    // First page of the sign-in window. It sends the person on to the provider, and nowhere else.
+    (async () => {
+      const go = new URL(location.href).searchParams.get("go") || "";
+      const status = await (await fetch("/api/status")).json();
+      if (status.auth_required && LwAuth.allowedStart(go, status.authorize_url)) {
+        location.replace(go);
+      } else {
+        document.getElementById("status").textContent = "This sign-in link isn't valid. Close this window and try again.";
+      }
+    })();
+  </script>
+</body>
+</html>
