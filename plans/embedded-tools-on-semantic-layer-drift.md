@@ -8,3 +8,4 @@ One row per build step. A departure is a file the step changed that its plan ste
 | 2026-11-21 | P2 | `specs/embedded-tools-on-semantic-layer.md` | none |
 | 2026-11-21 | P3 | `tests/test_assist.py`, `tests/test_excel_addin.py`, `tests/test_names.py` | `tests/test_service.py` |
 | 2026-11-21 | P4 | `tests/test_assist.py` | none |
+| 2026-11-21 | P5 | `data/synthetic/manager_values.csv`, `scripts/make_synthetic.py`, `tests/test_assist.py` | none |

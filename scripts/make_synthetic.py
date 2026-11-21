@@ -257,13 +257,17 @@ def generate(seed: int, out: Path = OUT) -> None:
                     "synthetic": True,
                 }
             )
-            base = rng.uniform(60, 90) if stressed else rng.uniform(95, 140)
+            # One starting value per company; the next quarter moves a few points, more for a stressed company.
+            if qi == 0:
+                base = rng.uniform(60, 90) if stressed else rng.uniform(95, 140)
+            else:
+                base += rng.uniform(-8, -2) if stressed else rng.uniform(-4, 4)
             managers.append(
                 {
                     "company_id": cid,
                     "quarter": q,
                     "reported": MANAGER_REPORTED[q],
-                    "value_pct_cost": round(base - (8 * qi if stressed else 0), 1),
+                    "value_pct_cost": round(base, 1),
                     "synthetic": True,
                 }
             )

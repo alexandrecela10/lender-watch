@@ -195,6 +195,7 @@ def test_local_server_is_lender_watch_with_three_tools():
         "check_lenders_in_file",
         "confirm_event",
         "confirm_match",
+        "explain_change",
         "get_measure",
         "read_letter",
     ]

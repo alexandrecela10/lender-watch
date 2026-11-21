@@ -77,3 +77,21 @@ def register(mcp) -> None:
     )
     def confirm_event(event_id: str, yes: bool) -> dict:
         return semantic.prototype().store.decide(event_id, yes)
+
+    @mcp.tool(
+        name="explain_change",
+        description=(
+            "Explain why a measure moved between 31 March and 30 June 2026: the parts, computed by code, that add "
+            "up to the change, and one sentence. Works for cost_in_flagged and share_cost_flagged over a list, and "
+            "for manager_lender_gap one company at a time. Report the parts as returned; never add numbers."
+        ),
+    )
+    def explain_change(measure: str, companies: list[str]) -> dict:
+        from erm import explain
+
+        client = None
+        if letters.ai_enabled():
+            from erm.api import default_client
+
+            client = default_client()
+        return explain.explain(semantic.prototype(), measure, companies, client=client)
