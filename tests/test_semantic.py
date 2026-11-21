@@ -23,7 +23,7 @@ def proto():
 
 def test_definitions_load_and_are_complete():
     measures = semantic.load_measures()
-    assert len(measures) == 6
+    assert len(measures) == 7
     for m in measures.values():
         assert all(m[f] not in (None, "") for f in semantic.FIELDS)
 
@@ -211,3 +211,12 @@ def test_hosted_service_never_loads_the_prototype():
     assert done.returncode == 0 and done.stdout.strip().endswith("ok"), done.stderr[
         -2000:
     ]
+
+
+def test_seventh_measure_share_via_funds_of_funds(proto):
+    rows = proto.get_measure(
+        "share_via_funds_of_funds", list(proto.portfolio.companies.company_id)
+    )["rows"]
+    assert all(0 <= r["value"] <= 1 for r in rows)
+    # Every direct fund sits in a fund of funds here, so every company has some indirect share, never all of it.
+    assert all(0 < r["value"] < 1 for r in rows)

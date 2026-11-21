@@ -1,0 +1,16 @@
+## Change explainer, 10 runs with the model writing the words (synthetic data)
+
+| # | Measure | Companies | Sentence from | Parts add up | Sentence |
+|---|---|---|---|---|---|
+| 1 | cost_in_flagged | all 60 | model | True | Our cost in flagged companies rose by $17,423,017, driven mainly by KnowBe4: cost moved while flagged (fell by $235,310) and Applitools: cost moved while flagged (rose by $50,689). Cloud Software Group: newly flagged also mattered, with a change of $19,516,284 (rose). |
+| 2 | share_cost_flagged | all 60 | model | True | The share of our cost in flagged companies rose by 4.06% of our cost, mostly because of KnowBe4: cost moved while flagged, which fell by 0.03% of our cost, and Applitools: cost moved while flagged, which rose by 0.02% of our cost. Arrowhead Engineered Products: cost moved while flagged also played a part, at 0.02% of our cost (rose). |
+| 3 | manager_lender_gap | Synthetic Company 01 | model | True | The manager versus lenders measure rose by 0.7 points, driven by Synthetic Company 01: manager's value moved (fell 3.2 points) and Synthetic Company 01: lenders' value moved (rose 3.9 points). |
+| 4 | manager_lender_gap | Synthetic Company 05 | model | True | The gap between the manager's and the lenders' values fell by 1.7 points this quarter. This came from Synthetic Company 05: manager's value moved, which fell by 6.5 points, and Synthetic Company 05: lenders' value moved, which rose by 4.8 points. |
+| 5 | manager_lender_gap | Synthetic Company 09 | model | True | The gap between the manager's and lenders' views rose by 1.8 points this quarter. This came mainly from Synthetic Company 09: manager's value moved, which fell by 6.1 points, and Synthetic Company 09: lenders' value moved, which rose by 7.9 points. |
+| 6 | manager_lender_gap | Synthetic Company 13 | model | True | The difference between the manager's and the lenders' values moved fell by 1.1 points. This came from Synthetic Company 13: manager's value moved (fell 7.0 points) and Synthetic Company 13: lenders' value moved (rose 5.9 points). |
+| 7 | manager_lender_gap | Synthetic Company 17 | model | True | The gap between the manager's and lenders' values rose by 0.3 points this quarter. The biggest driver was Synthetic Company 17: manager's value moved (fell 5.8 points), followed by Synthetic Company 17: lenders' value moved (rose 6.1 points). |
+| 8 | manager_lender_gap | Synthetic Company 21 | model | True | The gap between the manager's and the lenders' values changed rose by 1.7 points. This came from Synthetic Company 21: manager's value moved (fell 6.8 points) and Synthetic Company 21: lenders' value moved (rose 8.5 points). |
+| 9 | manager_lender_gap | Synthetic Company 25 | template | True | Manager versus lenders fell by 2.3 points between 31 March and 30 June 2026. Largest parts: Synthetic Company 25: manager's value moved, 6.4 points; Synthetic Company 25: lenders' value moved, 4.1 points. |
+| 10 | manager_lender_gap | Synthetic Company 33 | model | True | The gap between the manager's and lenders' values rose by 0.1 points, driven by Synthetic Company 33: manager's value moved (fell by 4.0 points) and Synthetic Company 33: lenders' value moved (rose by 4.1 points). |
+
+9 of 10 sentences passed the check and came from the model; the rest used the template. 77 s.

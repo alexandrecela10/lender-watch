@@ -61,3 +61,13 @@
   version: 1
   compute: manager_lender_gap
   explain: component
+
+- id: share_via_funds_of_funds
+  name: Share held through funds of funds
+  definition: Of what we paid for the company, the share that came through a fund of funds rather than directly.
+  unit: share
+  applies_to: both
+  owner: Alexandre (acting owner)
+  version: 1
+  compute: share_via_funds_of_funds
+  explain: none

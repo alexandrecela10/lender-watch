@@ -35,8 +35,13 @@ def test_parts_sum_for_every_invented_company_on_measure_6(proto):
             assert labels <= {
                 "manager's value moved",
                 "write-down we confirmed",
-                "lenders' value moved",
+                "lenders raised their value of the debt",
+                "lenders cut their value of the debt",
             }
+            for x in out["parts"]:
+                # The lenders' part names what lenders did, and says how it moved the gap.
+                if "lenders" in x["label"]:
+                    assert x["direction"] in ("narrowed the gap", "widened the gap")
 
 
 def test_shown_parts_add_up_with_a_rounding_part(proto):

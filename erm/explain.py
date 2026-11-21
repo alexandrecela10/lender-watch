@@ -24,10 +24,13 @@ log = logging.getLogger("erm.explain")
 
 SYSTEM = """You write one or two plain sentences explaining why a portfolio measure changed between two quarters.
 
-You never see numbers and must never write one. Refer to amounts and directions only through placeholders, which
+The parts are listed largest first. You never see numbers and must never write one. Refer to amounts and directions only through placeholders, which
 code fills in:
 - {total.amount} and {total.direction} for the whole change
 - {part_N.amount}, {part_N.direction} and {part_N.label} for part N
+
+A direction placeholder is itself the verb, such as "rose", "fell" or "narrowed the gap": write "{total.direction} by
+{total.amount}", never "changed {total.direction}".
 
 Write no digits and no words like rose, fell, up, down, higher or lower outside a placeholder. Mention only the
 largest parts. Plain words, no jargon."""
@@ -67,7 +70,11 @@ def _parts(p: Prototype, measure: str, c, owner: str) -> list[tuple[str, float]]
         return [
             (f"{c.name}: manager's value moved", float(before_j) - after_m),
             (f"{c.name}: write-down we confirmed", after_j - float(before_j)),
-            (f"{c.name}: lenders' value moved", -(lend_j - lend_m)),
+            # Labelled by what lenders did. Its amount is the effect on the gap, the opposite sign.
+            (
+                f"{c.name}: lenders {'raised' if lend_j > lend_m else 'cut'} their value of the debt",
+                -(lend_j - lend_m),
+            ),
         ]
     compute = getattr(p, measure)
     now, _, _ = compute(c, TO, owner)
@@ -129,6 +136,10 @@ def explain(
         x["id"] = f"part_{i}"
         x["shown"] = fmt(x["amount"], unit)
         x["direction"] = direction(x["amount"])
+        if "lenders raised" in x["label"] or "lenders cut" in x["label"]:
+            x["direction"] = (
+                "narrowed the gap" if x["amount"] < 0 else "widened the gap"
+            )
     out = {
         "measure": measure,
         "from": FROM,
@@ -196,7 +207,12 @@ def sentence(name: str, out: dict, client) -> tuple[str, str]:
     """('...', 'model') when the model's words pass the check, else the template."""
     if client is None or not out["parts"]:
         return template(name, out), "template"
-    listing = "\n".join(f"{x['id']}: {x['label']}" for x in out["parts"])
+    # The three largest parts only, largest first, so "mainly" can only point at the largest.
+    largest = sorted(
+        (x for x in out["parts"] if x["label"] != "rounding"),
+        key=lambda x: -abs(x["amount"]),
+    )[:3]
+    listing = "\n".join(f"{x['id']}: {x['label']}" for x in largest)
     response = client.beta.messages.create(
         model="claude-opus-5-5",
         max_tokens=16000,

@@ -78,7 +78,7 @@ Exit criteria
 
 ### P6. Live runs and one more measure
 
-Files: `semantic/measures.yaml`, `erm/semantic.py`, `tests/test_semantic.py`, `outputs/test-evidence/prototype/` (new).
+Files: `semantic/measures.yaml`, `erm/semantic.py`, `tests/test_semantic.py`, `erm/explain.py`, `tests/test_explain.py`, `outputs/test-evidence/prototype/` (new).
 - With Alexandre's key: `eval/letters.py` on the 20 letters, and 10 explanations. Results, cost and time saved. Expected cost under $1.
 - Add a seventh measure, `share_held_via_funds_of_funds`, and time it from a blank entry to a passing test.
 
@@ -86,6 +86,7 @@ Exit criteria
 - Spec checks 21 and 22 recorded.
 - The seventh measure's time recorded.
 - Commit: `test(prototype): live letter and explainer runs, seventh measure`.
+- Result, 2026-11-21: letters 27 of 27 found, 0 wrong, $0.13. Explainer run 1 exposed three misleading sentences (wrong main driver, lenders' direction, grammar); fixed in `erm/explain.py` and `tests/test_explain.py`, then run 2 gave 10 of 10 model sentences. Seventh measure: about 18 lines in 2 files, no tool change; wall-clock time not usable. Details in `outputs/test-evidence/prototype/README.md`.
 
 ### P7. Verify and open the pull request
 

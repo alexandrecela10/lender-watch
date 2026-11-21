@@ -106,8 +106,11 @@ class Portfolio:
         key = str(name_or_id).strip()
         return self.by_id.get(key) or self.by_name.get(key.casefold())
 
-    def cost(self, company_id: str, quarter: str) -> tuple[float, list[dict]]:
-        """Look-through cost: over every path, the product of shares times the fund's cost. With its sources."""
+    def cost(
+        self, company_id: str, quarter: str, via_fund_of_funds: bool = False
+    ) -> tuple[float, list[dict]]:
+        """Look-through cost: over every path, the product of shares times the fund's cost. With its sources.
+        `via_fund_of_funds` keeps only paths through a fund of funds (two stake rows)."""
         total, sources = 0.0, []
         held = self.positions[
             (self.positions.company_id == company_id)
@@ -115,6 +118,8 @@ class Portfolio:
         ]
         for i, p in held.iterrows():
             for share, stake_rows in self.weights.get(p.fund_id, []):
+                if via_fund_of_funds and len(stake_rows) < 2:
+                    continue
                 total += share * p.cost_usd
                 sources += [
                     src("synthetic", f"synthetic:fund_stakes:{r}") for r in stake_rows
@@ -265,6 +270,16 @@ class Prototype:
             return None, lw["status"], lw["sources"]
         value, sources, _ = self.manager_value(c, q)
         return value - lw["flags"]["weighted_pct_par"], None, sources + lw["sources"]
+
+    def share_via_funds_of_funds(self, c, q, owner):
+        cost, sources = self.portfolio.cost(c.company_id, q)
+        if cost == 0:
+            return None, "We paid nothing for this company in this quarter.", sources
+        return (
+            self.portfolio.cost(c.company_id, q, via_fund_of_funds=True)[0] / cost,
+            None,
+            sources,
+        )
 
     def _total(self, q: str) -> float:
         key = ("_total", q)

@@ -9,3 +9,4 @@ One row per build step. A departure is a file the step changed that its plan ste
 | 2026-11-21 | P3 | `tests/test_assist.py`, `tests/test_excel_addin.py`, `tests/test_names.py` | `tests/test_service.py` |
 | 2026-11-21 | P4 | `tests/test_assist.py` | none |
 | 2026-11-21 | P5 | `data/synthetic/manager_values.csv`, `scripts/make_synthetic.py`, `tests/test_assist.py` | none |
+| 2026-11-21 | P6 | `outputs/test-evidence/prototype/README.md`, `outputs/test-evidence/prototype/explanations-run1-before-fixes.md`, `outputs/test-evidence/prototype/explanations-run2.md`, `outputs/test-evidence/prototype/letters-run1.md` | `outputs/test-evidence/prototype/` |
