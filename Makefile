@@ -60,6 +60,11 @@ approve-prod:
 rollback:
 	./scripts/rollback.sh
 
+# Deploy the current commit of the hosted Lender Watch service to Fly.io. Needs a person's approval (make approve-prod).
+.PHONY: host-deploy
+host-deploy:
+	./scripts/host-deploy.sh
+
 # Try a rollback in a separate Docker project. Real prod is not touched.
 # Usage: make rehearse-rollback GOOD=<commit> NEW=<commit>
 rehearse-rollback:

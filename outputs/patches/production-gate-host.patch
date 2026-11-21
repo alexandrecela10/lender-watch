@@ -1,0 +1,119 @@
+--- a/.claude/hooks/production-gate.sh
++++ b/.claude/hooks/production-gate.sh
+@@ -3,7 +3,8 @@
+ #
+ # Needs a person's approval (`make approve-prod`, valid 15 minutes, one commit):
+ #   make prod, make prod-down, make rollback, compose commands on the prod profile,
+-#   docker commands on the prod container or its images, edits to the files that define prod.
++#   docker commands on the prod container or its images, edits to the files that define prod,
++#   make host-deploy, and fly commands that change the hosted Lender Watch service.
+ # Never allowed for an agent, approved or not:
+ #   the approval step, the approval file, edits to this gate.
+ #
+@@ -50,7 +51,7 @@
+ 
+ # Fail closed: without jq the input can't be read. Other commands still run, so `brew install jq` remains possible.
+ if ! command -v jq >/dev/null 2>&1; then
+-  if printf '%s' "$input" | grep -qE 'prod|rollback|compose|docker'; then
++  if printf '%s' "$input" | grep -qE 'prod|rollback|compose|docker|fly|host-deploy'; then
+     block "jq is not installed, so this safety check cannot run. Install it with \`brew install jq\`."
+   fi
+   exit 0
+@@ -66,7 +67,8 @@
+       */scripts/approve-prod.sh | */scripts/prod-lib.sh | */.erm/deploy/*)
+       never
+       ;;
+-    */compose.yaml | */Dockerfile | */.dockerignore | */scripts/prod-deploy.sh | */scripts/rollback.sh)
++    */compose.yaml | */Dockerfile | */.dockerignore | */scripts/prod-deploy.sh | */scripts/rollback.sh | \
++      */deploy/* | */scripts/host-deploy.sh)
+       needs_approval
+       ;;
+   esac
+@@ -138,8 +140,13 @@
+ fi
+ 
+ touches_prod() {
+-  has "(^|$S|/)g?make($S.*)?$S(prod|prod-down|rollback)($S|\$)" && return 0
+-  has 'prod-deploy\.sh|scripts/rollback\.sh' && return 0
++  has "(^|$S|/)g?make($S.*)?$S(prod|prod-down|rollback|host-deploy)($S|\$)" && return 0
++  has 'prod-deploy\.sh|scripts/rollback\.sh|host-deploy\.sh' && return 0
++  # Fly.io hosts the Lender Watch service. Reading its logs, status and releases changes nothing.
++  if has "(^|$S|/)(fly|flyctl)($S|\$)"; then
++    has "(^|$S|/)(fly|flyctl)$S+(logs|status|releases|version|doctor|help)($S|\$)" && return 1
++    return 0
++  fi
+   has 'COMPOSE_PROFILES=[^[:space:]]*prod' && return 0
+   if has 'docker[- ]compose'; then
+     has "$S(config|ps|logs|ls|images|version)($S|\$)" && return 1
+@@ -162,8 +169,8 @@
+ # True when this segment only runs the deploy or rollback script, which use up the approval themselves.
+ is_script_route() {
+   has "(^|$S|/)g?make($S.*)?${S}prod-down($S|\$)" && return 1
+-  has "(^|$S|/)g?make($S.*)?$S(prod|rollback)($S|\$)" && return 0
+-  has 'prod-deploy\.sh|scripts/rollback\.sh'
++  has "(^|$S|/)g?make($S.*)?$S(prod|rollback|host-deploy)($S|\$)" && return 0
++  has 'prod-deploy\.sh|scripts/rollback\.sh|host-deploy\.sh'
+ }
+ 
+ found_prod=0
+--- /dev/null
++++ b/tests/test_production_gate_host.py
+@@ -0,0 +1,58 @@
++"""The production gate also covers the hosted Lender Watch service on Fly.io (spec check 16)."""
++
++import pytest
++
++from tests.test_production_gate import ROOT, approve, bash, deploy, gate  # noqa: F401 (deploy is a fixture)
++
++NEEDS_APPROVAL = [
++    "make host-deploy",
++    "./scripts/host-deploy.sh",
++    "fly deploy --config deploy/fly.toml",
++    "flyctl deploy",
++    "fly secrets set LW_INVITED=user_1",
++    "fly scale memory 2048",
++    "fly machine stop 123",
++    "fly volumes destroy vol_1",
++    "fly apps destroy lender-watch",
++    "cd /tmp && fly deploy",
++    "bash -c 'fly deploy'",
++]
++
++ALLOWED = [
++    "fly logs",
++    "fly status",
++    "fly releases",
++    "fly version",
++    'git commit -m "document fly deploy and make host-deploy"',
++    "grep -n host-deploy Makefile",
++]
++
++
++@pytest.mark.parametrize("command", NEEDS_APPROVAL)
++def test_hosted_changes_need_approval(deploy, command):
++    result = bash(deploy, command)
++    assert result.returncode == 2, command
++    assert "make approve-prod" in result.stderr
++    approve(deploy)
++    assert bash(deploy, command).returncode == 0, command
++
++
++@pytest.mark.parametrize("command", ALLOWED)
++def test_reading_the_hosted_service_is_allowed(deploy, command):
++    assert bash(deploy, command).returncode == 0, command
++
++
++@pytest.mark.parametrize(
++    "file", ["deploy/fly.toml", "deploy/service.Dockerfile", "scripts/host-deploy.sh"]
++)
++def test_edits_to_the_hosted_definition_need_approval(deploy, file):
++    path = str(ROOT / file)
++    assert gate(deploy, "Write", {"file_path": path}).returncode == 2
++    approve(deploy)
++    assert gate(deploy, "Write", {"file_path": path}).returncode == 0
++
++
++def test_the_deploy_script_keeps_the_approval_for_its_own_check(deploy):
++    approve(deploy)
++    assert bash(deploy, "make host-deploy").returncode == 0
++    assert (deploy / "prod-approval").exists()
